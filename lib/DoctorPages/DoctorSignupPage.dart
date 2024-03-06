@@ -22,136 +22,148 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
       appBar: AppBar(
         title: const Text('Doctor signup'),
       ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(15),
-            child: Container(
-              padding: EdgeInsets.all(10),
-              height: 400,
-              decoration: BoxDecoration(
-                color: Colors.deepPurple.shade50,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.deepPurple,
-                ),
-                boxShadow: [
-                  BoxShadow(
+      body: Padding(
+        padding: const EdgeInsets.all(15),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text('Hello Doctor', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30),),
+              const SizedBox(height: 30,),
+              Container(
+                padding: const EdgeInsets.all(10),
+                height: 450,
+                decoration: BoxDecoration(
+                  color: Colors.deepPurple.shade50,
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
                     color: Colors.deepPurple,
-                    blurRadius: 5
-                  )
-                ]
-              ),
-              child: Form(
-                key: formKey,
+                  ),
+                  boxShadow: const [
+                    BoxShadow(
+                      color: Colors.deepPurple,
+                      blurRadius: 5
+                    )
+                  ]
+                ),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
                       isLogin? 'Log-in':'Sign-up',
-                      style: TextStyle(
-                        fontSize: 40,
-                        fontWeight: FontWeight.w600
+                      style: const TextStyle(
+                          fontSize: 40,
+                          fontWeight: FontWeight.w600
                       ),
                     ),
-                    SizedBox(height: 20),
-                    if(!isLogin) TextFormField(
-                      controller: nameController,
-                      decoration: InputDecoration(
-                        labelText: 'Name',
-                        icon: const Icon(Icons.person),
-                        border: OutlineInputBorder(
-                            borderSide: const BorderSide(),
-                            borderRadius: BorderRadius.circular(15)
-                        ),
-                        floatingLabelAlignment: FloatingLabelAlignment.center,
+                    Form(
+                      key: formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if(!isLogin) TextFormField(
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              labelText: 'Name',
+                              icon: const Icon(Icons.person),
+                              border: OutlineInputBorder(
+                                  borderSide: const BorderSide(),
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              floatingLabelAlignment: FloatingLabelAlignment.center,
+                            ),
+                            validator: (value){
+                              if(value == null || value.isEmpty){
+                                return 'Required';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10,),
+                          TextFormField(
+                            controller: phoneController,
+                            decoration: InputDecoration(
+                              labelText: 'Phone number',
+                              icon: const Icon(Icons.phone),
+                              border: OutlineInputBorder(
+                                borderSide: const BorderSide(),
+                                borderRadius: BorderRadius.circular(15)
+                              ),
+                              floatingLabelAlignment: FloatingLabelAlignment.center,
+                            ),
+                            validator: (value){
+                              if(value == null || value.isEmpty){
+                                return 'Required';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 10,),
+                          TextFormField(
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              icon: const Icon(Icons.key),
+                              border: OutlineInputBorder(
+                                  borderSide: const BorderSide(),
+                                  borderRadius: BorderRadius.circular(15)
+                              ),
+                              floatingLabelAlignment: FloatingLabelAlignment.center,
+                              suffixIcon: IconButton(
+                                tooltip: isObscured ? 'Show password' : 'Hide password',
+                                icon: isObscured ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                                onPressed: (){
+                                  setState(() {
+                                    isObscured = !isObscured;
+                                  });
+                                },
+                              ),
+                            ),
+                            validator: (value){
+                              if(value == null || value.isEmpty){
+                                return 'Required';
+                              }
+                              return null;
+                            },
+                            obscureText: isObscured,
+                          ),
+                        ],
                       ),
-                      validator: (value){
-                        if(value == null || value.isEmpty){
-                          return 'Required';
-                        }
-                        return null;
-                      },
                     ),
-                    const SizedBox(height: 10,),
-                    TextFormField(
-                      controller: phoneController,
-                      decoration: InputDecoration(
-                        labelText: 'Phone number',
-                        icon: const Icon(Icons.phone),
-                        border: OutlineInputBorder(
-                          borderSide: const BorderSide(),
-                          borderRadius: BorderRadius.circular(15)
-                        ),
-                        floatingLabelAlignment: FloatingLabelAlignment.center,
-                      ),
-                      validator: (value){
-                        if(value == null || value.isEmpty){
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                    ),
-                    const SizedBox(height: 10,),
-                    TextFormField(
-                      controller: passwordController,
-                      decoration: InputDecoration(
-                        labelText: 'Password',
-                        icon: const Icon(Icons.key),
-                        border: OutlineInputBorder(
-                            borderSide: const BorderSide(),
-                            borderRadius: BorderRadius.circular(15)
-                        ),
-                        floatingLabelAlignment: FloatingLabelAlignment.center,
-                        suffixIcon: IconButton(
-                          tooltip: isObscured ? 'Show password' : 'Hide password',
-                          icon: isObscured ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                    Column(
+                      children: [
+                        ElevatedButton(
                           onPressed: (){
-                            setState(() {
-                              isObscured = !isObscured;
-                            });
+                            if(formKey.currentState!.validate()){
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content: Text(
+                                          'Successful\n'
+                                              '${!isLogin? nameController.text:''}'
+                                              '${phoneController.text}\n'
+                                              '${passwordController.text}'
+                                      )
+                                  )
+                              );
+                            }
                           },
+                          child: !isLogin? const Text('Sign-Up') : const Text('Login')
                         ),
-                      ),
-                      validator: (value){
-                        if(value == null || value.isEmpty){
-                          return 'Required';
-                        }
-                        return null;
-                      },
-                      obscureText: isObscured,
-                    ),
-                    const SizedBox(height: 20,),
-                    ElevatedButton(
-                      onPressed: (){
-                        if(formKey.currentState!.validate()){
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                              content: Text(
-                                'Successful\n'
-                                '${!isLogin? nameController.text:''}'
-                                '${phoneController.text}\n'
-                                '${passwordController.text}'
-                              )
-                            )
-                          );
-                        }
-                      },
-                        child: !isLogin? const Text('Sign-Up') : const Text('Login')
-                    ),
-                    const SizedBox(height: 10,),
-                    TextButton(
-                      onPressed: (){
-                        setState(() {
-                          isLogin = !isLogin;
-                        });
-                      },
-                      child: !isLogin? const Text('Already have account? Login') : const Text('New to Helping Hand? SignUp')
+                        const SizedBox(height: 10,),
+                        TextButton(
+                            onPressed: (){
+                              setState(() {
+                                isLogin = !isLogin;
+                              });
+                            },
+                            child: !isLogin? const Text('Already have account? Login') : const Text('New to Helping Hand? SignUp')
+                        ),
+                      ],
                     )
                   ],
                 ),
               ),
-            )
-        ),
+            ],
+          )
       ),
     );
   }
