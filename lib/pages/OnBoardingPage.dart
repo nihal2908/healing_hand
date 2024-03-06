@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/main.dart';
 import 'package:healing_hand/pages/HomePage.dart';
+import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 
 class OnBoardingPage extends StatefulWidget {
@@ -62,7 +63,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         showNextButton: true,
         showBottomPart: true,
         onDone: (){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const HomePage()));
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const UserTypePage()));
         },
       ),
     );
@@ -85,7 +86,7 @@ PageViewModel CustomPageViewModal(String title, body, Image image){
       bodyAlignment: Alignment.bottomCenter,
       imagePadding: const EdgeInsets.only(top: 20, bottom: 20),
       boxDecoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: Colors.deepPurple.shade50,
         borderRadius: BorderRadius.circular(20),
       ),
       bodyPadding: const EdgeInsets.all(10),
