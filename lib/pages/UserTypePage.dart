@@ -9,11 +9,13 @@ class UserTypePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
+            const SizedBox(),
             const Text('Continue as a?', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
             InkWell(
               onTap: (){
@@ -47,7 +49,7 @@ class UserTypePage extends StatelessWidget {
                     height: 200,
                     width: 200,
                   ),
-                  const SizedBox(height: 10,),
+                  SizedBox(height: 10,),
                   const Text(
                     'Health conscious\nindividual',
                     textAlign: TextAlign.center,

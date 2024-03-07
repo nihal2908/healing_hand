@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
+import 'package:healing_hand/pages/HomePage.dart';
 
 final formKey = GlobalKey<FormState>();
 
@@ -19,19 +21,20 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text('Doctor signup'),
+        title: const Text('Individual signup'),
       ),
       body: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Text('Hey Champ!', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30),),
               const SizedBox(height: 30,),
               Container(
-                padding: const EdgeInsets.all(10),
-                height: 450,
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
+                height: 480,
                 decoration: BoxDecoration(
                     color: Colors.deepPurple.shade50,
                     borderRadius: BorderRadius.circular(20),
@@ -55,6 +58,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                           fontWeight: FontWeight.w600
                       ),
                     ),
+                    //SizedBox(height: 10,),
                     Form(
                       key: formKey,
                       child: Column(
@@ -62,6 +66,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                         children: [
                           if(!isLogin) TextFormField(
                             controller: nameController,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                               labelText: 'Name',
                               icon: const Icon(Icons.person),
@@ -81,6 +86,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                           const SizedBox(height: 10,),
                           TextFormField(
                             controller: phoneController,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                               labelText: 'Phone number',
                               icon: const Icon(Icons.phone),
@@ -100,6 +106,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                           const SizedBox(height: 10,),
                           TextFormField(
                             controller: passwordController,
+                            autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
                               labelText: 'Password',
                               icon: const Icon(Icons.key),
@@ -129,21 +136,30 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                         ],
                       ),
                     ),
+                    //SizedBox(height: 15,),
                     Column(
                       children: [
                         ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              elevation: 8,
+                            ),
                             onPressed: (){
                               if(formKey.currentState!.validate()){
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                        content: Text(
-                                            'Successful\n'
-                                                '${!isLogin? nameController.text:''}'
-                                                '${phoneController.text}\n'
-                                                '${passwordController.text}'
-                                        )
-                                    )
+                                  SnackBar(
+                                      content: Text(
+                                          'Successful\n'
+                                              '${!isLogin? nameController.text:''}'
+                                              '${phoneController.text}\n'
+                                              '${passwordController.text}'
+                                      )
+                                  )
                                 );
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientHomePage()));
                               }
                             },
                             child: !isLogin? const Text('Sign-Up') : const Text('Login')

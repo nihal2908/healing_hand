@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/pages/HomePage.dart';
 
 final formKey = GlobalKey<FormState>();
 
@@ -19,19 +20,20 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Doctor signup'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Text('Hello Doctor', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30),),
               const SizedBox(height: 30,),
               Container(
-                padding: const EdgeInsets.all(10),
-                height: 450,
+                padding: const EdgeInsets.only(top: 5, bottom: 10, left: 10, right: 10),
+                height: 490,
                 decoration: BoxDecoration(
                   color: Colors.deepPurple.shade50,
                   borderRadius: BorderRadius.circular(20),
@@ -132,6 +134,13 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                     Column(
                       children: [
                         ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 8,
+                          ),
                           onPressed: (){
                             if(formKey.currentState!.validate()){
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -144,6 +153,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                                       )
                                   )
                               );
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
                             }
                           },
                           child: !isLogin? const Text('Sign-Up') : const Text('Login')
