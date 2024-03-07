@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 
 final formKey = GlobalKey<FormState>();
@@ -153,7 +154,8 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                                       )
                                   )
                               );
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>HomePage()));
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
+                              //for checking, currently using push,, afterwards it should be pushReplacement or pushandrmoveuntil
                             }
                           },
                           child: !isLogin? const Text('Sign-Up') : const Text('Login')

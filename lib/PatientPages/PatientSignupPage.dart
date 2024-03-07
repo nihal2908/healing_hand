@@ -159,7 +159,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                                       )
                                   )
                                 );
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientHomePage()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
                               }
                             },
                             child: !isLogin? const Text('Sign-Up') : const Text('Login')

@@ -1,40 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
+import 'package:healing_hand/PatientPages/PatientHomePage.dart';
+import 'package:healing_hand/PatientPages/PatientSchedulePage.dart';
+import 'package:healing_hand/PatientPages/PatientSettingPage.dart';
+import 'package:healing_hand/customWidgets/roundedImageBox.dart';
 
-class PatientHomePage extends StatefulWidget {
-  const PatientHomePage({super.key});
+class PatientLandingPage extends StatefulWidget {
+  const PatientLandingPage({super.key});
 
   @override
-  State<PatientHomePage> createState() => _PatientHomePageState();
+  State<PatientLandingPage> createState() => _PatientLandingPageState();
 }
 
-List<Widget> HomePageScreen = [Text('1'), Text('2'), Text('3')];
+List<Widget> HomePageScreen = [
+  PatientHomePage(),
+  PatientSchedulePage(),
+  PatientSettingPage(),
+  PatientAccountPage()
+];
 
-class _PatientHomePageState extends State<PatientHomePage> {
+class _PatientLandingPageState extends State<PatientLandingPage> {
   int currentPageIndex = 0;
-
+  bool gotLocation = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Welcome "username"'),
-        backgroundColor: Colors.transparent,
-        actions: [
-          PopupMenuButton(
-              itemBuilder: (context){
-                return [
-                  PopupMenuItem(
-                    child: Text('Settings'),
-                    onTap: (){},
-                  ),
-                  PopupMenuItem(
-                    child: Text('Help & feedback'),
-                    onTap: (){},
-                  ),
-                ];
-              }
-          )
-        ],
-      ),
+      backgroundColor: Colors.deepPurple,
       body: HomePageScreen[currentPageIndex],
       bottomNavigationBar: NavigationBar(
         onDestinationSelected: (int index) {
@@ -46,24 +37,31 @@ class _PatientHomePageState extends State<PatientHomePage> {
         selectedIndex: currentPageIndex,
         destinations: const <Widget>[
           NavigationDestination(
-            //selectedIcon: Icon(Icons.looks_one),
-            icon: Icon(Icons.looks_one),
-            label: 'first',
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
           ),
           NavigationDestination(
-            //selectedIcon: Icon(Icons.access_time_filled),
-            icon: Badge(label: Icon(Icons.looks_two, color: Colors.white, size: 10,),
-              child: Icon(Icons.looks_two),),
-            label: 'second',
+            selectedIcon: Icon(Icons.view_list_outlined),
+            icon: Badge(
+              backgroundColor: Colors.deepPurple,
+              label: SizedBox.square(dimension: 7,),
+              child: Icon(Icons.view_list_outlined),
+            ),
+            label: 'Schedule',
           ),
           NavigationDestination(
-            //selectedIcon: Icon(Icons.person),
-            icon: Icon(Icons.looks_3),
-            label: 'third',
+            //selectedIcon: Icon(),
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.person),
+            icon: Icon(Icons.person_outline),
+            label: 'Account',
           ),
         ],
       ),
-
     );
   }
 }
