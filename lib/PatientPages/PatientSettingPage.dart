@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 
 class PatientSettingPage extends StatefulWidget {
   const PatientSettingPage({super.key});
@@ -8,13 +9,20 @@ class PatientSettingPage extends StatefulWidget {
 }
 
 class _PatientSettingPageState extends State<PatientSettingPage> {
+  int selectedTheme = 0;
+  int newTheme = 0;
+  List<String> themename = ['Light', 'Dark', 'System default'];
+
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
       child: Column(
         children: [
-          const SizedBox(height: 100,),
+          SizedBox(
+            height: 100,
+            child: Center(child: Text('Settings', style: titleStyle,)),
+          ),
           Container(
               width: MediaQuery.of(context).size.width,
               decoration: BoxDecoration(
@@ -27,17 +35,29 @@ class _PatientSettingPageState extends State<PatientSettingPage> {
                     padding: const EdgeInsets.all(20),
                     height: 250,
                     child: Column(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        ListView(
-                          children: [
-                            ListTile(
-                              title: Text('Choose theme'),
-                              subtitle: Text('Light'),
-                              onTap: (){
-                                selectTheme();
-                              },
-                            )
-                          ],
+                        ListTile(
+                          leading: const Icon(Icons.light_mode),
+                          title: const Text('Choose theme'),
+                          subtitle: Text(themename[selectedTheme]),
+                          onTap: (){
+                            selectTheme();
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.help),
+                          title: Text('Help & feedback'),
+                          onTap: (){
+                            print('Help pressed');
+                          },
+                        ),
+                        ListTile(
+                          leading: Icon(Icons.star),
+                          title: Text('Rate Helping Hand'),
+                          onTap: (){
+                            print('Rating pressed');
+                          },
                         )
                       ],
                     ),
@@ -50,5 +70,59 @@ class _PatientSettingPageState extends State<PatientSettingPage> {
     );
   }
 
-  void selectTheme() {}
+  void selectTheme(){
+    showDialog(
+        context: context,
+        builder: (context)=>
+            AlertDialog(
+              title: const Text('Choose theme'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ListTile(
+                    leading: Radio<int>(
+                      value: 0,
+                      groupValue: selectedTheme,
+                      onChanged: (value){
+                        setState(() {
+                          selectedTheme = value!;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                    title: Text(themename[0]),
+                  ),
+                  ListTile(
+                    leading: Radio<int>(
+                      value: 1,
+                      groupValue: selectedTheme,
+                      onChanged: (value){
+                        setState(() {
+                          selectedTheme = value!;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                    title: Text(themename[1]),
+                  ),
+                  ListTile(
+                    leading: Radio<int>(
+                      value: 2,
+                      groupValue: selectedTheme,
+                      onChanged: (value){
+                        setState(() {
+                          selectedTheme = value!;
+                        });
+                        Navigator.pop(context);
+                      },
+                    ),
+                    title: Text(themename[2]),
+                  ),
+                ],
+              ),
+            )
+    );
+  }
+
 }
+

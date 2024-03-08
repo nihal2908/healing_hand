@@ -14,9 +14,15 @@ class CircleImage extends StatelessWidget {
         color: Colors.white,
       ),
       child: Center(
-        child: CircleAvatar(
-          radius: 32.0,
-          backgroundImage: AssetImage(imagePath),
+        child: InkWell(
+          onTap: (){
+            print('picture tapped');
+          },
+          borderRadius: BorderRadius.circular(32),
+          child: CircleAvatar(
+            radius: 32.0,
+            backgroundImage: AssetImage(imagePath),
+          ),
         ),
       ),
     );
