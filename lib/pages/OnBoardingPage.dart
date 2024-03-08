@@ -3,6 +3,7 @@ import 'package:healing_hand/main.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({super.key});
@@ -62,7 +63,9 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         showSkipButton: true,
         showNextButton: true,
         showBottomPart: true,
-        onDone: (){
+        onDone: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setBool('IS_NEW_USER', false);
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const UserTypePage()));
         },
       ),

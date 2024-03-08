@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
+import 'package:healing_hand/customWidgets/DoctorTile.dart';
 
 class AppointmentContainer extends StatelessWidget {
   Appointment appointment;
@@ -38,17 +39,7 @@ class AppointmentContainer extends StatelessWidget {
             ],
           ),
           SizedBox(height: 5,),
-          Row(
-            children: [
-              CircleImage(imagePath: 'assets/images/demo_user.jpg'),
-              Column(
-                children: [
-                  Text(appointment.doctor.name),
-                  Text(appointment.doctor.phone),
-                ],
-              ),
-            ],
-          ),
+          DoctorTile(doc: appointment.doctor)
         ],
       )
     );

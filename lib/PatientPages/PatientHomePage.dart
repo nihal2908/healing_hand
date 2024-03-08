@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
+import 'package:healing_hand/PatientPages/SearchPage.dart';
 import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/customWidgets/AppointmentContainer.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
@@ -57,6 +58,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                     child: InkWell(
                         onTap: (){
                           print('Search pressed');
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=>SearchPage()));
                         },
                         child: Row(
                           children: [
