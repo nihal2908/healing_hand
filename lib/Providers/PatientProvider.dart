@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class Patient{
   Image profile;
   String name;
@@ -24,6 +23,16 @@ class Patient{
 }
 
 List<Patient> patients = [];
+
+Patient PatientUser = Patient(
+    profile: Image.asset('assets/images/demo_user.jpg'),
+    name: '',
+    age: 0,
+    gender: '',
+    phone: '',
+    email: '',
+    height: 0, weight: 0
+);
 
 class PatientProvider extends ChangeNotifier{
 
@@ -49,6 +58,27 @@ class PatientProvider extends ChangeNotifier{
         weight: weight
       )
     );
+    notifyListeners();
+  }
+
+  void createUser({
+    required String name,
+    required String gender,
+    required int age,
+    required String phone,
+    required String email,
+    required int height,
+    required int weight,
+  }){
+    PatientUser.name = name;
+    PatientUser.phone = phone;
+    PatientUser.height = height;
+    PatientUser.weight = weight;
+    PatientUser.gender = gender;
+    PatientUser.age = age;
+    PatientUser.email = email;
+
+    print('User details changed');
     notifyListeners();
   }
 }

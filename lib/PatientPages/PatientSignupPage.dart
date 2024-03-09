@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 
@@ -11,12 +12,13 @@ class PatientSignupPage extends StatefulWidget {
   State<PatientSignupPage> createState() => _PatientSignupPageState();
 }
 
+TextEditingController nameController = TextEditingController();
+TextEditingController phoneController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
+
 class _PatientSignupPageState extends State<PatientSignupPage> {
   bool isObscured = true;
   bool isLogin = false;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -159,7 +161,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                                       )
                                   )
                                 );
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientDetailPage()));
                               }
                             },
                             child: !isLogin? const Text('Sign-Up') : const Text('Login')

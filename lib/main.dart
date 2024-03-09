@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
+import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
+import 'package:healing_hand/Providers/DoctorProvider.dart';
+import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 import 'package:healing_hand/pages/OnBoardingPage.dart';
 import 'package:healing_hand/pages/UserTypePage.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool isNewUser = true;
@@ -20,15 +24,21 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      //home: isNewUser? const OnBoardingPage() : const UserTypePage(),
-      //home: const OnBoardingPage(),
-      home: const PatientLandingPage(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => PatientProvider()),
+        ChangeNotifierProvider(create: (context) => DoctorProvider())
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        //home: isNewUser? const OnBoardingPage() : const UserTypePage(),
+        //home: const OnBoardingPage(),
+        home: const PatientSignupPage(),
+      )
     );
   }
 }
