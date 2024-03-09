@@ -12,10 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 bool isNewUser = true;
 
 void main() async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  if(prefs.getBool('IS_NEW_USER')!=null){
-    isNewUser = prefs.getBool('IS_NEW_USER')!;
-  }
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // if(prefs.getBool('IS_NEW_USER')!=null){
+  //   isNewUser = prefs.getBool('IS_NEW_USER')!;
+  // }
   runApp(const MyApp());
 }
 
@@ -35,8 +35,8 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: isNewUser? const OnBoardingPage() : const UserTypePage(),
-        //home: const OnBoardingPage(),
+        //home: isNewUser? const OnBoardingPage() : const UserTypePage(),
+        home: const OnBoardingPage(),
         //home: const PatientSignupPage(),
       )
     );

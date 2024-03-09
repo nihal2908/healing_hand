@@ -48,7 +48,7 @@ class _PatientLandingPageState extends State<PatientLandingPage> {
               label: SizedBox.square(dimension: 7,),
               child: Icon(Icons.view_list_outlined),
             ),
-            label: 'Schedule',
+            label: 'Emergency',
           ),
           NavigationDestination(
             //selectedIcon: Icon(),
