@@ -35,9 +35,9 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        //home: isNewUser? const OnBoardingPage() : const UserTypePage(),
+        home: isNewUser? const OnBoardingPage() : const UserTypePage(),
         //home: const OnBoardingPage(),
-        home: const PatientSignupPage(),
+        //home: const PatientSignupPage(),
       )
     );
   }
