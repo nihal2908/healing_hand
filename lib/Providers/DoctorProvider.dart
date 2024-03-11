@@ -9,6 +9,7 @@ class Doctor{
   String phone;//
   String email;//
   String address;
+  String bio;
   double rating = 1.0;
   List<String>? reviews = [];
   // location cordinates
@@ -24,6 +25,7 @@ class Doctor{
     required this.email,
     required this.address,
     required this.rating,
+    required this.bio,
     this.reviews,
   });
 }
@@ -40,6 +42,7 @@ Doctor DoctorUser = Doctor(
     email: '',
     address: '',
     rating: 1,
+  bio: '',
   reviews: ['Sample: Sample Text']
 );
 
@@ -77,6 +80,7 @@ class DoctorProvider extends ChangeNotifier{
     required int age,
     required String phone,
     required String email,
+    required String bio,
 
   }){
     doctors.add(
@@ -89,7 +93,8 @@ class DoctorProvider extends ChangeNotifier{
             phone: phone,
             email: email,
             address: address,
-            rating: 1.0
+            rating: 1.0,
+          bio: bio
         )
     );
     notifyListeners();
@@ -104,6 +109,7 @@ class DoctorProvider extends ChangeNotifier{
     required String phone,
     required String email,
     required String address,
+    required String bio,
   }){
     DoctorUser.name = name;
     DoctorUser.gender = gender;
@@ -112,6 +118,7 @@ class DoctorProvider extends ChangeNotifier{
     DoctorUser.category = category;
     DoctorUser.phone = phone;
     DoctorUser.email = email;
+    DoctorUser.bio = bio;
     notifyListeners();
   }
 
@@ -133,6 +140,7 @@ Doctor sampleDoctor = Doctor(
     email: 'doctormail@gmail.com',
   address: 'Address',
   rating: 4.8,
+  bio: '',
   reviews: ['Patient1: Excellent service!', 'Patient2: Very knowledgeable.', 'Patient7: Compassionate and skilled.', 'Patient8: Quick diagnosis.'],
 );
 
@@ -145,6 +153,7 @@ Doctor doctor1 = Doctor(
   phone: '8765432109',
   email: 'dr.rajesh.patel@example.com',
   rating: 4.5,
+  bio: '',
   reviews: ['Patient3: Friendly and caring.'],
   address: 'Address',
 );
@@ -158,6 +167,7 @@ Doctor doctor2 = Doctor(
   phone: '7654321098',
   email: 'dr.ayesha.khan@example.com',
   rating: 4.2,
+  bio: '',
   address: 'Address',
   reviews: ['Patient5: Great doctor!', 'Patient6: Good communication.'],
 );
@@ -171,6 +181,7 @@ Doctor doctor3 = Doctor(
   phone: '6543210987',
   email: 'dr.vikram.gupta@example.com',
   rating: 4.9,
+  bio: '',
   address: 'Address',
   reviews: ['Patient7: Compassionate and skilled.', 'Patient8: Quick diagnosis.'],
 );
@@ -184,6 +195,7 @@ Doctor doctor4 = Doctor(
   phone: '5432109876',
   email: 'dr.sneha.desai@example.com',
   rating: 4.6,
+  bio: '',
   address: 'Address',
   reviews: ['Patient9: Excellent care!', 'Patient10: Knowledgeable and friendly.'],
 );
@@ -197,6 +209,7 @@ Doctor doctor5 = Doctor(
   phone: '4321098765',
   email: 'dr.sanjay.singh@example.com',
   rating: 4.2,
+  bio: '',
   address: 'Address',
   reviews: ['Patient11: Highly recommended.', 'Patient12: Listened attentively.'],
 );
@@ -210,6 +223,7 @@ Doctor doctor6 = Doctor(
   phone: '3210987654',
   email: 'dr.preeti.sharma@example.com',
   rating: 4.4,
+  bio: '',
   address: 'Address',
   reviews: ['Patient13: Courteous and professional.', 'Patient14: Thorough examination.'],
 );
@@ -223,6 +237,7 @@ Doctor doctor7 = Doctor(
   phone: '2109876543',
   email: 'dr.rohit.verma@example.com',
   rating: 4.1,
+  bio: '',
   address: 'Address',
   reviews: ['Patient15: Great experience!', 'Patient16: Kind and patient.'],
 );
@@ -236,6 +251,7 @@ Doctor doctor8 = Doctor(
   phone: '1098765432',
   email: 'dr.nisha.patel@example.com',
   rating: 4.3,
+  bio: '',
   address: 'Address',
   reviews: ['Patient17: Helpful advice.', 'Patient18: Efficient and caring.'],
 );
@@ -249,6 +265,7 @@ Doctor doctor9 = Doctor(
   phone: '9876543210',
   email: 'dr.anuj.kapoor@example.com',
   rating: 4.9,
+  bio: '',
   address: 'Address',
   reviews: ['Patient19: Exceptional doctor.', 'Patient20: Knowledgeable and friendly.'],
 );
@@ -262,6 +279,7 @@ Doctor doctor10 = Doctor(
   phone: '8765432109',
   email: 'dr.meera.singh@example.com',
   rating: 4.9,
+  bio: '',
   address: 'Address',
   reviews: ['Patient19: Exceptional doctor.', 'Patient20: Knowledgeable and friendly.'],
 );

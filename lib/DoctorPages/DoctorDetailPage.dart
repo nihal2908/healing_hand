@@ -18,6 +18,7 @@ class DoctorDetailPage extends StatefulWidget {
 final TextEditingController ageController = TextEditingController();
 final TextEditingController emailController = TextEditingController();
 final TextEditingController addressController = TextEditingController();
+TextEditingController bioController = TextEditingController();
 
 
 String selectedGender = 'Select';
@@ -131,6 +132,18 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                           },
                         ),
                         SizedBox(height: 10),
+                        CustomTextFormField(
+                          controller: bioController,
+                          labelText: 'Qualification',
+                          icon: Icons.person,
+                        ),
+                        SizedBox(height: 10),
+                        CustomTextFormField(
+                          controller: addressController,
+                          labelText: 'Address',
+                          icon: Icons.person,
+                        ),
+                        SizedBox(height: 10),
                         DropdownButtonFormField<String>(
                           menuMaxHeight: 300,
                           value: null,
@@ -182,6 +195,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                                           phone: phoneController.text,
                                           email: emailController.text,
                                           address: addressController.text,
+                                          bio: bioController.text,
                                       );
                                       //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> DoctorLandingPage()), (route) => false);
                                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
