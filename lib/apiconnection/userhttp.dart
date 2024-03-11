@@ -1,7 +1,7 @@
 import'package:http/http.dart' as http;
 class postApihttp
 {
-  String baseurl="http://handycraf.000webhostapp.com/memeapp/";
+  String baseurl="http://handycraf.000webhostapp.com/helping_hand/";
   int m=0;
   Future<int> givedata(int i) async
     {
@@ -11,11 +11,11 @@ class postApihttp
 
   Future saveData(String email,
       String password) async {
-    var request = http.MultipartRequest('POST', Uri.parse(baseurl+"login1.php"));
+    var request = http.MultipartRequest('POST', Uri.parse(baseurl+"login.php"));
     request.fields.addAll({
       //'name': name,
       //'number': number,
-      'emailid': email,
+      'phoneno': email,
       'password': password
     });
     String s='''"success"''';

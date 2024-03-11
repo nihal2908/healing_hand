@@ -183,6 +183,10 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                               setState(() {
                                 isLogin = !isLogin;
                               });
+                              if(isLogin)
+                              {
+                                
+                              }
                             },
                             child: !isLogin? const Text('Already have account? Login') : const Text('New to Helping Hand? SignUp')
                         ),
