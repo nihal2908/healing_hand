@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/PatientPages/PatientHomePage.dart';
-import 'package:healing_hand/PatientPages/PatientEmergencyPage.dart';
+import 'package:healing_hand/PatientPages/PatientAppointmentsPage.dart';
 import 'package:healing_hand/PatientPages/PatientSettingPage.dart';
-import 'package:healing_hand/customWidgets/roundedImageBox.dart';
 
 class PatientLandingPage extends StatefulWidget {
   const PatientLandingPage({super.key});
@@ -42,13 +41,9 @@ class _PatientLandingPageState extends State<PatientLandingPage> {
             label: 'Home',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.warning),
-            icon: Badge(
-              backgroundColor: Colors.deepPurple,
-              label: SizedBox.square(dimension: 7,),
-              child: Icon(Icons.warning_amber),
-            ),
-            label: 'Emergency',
+            selectedIcon: Icon(Icons.calendar_month),
+            icon: Icon(Icons.calendar_month_outlined),
+            label: 'Appointments',
           ),
           NavigationDestination(
             //selectedIcon: Icon(),

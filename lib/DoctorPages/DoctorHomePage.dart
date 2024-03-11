@@ -58,12 +58,15 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                         ListView.builder(
                           shrinkWrap: true,
                           itemBuilder: (context, index){
-                            return Column(
-                              children: [
-                                DocAppointmentContainer(appointment: appointments[index]),
-                                SizedBox(height: 10,)
-                              ],
-                            );
+                            if(appointments[index].date.isAfter(DateTime.now()) && appointments[index].status == 'accepted')
+                              return Column(
+                                children: [
+                                  DocAppointmentContainer(appointment: appointments[index]),
+                                  SizedBox(height: 10,)
+                                ],
+                              );
+                            else
+                              return Container();
                           },
                           itemCount: appointments.length,
                         ),

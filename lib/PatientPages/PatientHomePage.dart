@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/PatientPages/AppointmentRequestPage.dart';
 import 'package:healing_hand/PatientPages/CategoryViewPage.dart';
 import 'package:healing_hand/PatientPages/DoctorViewPage.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
@@ -46,11 +47,15 @@ class _PatientHomePageState extends State<PatientHomePage> {
             ),
             actions: [
               IconButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    //add here google map functionality
+                  },
                   icon: Icon(Icons.location_pin)
               ),
               IconButton(
-                  onPressed: (){},
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context)=>AppointmentRequestPage()));
+                  },
                   icon: Icon(Icons.notifications)
               ),
             ],
@@ -82,7 +87,6 @@ class _PatientHomePageState extends State<PatientHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Available Doctors', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),),
-                        TextButton(onPressed: (){print('Show all doctors');}, child: Text('See All', style: TextStyle(color: Colors.blue),))
                       ],
                     ),
                     Container(
@@ -112,7 +116,6 @@ class _PatientHomePageState extends State<PatientHomePage> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text('Categories', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),),
-                        //TextButton(onPressed: (){print('Show all doctors');}, child: Text('See All', style: TextStyle(color: Colors.blue),))
                       ],
                     ),
                     Container(
@@ -141,15 +144,25 @@ class _PatientHomePageState extends State<PatientHomePage> {
                     WhiteContainer(
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text('Upcoming Appointments', style: nameSytle),
-                                TextButton(onPressed: (){print('Show all appointments');}, child: Text('See All', style: TextStyle(color: Colors.blue),))
-                              ],
-                            ),
+                            Text('Emergency?', style: TextStyle(fontSize: 25, color: Colors.red, fontWeight: FontWeight.w700),),
+                            Text('Find nearest Doctors,Hospitals and Ambulance',textAlign: TextAlign.center, style: TextStyle(fontSize: 15, color: Colors.black, fontWeight: FontWeight.w500)),
                             SizedBox(height: 10,),
-                            AppointmentContainer(appointment: sampleAppointment),
+                            Image.asset('assets/images/emergency.jpg'),
+                            SizedBox(height: 10,),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                backgroundColor: Colors.red.shade100,
+                                foregroundColor: Colors.red,
+                                padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50)
+                              ),
+                                onPressed: (){
+                                  print('Go to Google Map');
+                                },
+                                child: Text('Find now', style: TextStyle(color: Colors.red),)
+                            )
                           ],
                         )
                     ),

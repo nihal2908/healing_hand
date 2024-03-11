@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/PatientPages/PatientProfileEditPage.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:provider/provider.dart';
@@ -61,7 +62,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                                     alignment: Alignment.centerRight,
                                     child: IconButton(
                                       onPressed: (){
-                                        print('Edit button pressed');
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientProfileEditPage()));
                                       },
                                       icon: const Icon(Icons.edit),
                                     ),
@@ -78,33 +79,6 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                             ),
                           ],
                         )
-                    ),
-                    const SizedBox(height: 20,),
-                    Container(
-                      padding: const EdgeInsets.all(20),
-                      width: MediaQuery.of(context).size.width,
-                      //height: 200,
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(25)
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text('Medical History', style: nameSytle,),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            //height: 150,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemBuilder: (context, index){
-                                return Text(history[index], style: profileStyle,);
-                              },
-                              itemCount: history.length,
-                            ),
-                          )
-                        ],
-                      ),
                     ),
                     SizedBox(height: 20,),
                     Container(

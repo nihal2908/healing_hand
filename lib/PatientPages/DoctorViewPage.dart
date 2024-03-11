@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
+import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
@@ -185,7 +186,56 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
             )
           ),
           onPressed: () {
-            print('Appoint book');
+            TextEditingController purposeController = TextEditingController();
+            TextEditingController modeController = TextEditingController();
+            showDialog(context: context, builder: (context)=>
+              AlertDialog(
+                title: Text('Enter purpose and Mode(Online/Offline)'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TextField(
+                      controller: purposeController,
+                      decoration: InputDecoration(
+                        hintText: 'Purpose'
+                      ),
+                    ),
+                    TextField(
+                      controller: modeController,
+                      decoration: InputDecoration(
+                          hintText: 'Mode'
+                      ),
+                    ),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: (){
+                      Navigator.pop(context);
+                    },
+                    child: Text('Cancel')
+                  ),
+                  TextButton(
+                      onPressed: (){
+                        appointments.add(
+                            Appointment(
+                                patient: PatientUser,
+                                doctor: doc,
+                                purpose: purposeController.text,
+                                startTime: TimeOfDay.now(),
+                                endTime: TimeOfDay.now(),
+                                date: DateTime.now(),
+                                type: modeController.text,
+                                status: 'waiting'
+                            )
+                        );
+                        Navigator.pop(context);
+                      },
+                      child: Text('Send Request')
+                  ),
+                ],
+              )
+            );
           },
           child: Text('Get an Appointment'),
         ),

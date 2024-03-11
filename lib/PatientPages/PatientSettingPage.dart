@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
+import 'package:healing_hand/pages/HelpPage.dart';
 
 class PatientSettingPage extends StatefulWidget {
   const PatientSettingPage({super.key});
@@ -50,6 +51,7 @@ class _PatientSettingPageState extends State<PatientSettingPage> {
                           title: Text('Help & feedback'),
                           onTap: (){
                             print('Help pressed');
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>HelpPage()));
                           },
                         ),
                         ListTile(
