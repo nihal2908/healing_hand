@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
+import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
+import 'package:healing_hand/PatientPages/PatientProfileEditPage.dart';
 import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
+import 'package:healing_hand/modelclass/user.dart';
 import 'package:provider/provider.dart';
-
+import 'package:http/http.dart' as http;
+import 'package:healing_hand/PatientPages/PatientSignupPage.dart' as pp;
 
 final detailKey = GlobalKey<FormState>();
 
@@ -19,7 +24,7 @@ final TextEditingController ageController = TextEditingController();
 final TextEditingController emailController = TextEditingController();
 final TextEditingController heightController = TextEditingController();
 final TextEditingController weightController = TextEditingController();
-
+final TextEditingController gender=TextEditingController();
 String selectedGender = 'Select';
 
 class _PatientDetailPageState extends State<PatientDetailPage> {
@@ -67,7 +72,7 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                       children: [
                         SizedBox(height: 10,),
                         CustomTextFormField(
-                          controller: nameController,
+                          controller: pp.nameController,
                           labelText: 'Name',
                           icon: Icons.person,
                           readOnly: true,
@@ -111,7 +116,7 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                         ),
                         SizedBox(height: 10),
                         CustomTextFormField(
-                          controller: phoneController,
+                          controller: pp.phoneController,
                           labelText: 'Phone Number',
                           icon: Icons.phone,
                           readOnly: true,
@@ -139,6 +144,13 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                         ),
                         SizedBox(height: 10),
                         CustomTextFormField(
+                          controller: gender,
+                          labelText: 'gender',
+                          icon: Icons.male,
+                          
+                        ),
+                        SizedBox(height: 10),
+                        CustomTextFormField(
                           controller: weightController,
                           labelText: 'Weight',
                           icon: Icons.line_weight,
@@ -158,15 +170,16 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                                   onPressed: (){
                                     if(detailKey.currentState!.validate()){
                                       PatientModel.createUser(
-                                          name: nameController.text,
+                                          name: pp.nameController.text,
                                           gender: selectedGender,
                                           age: int.parse(ageController.text),
-                                          phone: phoneController.text,
+                                          phone: pp.phoneController.text,
                                           email: emailController.text,
                                           height: int.parse(heightController.text),
                                           weight: int.parse(weightController.text)
                                       );
                                     }
+                                    SaveRecord(context);
                                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
                                   },
                                   child: const Text('Save')
@@ -183,4 +196,45 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
       ),
     );
   }
+  
+SaveRecord(context) async
+{
+  print(pp.nameController.text.toString());
+User user= User(pp.nameController.text.toString(),emailController.text.trim(),pp.passwordController.text.toString(),pp.phoneController.text.toString(),
+weightController.text.toString(),heightController.text.toString(),ageController.text.toString(),gender.text.toString());
+try{
+var res=await http.post(Uri.parse(
+  "http://handycraf.000webhostapp.com/helping_hand/signup.php"
+),body:user.toJson());
+if(res.statusCode==200)
+{
+  //var resBody1=jsonDecode(res.body);
+  String resBody=res.body;
+  print(resBody);
+    if((resBody)=="false")
+  {
+ Future.delayed(Duration.zero,()=>showDialog(context: context, builder: ((context) => AlertDialog(
+                  title:Text("Record Saved "),
+                  content:ElevatedButton(child:Text("O.K"),onPressed: () {Navigator.pop(context);},)))));   
+  }
+  else{
+    AlertDialog(
+        content: Text("Record already exist"),
+        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+
+      );    
+  }
+}
+else{
+  AlertDialog(
+        content: Text("Record Saved now go to login page"),
+        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+
+      );    
+}
+}
+catch(e){
+  print(e);
+}
+}
 }
