@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
-import 'package:healing_hand/pages/HomePage.dart';
 
 final formKey = GlobalKey<FormState>();
 
@@ -23,25 +22,32 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.deepPurple,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade200,
+        foregroundColor: Colors.black,
         title: const Text('Individual signup'),
+        centerTitle: true,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(bottom: Radius.circular(15), top: Radius.circular(15))
+        ),
       ),
       body: Padding(
           padding: const EdgeInsets.all(15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text('Hey Champ!', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30),),
+              const Text('Hey Champ!', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
               const SizedBox(height: 30,),
               Container(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
                 height: 480,
                 decoration: BoxDecoration(
-                    color: Colors.deepPurple.shade50,
+                    color: Colors.deepPurple.shade100,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
-                      color: Colors.deepPurple,
+                      color: Colors.black,
                     ),
                     boxShadow: const [
                       BoxShadow(
@@ -161,7 +167,15 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                                       )
                                   )
                                 );
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientDetailPage()));
+                                if(isLogin){
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => PatientLandingPage())
+                                  );
+                                  print('Add here login verification');
+                                }
+                                else
+                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PatientDetailPage()));
                               }
                             },
                             child: !isLogin? const Text('Sign-Up') : const Text('Login')

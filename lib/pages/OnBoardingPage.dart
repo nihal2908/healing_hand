@@ -39,7 +39,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Helping Hand',
+          'Healing Hand',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             color: Colors.deepPurple,
@@ -64,8 +64,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         showNextButton: true,
         showBottomPart: true,
         onDone: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setBool('IS_NEW_USER', false);
+          // SharedPreferences prefs = await SharedPreferences.getInstance();
+          // prefs.setBool('IS_NEW_USER', false);
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const UserTypePage()));
         },
       ),

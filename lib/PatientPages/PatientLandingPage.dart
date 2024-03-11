@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/PatientPages/PatientHomePage.dart';
-import 'package:healing_hand/PatientPages/PatientSchedulePage.dart';
+import 'package:healing_hand/PatientPages/PatientEmergencyPage.dart';
 import 'package:healing_hand/PatientPages/PatientSettingPage.dart';
 import 'package:healing_hand/customWidgets/roundedImageBox.dart';
 
@@ -42,11 +42,11 @@ class _PatientLandingPageState extends State<PatientLandingPage> {
             label: 'Home',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.view_list_outlined),
+            selectedIcon: Icon(Icons.warning),
             icon: Badge(
               backgroundColor: Colors.deepPurple,
               label: SizedBox.square(dimension: 7,),
-              child: Icon(Icons.view_list_outlined),
+              child: Icon(Icons.warning_amber),
             ),
             label: 'Emergency',
           ),

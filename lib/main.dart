@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
 import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
@@ -38,6 +39,9 @@ class MyApp extends StatelessWidget {
         //home: isNewUser? const OnBoardingPage() : const UserTypePage(),
         home: const OnBoardingPage(),
         //home: const PatientSignupPage(),
+        //home: PatientLandingPage(),
+        //home: UserTypePage(),
+        //home: DoctorLandingPage(),
       )
     );
   }

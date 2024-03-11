@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
 import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 
@@ -11,19 +12,27 @@ class DoctorSignupPage extends StatefulWidget {
   State<DoctorSignupPage> createState() => _DoctorSignupPageState();
 }
 
+TextEditingController nameController = TextEditingController();
+TextEditingController phoneController = TextEditingController();
+TextEditingController passwordController = TextEditingController();
+
 class _DoctorSignupPageState extends State<DoctorSignupPage> {
   bool isObscured = true;
   bool isLogin = false;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.deepPurple,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
+        backgroundColor: Colors.grey.shade200,
+        foregroundColor: Colors.black,
         title: const Text('Doctor signup'),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.vertical(bottom: Radius.circular(15), top: Radius.circular(15))
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -39,7 +48,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                   color: Colors.deepPurple.shade50,
                   borderRadius: BorderRadius.circular(20),
                   border: Border.all(
-                    color: Colors.deepPurple,
+                    color: Colors.black,
                   ),
                   boxShadow: const [
                     BoxShadow(
@@ -154,7 +163,15 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                                       )
                                   )
                               );
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
+                              if(isLogin){
+                                Navigator.pushReplacement(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => DoctorLandingPage())
+                                );
+                                print('Add here login verification');
+                              }
+                              else
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorDetailPage()));
                               //for checking, currently using push,, afterwards it should be pushReplacement or pushandrmoveuntil
                             }
                           },

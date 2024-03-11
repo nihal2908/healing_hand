@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 
 class CircleImage extends StatelessWidget {
   final String imagePath;
-  CircleImage({required this.imagePath});
+  final void Function()? onTap;
+  CircleImage({required this.imagePath, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class CircleImage extends StatelessWidget {
       ),
       child: Center(
         child: InkWell(
-          onTap: (){
+          onTap: onTap ?? (){
             print('picture tapped');
           },
           borderRadius: BorderRadius.circular(32),

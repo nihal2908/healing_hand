@@ -26,11 +26,11 @@ List<Patient> patients = [];
 
 Patient PatientUser = Patient(
     profile: Image.asset('assets/images/demo_user.jpg'),
-    name: '',
+    name: 'Sample user',
     age: 0,
-    gender: '',
-    phone: '',
-    email: '',
+    gender: 'sample',
+    phone: 'sampel',
+    email: 'sample',
     height: 0, weight: 0
 );
 

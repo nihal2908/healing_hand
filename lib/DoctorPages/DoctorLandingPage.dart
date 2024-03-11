@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorHomePage.dart';
+import 'package:healing_hand/DoctorPages/DoctorNotePage.dart';
+import 'package:healing_hand/DoctorPages/DoctorSettingPage.dart';
+
 
 class DoctorLandingPage extends StatefulWidget {
   const DoctorLandingPage({super.key});
@@ -7,20 +11,45 @@ class DoctorLandingPage extends StatefulWidget {
   State<DoctorLandingPage> createState() => _DoctorLandingPageState();
 }
 
+List<Widget> HomePageScreen = [
+  DoctorHomePage(),
+  DoctorNotePage(),
+  DoctorSettingPage(),
+];
+
 class _DoctorLandingPageState extends State<DoctorLandingPage> {
+  int currentPageIndex = 0;
+  bool gotLocation = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Doctor Landing Page'),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(10),
-          child: Column(
-
+      backgroundColor: Colors.deepPurple,
+      body: HomePageScreen[currentPageIndex],
+      bottomNavigationBar: NavigationBar(
+        onDestinationSelected: (int index) {
+          setState(() {
+            currentPageIndex = index;
+          });
+        },
+        indicatorColor: Colors.deepPurple.shade200,
+        selectedIndex: currentPageIndex,
+        destinations: const <Widget>[
+          NavigationDestination(
+            selectedIcon: Icon(Icons.home),
+            icon: Icon(Icons.home_outlined),
+            label: 'Home',
           ),
-        ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.note_alt_sharp),
+            icon: Icon(Icons.note_alt_outlined),
+            label: 'Notes',
+          ),
+          NavigationDestination(
+            //selectedIcon: Icon(),
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
+        ],
       ),
     );
   }

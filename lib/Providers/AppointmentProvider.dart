@@ -31,3 +31,5 @@ Appointment sampleAppointment = Appointment(
     date: DateTime(2024, 03, 10),
     type: 'Online'
 );
+
+List<Appointment> appointments = [sampleAppointment, sampleAppointment, sampleAppointment, sampleAppointment];

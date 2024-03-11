@@ -1,52 +1,52 @@
 import 'package:flutter/material.dart';
-import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
-import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
-import 'package:healing_hand/Providers/PatientProvider.dart';
+import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
+import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
+import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
 import 'package:provider/provider.dart';
 
 
 final detailKey = GlobalKey<FormState>();
 
-class PatientDetailPage extends StatefulWidget {
-  const PatientDetailPage({super.key});
+class DoctorDetailPage extends StatefulWidget {
+  const DoctorDetailPage({super.key});
 
   @override
-  State<PatientDetailPage> createState() => _PatientDetailPageState();
+  State<DoctorDetailPage> createState() => _DoctorDetailPageState();
 }
 
 final TextEditingController ageController = TextEditingController();
 final TextEditingController emailController = TextEditingController();
-final TextEditingController heightController = TextEditingController();
-final TextEditingController weightController = TextEditingController();
+final TextEditingController addressController = TextEditingController();
+
 
 String selectedGender = 'Select';
+String selectedCategory = 'Select';
 
-class _PatientDetailPageState extends State<PatientDetailPage> {
+class _DoctorDetailPageState extends State<DoctorDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        title: Text('Individual signup'),
+        title: Text('Doctor signup'),
         backgroundColor: Colors.grey.shade200,
         foregroundColor: Colors.black,
         centerTitle: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15)
+            borderRadius: BorderRadius.circular(15)
         ),
       ),
       body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text('Lets create your profile', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
-                const SizedBox(height: 15,),
-                Container(
+        padding: const EdgeInsets.all(15),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text('Lets create your profile', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
+              const SizedBox(height: 15,),
+              Container(
                   padding: const EdgeInsets.all(10),
-                  //height: 480,
                   decoration: BoxDecoration(
                       color: Colors.deepPurple.shade50,
                       borderRadius: BorderRadius.circular(20),
@@ -131,22 +131,39 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                           },
                         ),
                         SizedBox(height: 10),
-                        CustomTextFormField(
-                          controller: heightController,
-                          labelText: 'Height',
-                          icon: Icons.height,
-                          keyboardType: TextInputType.number,
+                        DropdownButtonFormField<String>(
+                          menuMaxHeight: 300,
+                          value: null,
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+                          decoration: InputDecoration(
+                            labelText: 'Specialisation',
+                            icon: const Icon(Icons.people),
+                            floatingLabelAlignment: FloatingLabelAlignment.center,
+                            border: OutlineInputBorder(
+                              borderSide: const BorderSide(),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                          ),
+                          items: DoctorCategories
+                              .map((cat) => DropdownMenuItem(
+                            value: cat,
+                            child: Text(cat),
+                          )).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedCategory = value!;
+                            });
+                          },
+                          validator: (value) {
+                            if (value == null || value.isEmpty || value == 'Select') {
+                              return 'Required';
+                            }
+                            return null;
+                          },
                         ),
                         SizedBox(height: 10),
-                        CustomTextFormField(
-                          controller: weightController,
-                          labelText: 'Weight',
-                          icon: Icons.line_weight,
-                          keyboardType: TextInputType.number,
-                        ),
-                        SizedBox(height: 10),
-                        Consumer<PatientProvider>(
-                            builder: (context, PatientModel, child){
+                        Consumer<DoctorProvider>(
+                            builder: (context, DoctorModel, child){
                               return ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
@@ -157,17 +174,18 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                                   ),
                                   onPressed: (){
                                     if(detailKey.currentState!.validate()){
-                                      PatientModel.createUser(
+                                      DoctorModel.createUser(
                                           name: nameController.text,
                                           gender: selectedGender,
                                           age: int.parse(ageController.text),
+                                          category: selectedCategory,
                                           phone: phoneController.text,
                                           email: emailController.text,
-                                          height: int.parse(heightController.text),
-                                          weight: int.parse(weightController.text)
+                                          address: addressController.text,
                                       );
+                                      //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> DoctorLandingPage()), (route) => false);
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
                                     }
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
                                   },
                                   child: const Text('Save')
                               );
@@ -178,8 +196,8 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                   )
               ),
             ],
-                    ),
           ),
+        ),
       ),
     );
   }

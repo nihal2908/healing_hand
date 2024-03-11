@@ -9,6 +9,7 @@ class UserTypePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.deepPurple,
       resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(
@@ -16,7 +17,7 @@ class UserTypePage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             const SizedBox(),
-            const Text('Continue as a?', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+            const Text('Continue as a?', style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Colors.white),),
             InkWell(
               onTap: (){
                 Navigator.push(context, MaterialPageRoute(builder: (context) => const DoctorSignupPage()));
@@ -32,7 +33,8 @@ class UserTypePage extends StatelessWidget {
                     'Doctor',
                     style: TextStyle(
                         fontSize: 17,
-                        fontWeight: FontWeight.w600
+                        fontWeight: FontWeight.w600,
+                      color: Colors.white
                     ),
                   ),
                 ],
@@ -55,7 +57,8 @@ class UserTypePage extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 17,
-                      fontWeight: FontWeight.w600
+                      fontWeight: FontWeight.w600,
+                      color: Colors.white
                     ),
                   ),
                 ],
