@@ -7,12 +7,13 @@ import 'package:healing_hand/PatientPages/SearchPage.dart';
 import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
+import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/AppointmentContainer.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
+import 'package:healing_hand/modelclass/prodmodal.dart';
 import 'package:provider/provider.dart';
-
-
+String key="";
 class PatientHomePage extends StatefulWidget {
   const PatientHomePage({super.key});
 
@@ -25,7 +26,44 @@ class _PatientHomePageState extends State<PatientHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    httpServices13 http=new httpServices13();
+    return FutureBuilder<List<prodModal>>(
+      future: http.getAllPost(key),
+      builder: ((context, snapshot) {
+        print("calm down");
+        // print(key);
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Scaffold(
+              body:
+                  Center(heightFactor: 1.4, child: CircularProgressIndicator()),
+            );
+          case ConnectionState.waiting:
+            return Scaffold(
+              body:
+                  Center(heightFactor: 0.4, child: CircularProgressIndicator()),
+            );
+          case ConnectionState.active:
+            return ShowPostList(context, snapshot.data!);
+
+          case ConnectionState.done:
+
+            //return CircularProgressIndicator();
+            return ShowPostList(context, snapshot.data!);
+        }
+        //}
+
+        //else{
+        //return CircularProgressIndicator();
+        //}
+
+        //  return CircularProgressIndicator();
+      }),
+    );
+}
+Widget ShowPostList(BuildContext context,List<prodModal> posts)
+{
+  return Padding(
       padding: EdgeInsets.all(15),
       child: Column(
         children: [
@@ -89,11 +127,12 @@ class _PatientHomePageState extends State<PatientHomePage> {
                         Text('Available Doctors', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),),
                       ],
                     ),
+                    
                     Container(
                       height: 120.0,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: doctors.length,
+                        itemCount: posts.length,
                         itemBuilder: (context,index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -102,10 +141,12 @@ class _PatientHomePageState extends State<PatientHomePage> {
                                 CircleImage(
                                   imagePath: 'assets/images/doctor.png',
                                   onTap: (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorViewPage(doc: doctors[index])));
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorViewPage(name: posts[index].name,
+                                    email: posts[index].email,category: posts[index].category,gender:posts[index].gender,
+                                    phone: posts[index].phone,)));
                                   },
                                 ),
-                                SizedBox(width: 85, child: Text(doctors[index].name, style: TextStyle(color: Colors.white), overflow: TextOverflow.ellipsis,))
+                                SizedBox(width: 85, child: Text(posts[index].name.toString(), style: const TextStyle(color: Colors.white), overflow: TextOverflow.ellipsis,))
                               ],
                             ),
                           );
@@ -130,7 +171,7 @@ class _PatientHomePageState extends State<PatientHomePage> {
                                   CircleImage(
                                     imagePath: 'assets/images/physician.jpg',
                                     onTap: (){
-                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoryViewPage(category: DoctorCategories[index])));
+                                      Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoryViewPage(key1: DoctorCategories[index])));
                                     },
                                   ),
                                   SizedBox(width: 85, child: Center(child: Text(DoctorCategories[index],overflow: TextOverflow.ellipsis, style: TextStyle(color: Colors.white),)))

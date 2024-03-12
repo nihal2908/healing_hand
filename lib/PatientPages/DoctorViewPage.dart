@@ -1,32 +1,109 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+//import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
+import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
+import 'package:healing_hand/customWidgets/DoctorTile.dart';
+import 'package:healing_hand/modelclass/prodmodal.dart';
+import 'package:healing_hand/modelclass/review.dart';
 import 'package:provider/provider.dart';
-
+import 'package:healing_hand/PatientPages/PatientSignupPage.dart' as p;
+String? name1;
+  String? phone1;
+  String? email1;
+  String? category1;
+  String? address1;
+  String? gender1;
+  String? age1; 
+  String? rating1;
+  String? review1;
+List<prodModal1> ff=[];
 class DoctorViewPage extends StatefulWidget {
-  final Doctor doc;
-  DoctorViewPage({super.key, required this.doc});
-
+  DoctorViewPage({
+    name,email,category,age,gender,phone,address,rating
+  })
+  {
+name1=name;
+ phone1=phone;
+   email1=email;
+   category1=category;
+   address1=address;
+ gender1=gender;
+   age1=age; 
+   rating1=rating;
+  
+  }
+  
   @override
-  State<DoctorViewPage> createState() => _DoctorViewPageState(doc: doc);
-}
+  _DoctorViewPageState createState()
+  {
+    return _DoctorViewPageState();
+  }
+  // DoctorViewPage({super.key, this.name,this.email,this.category,this.password,this.gender,this.age,});
 
+  // @override
+  // State<DoctorViewPage> createState() => _DoctorViewPageState(doc: doc);
+}
+httpServices13 http=new httpServices13();
 class _DoctorViewPageState extends State<DoctorViewPage> {
-  final Doctor doc;
-  _DoctorViewPageState({required this.doc});
+  //final Doctor doc;
+  //_DoctorViewPageState();
   bool showAllReviews = false;
   TextEditingController reviewController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
 
-    bool noReview = (doc.reviews == null);
+   // bool noReview = (doc.reviews == null);
+print("sid12");
+print(email1);
+    return FutureBuilder<List<prodModal1>>(
+      future: http.getAllPost3(email1),
+      builder: ((context, snapshot) {
+        print("calm down");
+        // print(key);
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Scaffold(
+              body:
+                  Center(heightFactor: 1.4, child: CircularProgressIndicator()),
+            );
+          case ConnectionState.waiting:
+            return Scaffold(
+              body:
+                  Center(heightFactor: 0.4, child: CircularProgressIndicator()),
+            );
+          case ConnectionState.active:
+          if(snapshot.data==null) return ShowPostList(context, ff);
+          else
+            return ShowPostList(context, snapshot.data!);
 
-    return Scaffold(
+          case ConnectionState.done:
+          if(snapshot.data==null) return ShowPostList(context, ff);
+            //return CircularProgressIndicator();
+            return ShowPostList(context, snapshot.data!);
+        }
+        //}
+
+        //else{
+        //return CircularProgressIndicator();
+        //}
+
+        //  return CircularProgressIndicator();
+      }),
+    );
+  }
+Widget ShowPostList(BuildContext context,List<prodModal1> posts)
+{
+  if(rating1==null) rating1="1";
+  print("iiii");
+  print(rating1);
+  print(double.parse(rating1.toString()));
+  return Scaffold(
       backgroundColor: Colors.deepPurple,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -54,14 +131,15 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                                   //height: 250,
                                   child: Column(
                                     children: [
+                                      
                                       SizedBox(height: 30,),
-                                      Text(doc.name, style: nameSytle,),
-                                      Text(doc.category, style: profileStyle),
-                                      Text('${doc.age} years', style: profileStyle,),
-                                      Text(doc.gender, style: profileStyle),
-                                      Text(doc.email, style: profileStyle),
+                                      Text(name1.toString(), style: nameSytle,),
+                                      Text(category1.toString(), style: profileStyle),
+                                      Text('${age1.toString()} years', style: profileStyle,),
+                                      Text(gender1.toString(), style: profileStyle),
+                                      Text(email1.toString(), style: profileStyle),
                                       RatingBar.builder(
-                                        initialRating: doc.rating,
+                                        initialRating: double.parse(rating1.toString()),
                                         minRating: 1,
                                         direction: Axis.horizontal,
                                         allowHalfRating: true,
@@ -74,11 +152,12 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                                         ignoreGestures: true,
                                         onRatingUpdate: (newRating) {
                                           setState(() {
-                                            doc.rating = newRating;
+                                            
+                                            rating1 = newRating.toString();
                                           });
                                         },
                                       ),
-                                      Text('${doc.rating} / 5', style: profileStyle),
+                                      Text('${double.parse(rating1.toString())} / 5', style: profileStyle),
                                       //Text('${PatientUser.height}cm / ${PatientUser.weight}Kg', style: profileStyle)
                                     ],
                                   ),
@@ -102,7 +181,7 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text('Customer reviews', style: nameSytle,),
-                                  if (widget.doc.reviews!.length > 2)
+                                  if (posts.length > 2)
                                   TextButton(
                                     onPressed: () {
                                       setState(() {
@@ -118,20 +197,22 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                                 //height: 150,
                                 child: Column(
                                   children: [
-                                    noReview? Padding(padding: EdgeInsets.all(10), child: Text('No recent Reviews')):
+                                    posts.length==0? Padding(padding: EdgeInsets.all(10), child: Text('No recent Reviews')):
                                     Column(
                                       children: [
                                         // Display two recent reviews
                                         ListView.builder(
                                           shrinkWrap: true,
-                                          itemCount: showAllReviews ? doc.reviews!.length : doc.reviews!.length>=2 ? 2 : doc.reviews!.length,
+                                          itemCount:posts.length,
                                           itemBuilder: (context, index) {
-                                            String review = doc.reviews![index];
-                                            List<String> parts = review.split(': ');
+                                            String review = posts[index].review.toString();
+                                            print("bbb");
+                                            print(review);
+                                           // List<String> parts = review.split(': ');
 
                                             return ListTile(
-                                              title: Text(parts[0]),
-                                              subtitle: Text(parts[1]),
+                                              title: Text(posts[index].email.toString()),
+                                              subtitle: Text(posts[index].review.toString()),
                                             );
                                           },
                                         ),
@@ -158,7 +239,7 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                           height: 67,
                           child: Center(
                               child: Text(
-                                  doc.name,
+                                  name1.toString(),
                                   style: titleStyle
                               )
                           ),
@@ -216,19 +297,22 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                     child: Text('Cancel')
                   ),
                   TextButton(
-                      onPressed: (){
-                        appointments.add(
-                            Appointment(
-                                patient: PatientUser,
-                                doctor: doc,
-                                purpose: purposeController.text,
-                                startTime: TimeOfDay.now(),
-                                endTime: TimeOfDay.now(),
-                                date: DateTime.now(),
-                                type: modeController.text,
-                                status: 'waiting'
-                            )
-                        );
+                      onPressed: ()async{
+                        //DateTime date=DateTime(DateTime.october);
+                        //date=DateTime.now();
+                        int h=await http.saverec(email1.toString(), p.phoneController.toString(),"14-09-2024" , "7:40 A.M", "wait", purposeController.text.toString());
+                        // appointments.add(
+                        //     Appointment(
+                        //         patient: PatientUser,
+                        //         doctor: doc,
+                        //         purpose: purposeController.text,
+                        //         startTime: TimeOfDay.now(),
+                        //         endTime: TimeOfDay.now(),
+                        //         date: DateTime.now(),
+                        //         type: modeController.text,
+                        //         status: 'waiting'
+                        //     )
+                        // );
                         Navigator.pop(context);
                       },
                       child: Text('Send Request')
@@ -241,8 +325,8 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
         ),
       ),
     );
-  }
-
+}
+String? review;
   void showReviewDialog() {
     showDialog(
       context: context,
@@ -250,9 +334,13 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
         return AlertDialog(
           title: Text('Add Your Review'),
           content: TextField(
+            onChanged: (value) {
+          review=value;    
+            },
             controller: reviewController,
             decoration: InputDecoration(hintText: 'Enter your review'),
           ),
+          
           actions: [
             TextButton(
               onPressed: () {
@@ -261,8 +349,11 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
               child: Text('Cancel'),
             ),
             TextButton(
-              onPressed: () {
-                _addReview();
+              onPressed: () async{
+                int j=await http.saverec1("random user", email1.toString(),review.toString());
+                if(j==0) print("success");
+                else print("failure");
+                //_addReview();
                 Navigator.pop(context);
               },
               child: Text('Post'),
@@ -271,18 +362,18 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
         );
       },
     );
-  }
-  void _addReview() {
-    String reviewText = '${PatientUser.name}: "${reviewController.text}"';
-    setState(() {
-      if (doc.reviews != null) {
-        doc.reviews!.add(reviewText);
-      }
-      else {
-        doc.reviews = ['${reviewController.text}'];
-      }
-      reviewController.clear();
-    }
-    );
-  }
+   }
+  // void _addReview() {
+  //   String reviewText = '${PatientUser.name}: "${reviewController.text}"';
+  //   setState(() {
+  //     if (doc.reviews != null) {
+  //       doc.reviews!.add(reviewText);
+  //     }
+  //     else {
+  //       doc.reviews = ['${reviewController.text}'];
+  //     }
+  //     reviewController.clear();
+  //   }
+  //   );
+  // }
 }

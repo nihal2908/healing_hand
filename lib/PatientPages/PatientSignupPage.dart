@@ -5,7 +5,7 @@ import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
 import 'package:healing_hand/apiconnection/userhttp.dart';
 
 final formKey = GlobalKey<FormState>();
-
+String remember="";
 class PatientSignupPage extends StatefulWidget {
   const PatientSignupPage({super.key});
 
@@ -169,6 +169,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                                       )
                                   )
                                 );
+                                remember=phoneController.text.toString();
                                 if(isLogin){
                                
                               

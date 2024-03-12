@@ -39,7 +39,7 @@ class AppointmentContainer extends StatelessWidget {
             ],
           ),
           SizedBox(height: 5,),
-          DoctorTile(doc: appointment.doctor)
+         // DoctorTile(doc: appointment.doctor)
         ],
       )
     );

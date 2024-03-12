@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
+import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/DoctorTile.dart';
-
+import 'package:healing_hand/modelclass/prodmodal.dart';
+httpServices13 http=new httpServices13();
+List<prodModal> l1=[];
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
@@ -9,11 +12,51 @@ class SearchPage extends StatefulWidget {
   State<SearchPage> createState() => _SearchPageState();
 }
 
+String key="";
 class _SearchPageState extends State<SearchPage> {
   List<Doctor> filteredObjects = [];
   bool searchByName = true;
   @override
   Widget build(BuildContext context) {
+    return FutureBuilder<List<prodModal>>(
+      future: http.getAllPost(key),
+      builder: ((context, snapshot) {
+        print("calm down");
+        // print(key);
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Scaffold(
+              body:
+                  Center(heightFactor: 1.4, child: CircularProgressIndicator()),
+            );
+          case ConnectionState.waiting:
+          return ShowPostList(context, l1!);  
+                       
+         
+          case ConnectionState.active:
+          if(snapshot.data!=null)
+            return ShowPostList(context, snapshot.data!);
+            else return ShowPostList(context,l1);
+
+          case ConnectionState.done:
+          if(snapshot.data!=null)
+            //return CircularProgressIndicator();
+            return ShowPostList(context, snapshot.data!);
+            else return ShowPostList(context, l1);
+        }
+        //}
+
+        //else{
+        //return CircularProgressIndicator();
+        //}
+
+        //  return CircularProgressIndicator();
+      }),
+    );  
+  }
+  Widget ShowPostList(BuildContext context,List<prodModal> posts)
+  {key="";
+  if(posts!=null) l1=posts;
     return Scaffold(
       backgroundColor: Colors.deepPurple,
       appBar: AppBar(
@@ -39,6 +82,7 @@ class _SearchPageState extends State<SearchPage> {
               onSelected: (value){
                 setState(() {
                   searchByName = value;
+                  ;
                 });
               },
               icon: Icon(Icons.tune),
@@ -54,20 +98,21 @@ class _SearchPageState extends State<SearchPage> {
           ),
           onChanged: (query) {
             setState(() {
-              filteredObjects = searchByName?
-              doctors.where((obj) =>
-              obj.name.toLowerCase().contains(query.toLowerCase()))
-                  .toList() :
-              doctors.where((obj) =>
-              obj.category.toLowerCase().contains(query.toLowerCase()))
-                  .toList();
-              //sorting the new list in reverse lexigraphical order
-              filteredObjects.sort((a, b) => b.name.compareTo(a.name));
-            });
+              key=query;
+            //   filteredObjects = searchByName?
+            //   doctors.where((obj) =>
+            //   obj.name.toLowerCase().contains(query.toLowerCase()))
+            //       .toList() :
+            //   doctors.where((obj) =>
+            //   obj.category.toLowerCase().contains(query.toLowerCase()))
+            //       .toList();
+            //   //sorting the new list in reverse lexigraphical order
+            //   filteredObjects.sort((a, b) => b.name.compareTo(a.name));
+             });
           },
         )
       ),
-      body: Padding(
+      body:Padding(
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
@@ -75,15 +120,17 @@ class _SearchPageState extends State<SearchPage> {
               child: ListView.separated(
                 separatorBuilder: (context, index) =>
                     SizedBox(height: 5,),
-                itemCount: filteredObjects.length,
+                itemCount: posts.length,
                 itemBuilder: (context, index) {
-                  return DoctorTile(doc: filteredObjects[index]);
+                  print(posts[index].name);
+                  return DoctorTile(name: posts[index].name.toString(),
+                                    age:posts[index].age,email: posts[index].email,category: posts[index].category,gender:posts[index].category,
+                                    phone: posts[index].phone);
                 },
               ),
             ),
           ],
         ),
-      ),
-    );
+      ));
   }
 }
