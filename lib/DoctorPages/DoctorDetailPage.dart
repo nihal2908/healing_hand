@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
 import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
+import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
+import 'package:healing_hand/modelclass/doctor.dart';
 import 'package:provider/provider.dart';
-
+import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart' as pp;
+import 'package:http/http.dart' as http;
 
 final detailKey = GlobalKey<FormState>();
 
@@ -186,6 +189,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                                     elevation: 8,
                                   ),
                                   onPressed: (){
+                                    
                                     if(detailKey.currentState!.validate()){
                                       DoctorModel.createUser(
                                           name: nameController.text,
@@ -197,6 +201,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                                           address: addressController.text,
                                           bio: bioController.text,
                                       );
+                                      SaveRecord(context);
                                       //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> DoctorLandingPage()), (route) => false);
                                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
                                     }
@@ -215,4 +220,45 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
       ),
     );
   }
+  SaveRecord(context) async
+{
+  print(pp.nameController.text.toString());
+User user= new User(pp.nameController.text.toString(),emailController.text.trim(),pp.passwordController.text.toString(),pp.phoneController.text.toString(),
+selectedCategory,addressController.text.toString(),ageController.text.toString(),selectedGender.toString());
+try{
+var res=await http.post(Uri.parse(
+  "http://handycraf.000webhostapp.com/helping_hand/signup1.php"
+),body:user.toJson());
+if(res.statusCode==200)
+{
+  //var resBody1=jsonDecode(res.body);
+  String resBody=res.body;
+  print(resBody);
+  print(resBody);
+    if((resBody)=="false")
+  {
+ Future.delayed(Duration.zero,()=>showDialog(context: context, builder: ((context) => AlertDialog(
+                  title:Text("Record Saved "),
+                  content:ElevatedButton(child:Text("O.K"),onPressed: () {Navigator.pop(context);},)))));   
+  }
+  else{
+    AlertDialog(
+        content: Text("Record already exist"),
+        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+
+      );    
+  }
+}
+else{
+  AlertDialog(
+        content: Text("Record Saved now go to login page"),
+        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+
+      );    
+}
+}
+catch(e){
+  print(e);
+}
+}
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
 import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
+import 'package:healing_hand/apiconnection/doctorhttp.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 
 final formKey = GlobalKey<FormState>();
@@ -151,7 +152,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                             ),
                             elevation: 8,
                           ),
-                          onPressed: (){
+                          onPressed: ()async {
                             if(formKey.currentState!.validate()){
                               ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
@@ -164,10 +165,37 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                                   )
                               );
                               if(isLogin){
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => DoctorLandingPage())
-                                );
+                                postApihttp http = postApihttp();
+                            await http.saveData(phoneController.text.toString(),
+                                passwordController.text.toString());
+                            int j = await http.givedata(0);
+                              
+                              if(j==0)
+                              {
+                                  Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => DoctorLandingPage())
+                                  );
+                                  print('Add here login verification');
+                                }
+                                else
+                                {
+                                  showDialog(
+                                  context: context,
+                                  builder: ((context) => AlertDialog(
+                                      title: Text(
+                                          "Invalid email or password entered"),
+                                      content: ElevatedButton(
+                                        child: Text("O.K"),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                      ))));
+                                }
+                                // Navigator.pushReplacement(
+                                //     context,
+                                //     MaterialPageRoute(builder: (context) => DoctorLandingPage())
+                                // );
                                 print('Add here login verification');
                               }
                               else
@@ -183,10 +211,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                               setState(() {
                                 isLogin = !isLogin;
                               });
-                              if(isLogin)
-                              {
-                                
-                              }
+                              
                             },
                             child: !isLogin? const Text('Already have account? Login') : const Text('New to Helping Hand? SignUp')
                         ),
