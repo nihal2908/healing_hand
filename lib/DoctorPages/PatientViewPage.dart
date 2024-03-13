@@ -118,7 +118,7 @@ gender1=gender;
                               )
                           ),
                         ),
-                        CircleImage(imagePath: 'assets/images/demo_user.jpg'),
+                        CircleImage(image: AssetImage('assets/images/demo_user.jpg')),
                       ],
                     ),
                   ],

@@ -262,7 +262,7 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                         )
                     ),
                   ),
-                  CircleImage(imagePath: 'assets/images/doctor.png'),
+                  CircleImage(image: AssetImage('assets/images/doctor.png')),
                 ],
               ),
             ],

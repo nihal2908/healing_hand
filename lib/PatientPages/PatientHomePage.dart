@@ -75,7 +75,7 @@ Widget ShowPostList(BuildContext context,List<prodModal> posts)
             leading: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleImage(imagePath: 'assets/images/demo_user.jpg'),
+                CircleImage(image: PatientUser.profile.image),
                 Text('Welcome back,'),
                 Text(PatientUser.name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
               ],
@@ -139,7 +139,7 @@ Widget ShowPostList(BuildContext context,List<prodModal> posts)
                             child: Column(
                               children: [
                                 CircleImage(
-                                  imagePath: 'assets/images/doctor.png',
+                                  image: AssetImage('assets/images/doctor.png'),
                                   onTap: (){
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorViewPage(name: posts[index].name,
                                     email: posts[index].email,category: posts[index].category,gender:posts[index].gender,
@@ -169,7 +169,7 @@ Widget ShowPostList(BuildContext context,List<prodModal> posts)
                               child: Column(
                                 children: [
                                   CircleImage(
-                                    imagePath: 'assets/images/physician.jpg',
+                                    image: AssetImage('assets/images/physician.jpg'),
                                     onTap: (){
                                       Navigator.push(context, MaterialPageRoute(builder: (context)=>CategoryViewPage(key1: DoctorCategories[index])));
                                     },

@@ -72,7 +72,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
             leading: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleImage(imagePath: 'assets/images/doctor.png'),
+                CircleImage(image: AssetImage('assets/images/doctor.png')),
                 Text('Welcome back,'),
                 Text(DoctorUser.name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
               ],

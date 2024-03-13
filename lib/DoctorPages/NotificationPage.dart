@@ -78,7 +78,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           child: Column(
                             children: [
                               ListTile(
-                                leading: CircleImage(imagePath: 'assets/images/demo_user.jpg'),
+                                leading: CircleImage(image: AssetImage('assets/images/demo_user.jpg')),
                                 title: Text(posts[index].phone.toString()),
                                 subtitle: Text(posts[index].purpose.toString()),
                               ),

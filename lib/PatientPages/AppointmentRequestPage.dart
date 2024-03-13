@@ -71,7 +71,7 @@ class _AppointmentRequestPageState extends State<AppointmentRequestPage> {
                           child: Column(
                             children: [
                               ListTile(
-                                leading: CircleImage(imagePath: 'assets/images/doctor.png'),
+                                leading: CircleImage(image: AssetImage('assets/images/doctor.png')),
                                 title: Text(posts[index].purpose.toString()),
                                 subtitle: Text(posts[index].email.toString()),
                               ),

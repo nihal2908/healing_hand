@@ -15,7 +15,6 @@ List<Widget> HomePageScreen = [
   PatientHomePage(),
   PatientSchedulePage(),
   PatientSettingPage(),
-  PatientAccountPage()
 ];
 
 class _PatientLandingPageState extends State<PatientLandingPage> {
@@ -49,11 +48,6 @@ class _PatientLandingPageState extends State<PatientLandingPage> {
             //selectedIcon: Icon(),
             icon: Icon(Icons.settings),
             label: 'Settings',
-          ),
-          NavigationDestination(
-            selectedIcon: Icon(Icons.person),
-            icon: Icon(Icons.person_outline),
-            label: 'Account',
           ),
         ],
       ),

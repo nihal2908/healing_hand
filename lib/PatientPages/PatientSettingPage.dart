@@ -39,6 +39,13 @@ class _PatientSettingPageState extends State<PatientSettingPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         ListTile(
+                          leading: const Icon(Icons.person),
+                          title: const Text('Your Profile'),
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context) => PatientAccountPage()));
+                          },
+                        ),
+                        ListTile(
                           leading: const Icon(Icons.light_mode),
                           title: const Text('Choose theme'),
                           subtitle: Text(themename[selectedTheme]),

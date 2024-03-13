@@ -185,7 +185,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                         )
                     ),
                   ),
-                  CircleImage(imagePath: 'assets/images/doctor.png'),
+                  CircleImage(image: AssetImage('assets/images/doctor.png')),
                 ],
               ),
             ],
