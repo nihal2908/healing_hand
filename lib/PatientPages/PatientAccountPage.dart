@@ -7,11 +7,14 @@ import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
+import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/modelclass/userer.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:healing_hand/PatientPages/PatientProfileEditPage.dart' as dd;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../customWidgets/styles.dart';
 httpServices13 http=new httpServices13();
 
 class PatientAccountPage extends StatefulWidget {
@@ -21,23 +24,6 @@ class PatientAccountPage extends StatefulWidget {
   State<PatientAccountPage> createState() => _PatientAccountPageState();
 }
 
-TextStyle nameSytle = const TextStyle(
-  fontSize: 17,
-  color: Colors.black,
-  fontWeight: FontWeight.w600
-);
-
-TextStyle profileStyle =  const TextStyle(
-    fontSize: 15,
-    color: Colors.black87,
-    fontWeight: FontWeight.w400
-);
-
-TextStyle titleStyle = const TextStyle(
-    fontSize: 22,
-    fontWeight: FontWeight.bold,
-    color: Colors.white
-);
 
 Image content = Image.asset('assets/images/demo_user.jpg', fit: BoxFit.fill,);
 
@@ -45,8 +31,7 @@ Image content = Image.asset('assets/images/demo_user.jpg', fit: BoxFit.fill,);
 class _PatientAccountPageState extends State<PatientAccountPage> {
   @override
   Widget build(BuildContext context) {
-    // return Consumer<PatientProvider>(
-      // builder: (context, UserModal, child){
+
         return FutureBuilder<List<prodModal3>>(
       future: http.getAllPost5(remember),
       builder: ((context, snapshot) {
@@ -85,7 +70,6 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
     Widget ShowPostList(BuildContext context,List<prodModal3> posts )
     {
       return Scaffold(
-        backgroundColor: Colors.deepPurple,
         appBar: AppBar(),
         body: SingleChildScrollView(
             child: Padding(
@@ -99,7 +83,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                       Container(
                           width: MediaQuery.of(context).size.width,
                           decoration: BoxDecoration(
-                              color: Colors.grey.shade200,
+                              color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(25)
                           ),
                           child: Column(
@@ -116,7 +100,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                                         dd.password=posts[0].pass.toString();
                                           dd.nameController.text=posts[0].user_name.toString();
                                           dd.emailController.text=posts[0].user_email.toString();
-                                          dd.selectedGender=posts[0].gender.toString();
+                                          dd.editedGender=posts[0].gender.toString();
                                           dd.heightController.text=posts[0].height.toString();
                                           dd.weightController.text=posts[0].weight.toString();
                                           dd.phoneController.text=remember.toString();
@@ -139,36 +123,28 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                           )
                       ),
                       SizedBox(height: 20,),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(25)
-                        ),
-                        child: InkWell(
-                            onTap: (){
-                              changePassword();
-                              print('Change password');
-                            },
-                            child: Center(child: Text('Change Password', style: nameSytle,))
+                      WhiteContainer(
+                        child: Container(
+                          height: 30,
+                          child: InkWell(
+                              onTap: (){
+                                changePassword();
+                                print('Change password');
+                              },
+                              child: Center(child: Text('Change Password', style: nameSytle,))
+                          ),
                         ),
                       ),
                       SizedBox(height: 20,),
-                      Container(
-                        padding: const EdgeInsets.all(10),
-                        width: MediaQuery.of(context).size.width,
-                        height: 50,
-                        decoration: BoxDecoration(
-                            color: Colors.grey.shade200,
-                            borderRadius: BorderRadius.circular(25)
-                        ),
-                        child: InkWell(
-                            onTap: (){
-                              print('Logout pressed');
-                            },
-                            child: Center(child: Text('Log-out', style: nameSytle,))
+                      WhiteContainer(
+                        child: Container(
+                          height: 30,
+                          child: InkWell(
+                              onTap: (){
+                                print('Logout pressed');
+                              },
+                              child: Center(child: Text('Log-out', style: nameSytle,))
+                          ),
                         ),
                       )
                     ],

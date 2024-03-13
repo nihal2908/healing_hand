@@ -58,7 +58,6 @@ class _SearchPageState extends State<SearchPage> {
   {key="";
   if(posts!=null) l1=posts;
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         leading: SizedBox(),
@@ -88,7 +87,7 @@ class _SearchPageState extends State<SearchPage> {
               icon: Icon(Icons.tune),
             ),
             filled: true,
-            fillColor: Colors.grey.shade200,
+            fillColor: Theme.of(context).cardColor,
             hintText: 'Search..',
             contentPadding: EdgeInsets.all(5),
             border: OutlineInputBorder(

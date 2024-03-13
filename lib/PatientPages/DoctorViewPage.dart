@@ -12,6 +12,8 @@ import 'package:healing_hand/modelclass/prodmodal.dart';
 import 'package:healing_hand/modelclass/review.dart';
 import 'package:provider/provider.dart';
 import 'package:healing_hand/PatientPages/PatientSignupPage.dart' as p;
+
+import '../customWidgets/styles.dart';
 String? name1;
   String? phone1;
   String? email1;
@@ -54,6 +56,7 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
   //_DoctorViewPageState();
   bool showAllReviews = false;
   TextEditingController reviewController = TextEditingController();
+  double userRating = 0.0;
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +107,6 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
     print(rating1);
     print(double.parse(rating1.toString()));
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.white,
@@ -124,7 +126,7 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                           .size
                           .width,
                       decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(25)
                       ),
                       child: Column(
@@ -180,7 +182,7 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                         .width,
                     //height: 200,
                     decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(25)
                     ),
                     child: Column(
@@ -342,13 +344,39 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Add Your Review'),
-          content: TextField(
-            onChanged: (value) {
-              review = value;
-            },
-            controller: reviewController,
-            decoration: InputDecoration(hintText: 'Enter your review'),
+          title: Text('Add Your Review, Rating'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  Text('Give rating:'),
+                  RatingBar.builder(
+                    initialRating: userRating,
+                    minRating: 1,
+                    direction: Axis.horizontal,
+                    allowHalfRating: true,
+                    itemCount: 5,
+                    itemSize: 25,
+                    itemBuilder: (context, _) => Icon(
+                      Icons.star,
+                      color: Colors.amber,
+                    ),
+                    onRatingUpdate: (newRating) {
+                        userRating = newRating;
+                      // the value of the rating given by user is stored in userRating value, use it
+                    },
+                  ),
+                ],
+              ),
+              TextField(
+                onChanged: (value) {
+                  review = value;
+                },
+                controller: reviewController,
+                decoration: InputDecoration(hintText: 'Enter your review'),
+              ),
+            ],
           ),
 
           actions: [

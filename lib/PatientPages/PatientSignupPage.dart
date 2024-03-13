@@ -3,6 +3,7 @@ import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
 import 'package:healing_hand/apiconnection/userhttp.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 final formKey = GlobalKey<FormState>();
 String remember="";
@@ -185,6 +186,8 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                                       context,
                                       MaterialPageRoute(builder: (context) => PatientLandingPage())
                                   );
+                                  SharedPreferences prefs = await SharedPreferences.getInstance();
+                                  prefs.setString('FIRST_PAGE', 'patient');
                                   print('Add here login verification');
                                 }
                                 else

@@ -10,6 +10,7 @@ import 'package:healing_hand/modelclass/user.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:healing_hand/PatientPages/PatientSignupPage.dart' as pp;
+import 'package:shared_preferences/shared_preferences.dart';
 
 final detailKey = GlobalKey<FormState>();
 
@@ -144,13 +145,6 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                         ),
                         SizedBox(height: 10),
                         CustomTextFormField(
-                          controller: gender,
-                          labelText: 'gender',
-                          icon: Icons.male,
-                          
-                        ),
-                        SizedBox(height: 10),
-                        CustomTextFormField(
                           controller: weightController,
                           labelText: 'Weight',
                           icon: Icons.line_weight,
@@ -167,7 +161,7 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                                     ),
                                     elevation: 8,
                                   ),
-                                  onPressed: (){
+                                  onPressed: () async {
                                     if(detailKey.currentState!.validate()){
                                       PatientModel.createUser(
                                           name: pp.nameController.text,
@@ -180,6 +174,9 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                                       );
                                     }
                                     SaveRecord(context);
+                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
+                                    SharedPreferences prefs = await SharedPreferences.getInstance();
+                                    prefs.setString('FIRST_PAGE', 'patient');
                                     Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
                                   },
                                   child: const Text('Save')
@@ -201,7 +198,7 @@ SaveRecord(context) async
 {
   print(pp.nameController.text.toString());
 User user= User(pp.nameController.text.toString(),emailController.text.trim(),pp.passwordController.text.toString(),pp.phoneController.text.toString(),
-weightController.text.toString(),heightController.text.toString(),ageController.text.toString(),gender.text.toString());
+weightController.text.toString(),heightController.text.toString(),ageController.text.toString(),selectedGender.toString());
 try{
 var res=await http.post(Uri.parse(
   "http://handycraf.000webhostapp.com/helping_hand/signup.php"

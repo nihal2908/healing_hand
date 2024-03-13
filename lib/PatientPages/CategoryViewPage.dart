@@ -50,7 +50,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
           if(snapshot.data!=null)
             return ShowPostList(context, snapshot.data!);
             else return Scaffold(
-              backgroundColor: Colors.purple,
+              //backgroundColor: Colors.purple,
               appBar: AppBar(title: Text(key2.toString()),),
             );
 
@@ -58,7 +58,7 @@ class _CategoryViewPageState extends State<CategoryViewPage> {
 if(snapshot.data!=null)
             return ShowPostList(context, snapshot.data!);
             else return Scaffold(
-              backgroundColor: Colors.purple,
+              //backgroundColor: Colors.purple,
               appBar: AppBar(title: Text(key2.toString()),),);        }
         //}
 
@@ -73,7 +73,7 @@ if(snapshot.data!=null)
   Widget ShowPostList(BuildContext context,List<prodModal> posts)
   {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      //backgroundColor: Colors.deepPurple,
       appBar: AppBar(
         title: Text(key2.toString()),
         backgroundColor: Colors.transparent,

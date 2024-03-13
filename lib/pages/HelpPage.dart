@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/customWidgets/styles.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+TextStyle heading = TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold);
 
 class HelpPage extends StatelessWidget {
 
@@ -15,7 +18,6 @@ class HelpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple.shade200,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
       ),
@@ -26,38 +28,38 @@ class HelpPage extends StatelessWidget {
           children: [
             Text(
               'Healing Hand App',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: titleStyle,
             ),
             SizedBox(height: 16),
             Text(
               'Welcome to Healing Hand, your health companion app that connects patients and doctors seamlessly.',
-              style: TextStyle(fontSize: 16),
+              style: TextStyle(fontSize: 16, color: Colors.white),
             ),
             SizedBox(height: 32),
       
             // Features
             Text(
               'Key Features:',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: heading,
             ),
             ListTile(
               leading: Icon(Icons.check),
-              title: Text('Find nearby doctors and hospitals.'),
+              title: Text('Find nearby doctors and hospitals.', style: TextStyle(color: Colors.white),),
             ),
             ListTile(
               leading: Icon(Icons.check),
-              title: Text('Schedule appointments with ease.'),
+              title: Text('Schedule appointments with ease.', style: TextStyle(color: Colors.white),),
             ),
             ListTile(
               leading: Icon(Icons.check),
-              title: Text('Access ambulance services quickly.'),
+              title: Text('Access ambulance services quickly.',style: TextStyle(color: Colors.white),),
             ),
 
             SizedBox(height: 32),
       
             Text(
               'Frequently Asked Questions:',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              style: heading,
             ),
             SizedBox(height: 16),
             FAQItem(question: 'How do I schedule an appointment?', answer: 'To schedule an appointment, go to the "Book Appointment" section and follow the instructions.'),
@@ -90,10 +92,10 @@ class FAQItem extends StatelessWidget {
       children: [
         Text(
           question,
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         SizedBox(height: 8),
-        Text(answer),
+        Text(answer, style: TextStyle(color: Colors.white),),
         SizedBox(height: 16),
       ],
     );

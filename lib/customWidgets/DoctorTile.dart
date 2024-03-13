@@ -38,7 +38,7 @@ class DoctorTile extends StatelessWidget{
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(0),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: Theme.of(context).brightness == Brightness.dark ? Colors.grey.shade800 : Colors.grey.shade300,
         borderRadius: BorderRadius.circular(25),
       ),
       child: ListTile(

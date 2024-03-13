@@ -52,10 +52,7 @@ class _AppointmentRequestPageState extends State<AppointmentRequestPage> {
   Widget ShowPostList(BuildContext context,List<prodModal2> posts)
   {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
         title: Text('Notifications'),
       ),
       body: SingleChildScrollView(

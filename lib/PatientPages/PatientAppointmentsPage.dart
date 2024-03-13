@@ -10,6 +10,8 @@ import 'package:healing_hand/customWidgets/AppointmentContainer.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/modelclass/appoinment.dart';
+
+import '../customWidgets/styles.dart';
 httpServices13 http=new httpServices13();
 class PatientSchedulePage extends StatefulWidget {
   const PatientSchedulePage({super.key});
@@ -69,7 +71,8 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
       print("flag");
       print(posts[i].status);
       print(DateTime.parse(posts[i].date.toString()));
-      if(DateTime.parse(posts[i].date.toString()).isAfter(DateTime.now()))
+      print(DateTime.parse(posts[i].enddate.toString()));
+      if(DateTime.parse(posts[i].date!).isAfter(DateTime.now()))
         noUpComApp = false;
       else
         noPastApp = false;
@@ -86,7 +89,7 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
             SizedBox(height: 10,),
             Text(
               'Upcoming Appointments',
-              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),
+              style: headingStyle,
             ),
             SizedBox(height: 15,),
             if(posts.length == 0 || noUpComApp)
@@ -104,7 +107,7 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
             SizedBox(height: 15,),
             Text(
               'Past Consultations',
-              style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),
+              style: headingStyle,
             ),
             SizedBox(height: 15,),
             if(posts.length == 0 || noPastApp)

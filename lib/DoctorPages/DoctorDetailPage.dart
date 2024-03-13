@@ -8,6 +8,7 @@ import 'package:healing_hand/modelclass/doctor.dart';
 import 'package:provider/provider.dart';
 import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart' as pp;
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 final detailKey = GlobalKey<FormState>();
 
@@ -188,7 +189,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                                     ),
                                     elevation: 8,
                                   ),
-                                  onPressed: (){
+                                  onPressed: () async {
                                     
                                     if(detailKey.currentState!.validate()){
                                       DoctorModel.createUser(
@@ -202,6 +203,8 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                                           bio: bioController.text,
                                       );
                                       SaveRecord(context);
+                                      SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      prefs.setString('FIRST_PAGE', 'doctor');
                                       //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> DoctorLandingPage()), (route) => false);
                                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
                                     }

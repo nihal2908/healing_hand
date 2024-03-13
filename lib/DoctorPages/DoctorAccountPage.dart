@@ -5,6 +5,8 @@ import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:provider/provider.dart';
 
+import '../customWidgets/styles.dart';
+
 class DoctorAccountPage extends StatefulWidget {
   final Doctor doc;
   DoctorAccountPage({super.key, required this.doc});

@@ -4,6 +4,7 @@ import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/DoctorTile.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
+import 'package:url_launcher/url_launcher.dart';
  String? phone1;
  String? email1;
  String? date1;
@@ -47,7 +48,7 @@ class AppointmentContainer extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(purpose1.toString(), style: nameSytle,),
+            Text(purpose1.toString(), style: TextStyle(fontSize: 19, color: Colors.white),),
             SizedBox(height: 5,),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -63,6 +64,7 @@ class AppointmentContainer extends StatelessWidget {
                     ],
                   ),
                 ),
+               Text('Online')
                // Text(appointment.type),
               ],
             ),
@@ -93,6 +95,10 @@ class AppointmentContainer extends StatelessWidget {
                 ElevatedButton(
                     onPressed: (){
                       print('Make a voice call');
+                      launchUrl(
+                          Uri(scheme: 'tel', path: '9569399487'),
+                          mode: LaunchMode.externalApplication
+                      );
                     },
                     child: Column(children: [Icon(Icons.call), Text('Make a Voice Call')],)
                 ),

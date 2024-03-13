@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
-import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/apiconnection/doctorhttp.dart';
 import 'package:healing_hand/apiconnection/doctorview.dart';
@@ -17,7 +16,7 @@ final TextEditingController emailController = TextEditingController(text: Patien
 final TextEditingController heightController = TextEditingController(text: PatientUser.height.toString());
 final TextEditingController weightController = TextEditingController(text: PatientUser.weight.toString());
 
-String selectedGender = 'Select';
+String? editedGender;
 
 class PatientProfileEditPage extends StatefulWidget {
   @override
@@ -27,14 +26,12 @@ class PatientProfileEditPage extends StatefulWidget {
 class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
   @override
   Widget build(BuildContext context) {
-    return Consumer<PatientProvider>(
-      builder: (context, PatientModel, child) {
         return Scaffold(
-          backgroundColor: Colors.deepPurple,
+          //backgroundColor: Colors.deepPurple,
           appBar: AppBar(
             title: Text('Edit Your Profile'),
-            backgroundColor: Colors.grey.shade200,
-            foregroundColor: Colors.black,
+            //backgroundColor: Colors.grey.shade200,
+            //foregroundColor: Colors.black,
             centerTitle: true,
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15)
@@ -51,7 +48,7 @@ class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
                       padding: const EdgeInsets.all(10),
                       //height: 480,
                       decoration: BoxDecoration(
-                          color: Colors.deepPurple.shade50,
+                          color: Theme.of(context).cardColor,
                           borderRadius: BorderRadius.circular(20),
                           border: Border.all(
                             color: Colors.deepPurple,
@@ -74,36 +71,36 @@ class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
                               labelText: 'Name',
                               icon: Icons.person,
                             ),
-                            // SizedBox(height: 10),
-                            // DropdownButtonFormField<String>(
-                            //   value: selectedGender,
-                            //   autovalidateMode: AutovalidateMode.onUserInteraction,
-                            //   decoration: InputDecoration(
-                            //     labelText: 'Gender',
-                            //     icon: const Icon(Icons.people),
-                            //     floatingLabelAlignment: FloatingLabelAlignment.center,
-                            //     border: OutlineInputBorder(
-                            //       borderSide: const BorderSide(),
-                            //       borderRadius: BorderRadius.circular(15),
-                            //     ),
-                            //   ),
-                            //   items: ['Select', 'Male', 'Female', 'Other']
-                            //       .map((gender) => DropdownMenuItem(
-                            //     value: gender,
-                            //     child: Text(gender),
-                            //   )).toList(),
-                            //   onChanged: (value) {
-                            //     setState(() {
-                            //       selectedGender = value!;
-                            //     });
-                            //   },
-                            //   validator: (value) {
-                            //     if (value == null || value.isEmpty || value == 'Select') {
-                            //       return 'Required';
-                            //     }
-                            //     return null;
-                            //   },
-                            // ),
+                            SizedBox(height: 10),
+                            DropdownButtonFormField<String>(
+                              value: editedGender,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              decoration: InputDecoration(
+                                labelText: 'Gender',
+                                icon: const Icon(Icons.people),
+                                floatingLabelAlignment: FloatingLabelAlignment.center,
+                                border: OutlineInputBorder(
+                                  borderSide: const BorderSide(),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              items: ['Select', 'Male', 'Female', 'Other']
+                                  .map((gender) => DropdownMenuItem(
+                                value: gender,
+                                child: Text(gender),
+                              )).toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  editedGender = value!;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty || value == 'Select') {
+                                  return 'Required';
+                                }
+                                return null;
+                              },
+                            ),
                             SizedBox(height: 10),
                             CustomTextFormField(
                               controller: ageController,
@@ -160,7 +157,7 @@ class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
                                         if(editorKey.currentState!.validate()){
                                           PatientModel.createUser(
                                               name: nameController.text,
-                                              gender: selectedGender,
+                                              gender: editedGender!,
                                               age: int.parse(ageController.text),
                                               phone: phoneController.text,
                                               email: emailController.text,
@@ -169,9 +166,8 @@ class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
                                           );
                                           print(password);
                                           postApihttp http=new postApihttp();
-                                          int j=await http.saveData2(emailController.text.toString(), password!,nameController.text.toString(),
-                                           heightController.text.toString(), weightController.text.toString(), "male", ageController.text.toString());
-                                          
+                                          await http.saveData2(emailController.text.toString(), password!,nameController.text.toString(),
+                                           heightController.text.toString(), weightController.text.toString(),editedGender.toString(), ageController.text.toString());
                                         }
                                         Navigator.pop(context);
                                       },
@@ -188,7 +184,5 @@ class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
             ),
           ),
         );
-      }
-    );
   }
 }

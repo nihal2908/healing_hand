@@ -11,7 +11,7 @@ class WhiteContainer extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.grey.shade200,
+        color: Theme.of(context).cardColor,//Colors.grey.shade200,
         borderRadius: BorderRadius.circular(25),
       ),
       child: child,

@@ -3,6 +3,8 @@ import 'package:healing_hand/DoctorPages/DoctorAccountPage.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 
+import '../customWidgets/styles.dart';
+
 class DoctorSettingPage extends StatefulWidget {
   const DoctorSettingPage({super.key});
 

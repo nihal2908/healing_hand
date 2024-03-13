@@ -64,8 +64,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         showNextButton: true,
         showBottomPart: true,
         onDone: () async {
-          // SharedPreferences prefs = await SharedPreferences.getInstance();
-          // prefs.setBool('IS_NEW_USER', false);
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString('FIRST_PAGE', 'userselection');
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const UserTypePage()));
         },
       ),

@@ -68,10 +68,8 @@ Widget ShowPostList(BuildContext context,List<prodModal> posts)
       child: Column(
         children: [
           AppBar(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.transparent,
             leadingWidth: 300,
-            toolbarHeight: 130,
+            toolbarHeight: 150,
             leading: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
