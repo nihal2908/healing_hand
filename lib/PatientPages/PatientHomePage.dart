@@ -146,7 +146,7 @@ Widget ShowPostList(BuildContext context,List<prodModal> posts)
                                     phone: posts[index].phone,)));
                                   },
                                 ),
-                                SizedBox(width: 85, child: Text(posts[index].name.toString(), style: const TextStyle(color: Colors.white), overflow: TextOverflow.ellipsis,))
+                                SizedBox(width: 85, child: Center(child: Text(posts[index].name.toString(), style: const TextStyle(color: Colors.white), overflow: TextOverflow.ellipsis,)))
                               ],
                             ),
                           );

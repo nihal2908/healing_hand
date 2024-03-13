@@ -44,7 +44,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
               const SizedBox(height: 30,),
               Container(
                 padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                height: 480,
+                //height: 480,
                 decoration: BoxDecoration(
                     color: Colors.deepPurple.shade100,
                     borderRadius: BorderRadius.circular(20),
@@ -146,7 +146,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                         ],
                       ),
                     ),
-                    //SizedBox(height: 15,),
+                    SizedBox(height: 15,),
                     Column(
                       children: [
                         ElevatedButton(

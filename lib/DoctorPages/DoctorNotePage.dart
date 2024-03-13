@@ -22,6 +22,7 @@ class _DoctorNotePageState extends State<DoctorNotePage> {
       child: Column(
           children: [
             AppBar(
+              leading: Container(),
               title: Text('Patient Notes',),
               centerTitle: true,
               backgroundColor: Colors.transparent,

@@ -72,7 +72,6 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                                   Text(PatientUser.gender, style: profileStyle),
                                   Text(PatientUser.phone, style: profileStyle),
                                   Text(PatientUser.email, style: profileStyle),
-                                  Text('Aadhaar: Not available', style: profileStyle),
                                   Text('${PatientUser.height}cm / ${PatientUser.weight}Kg', style: profileStyle)
                                 ],
                               ),

@@ -44,7 +44,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
               const SizedBox(height: 30,),
               Container(
                 padding: const EdgeInsets.only(top: 5, bottom: 10, left: 10, right: 10),
-                height: 490,
+                //height: 490,
                 decoration: BoxDecoration(
                   color: Colors.deepPurple.shade50,
                   borderRadius: BorderRadius.circular(20),

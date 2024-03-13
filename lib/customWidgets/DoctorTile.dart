@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/DoctorViewPage.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
+import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/modelclass/prodmodal.dart';
  String? name1;
@@ -41,7 +42,7 @@ class DoctorTile extends StatelessWidget{
         borderRadius: BorderRadius.circular(25),
       ),
       child: ListTile(
-        leading: Icon(Icons.person),
+        leading: Image.asset('assets/images/doctor.png',),
         title: Text(name1.toString()),
         subtitle: Text(category1.toString()),
         onTap: (){
