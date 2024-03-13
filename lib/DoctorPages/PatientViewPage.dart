@@ -1,11 +1,36 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
+import 'package:healing_hand/customWidgets/DoctorTile.dart';
 import 'package:provider/provider.dart';
+String? user_name1;
+  String? user_email1;
+  String? pass1;
+  String? phone1;
+  String? weight1;
+  String? height1;
+  String? age1;
+  String? gender1;
 
 class PatientViewPage extends StatelessWidget {
-  Patient patient;
-  PatientViewPage({super.key, required this.patient});
+ PatientViewPage(String? user_name,
+  String? user_email,
+  String? pass,
+  String? phone,
+  String? weight,
+  String? height,
+  String? age,
+  String? gender,)
+ {
+user_name1=user_name;
+user_email1=user_email;
+pass1=pass;
+phone1=phone;
+weight1=weight;
+height1=height;
+age1=age;
+gender1=gender;
+ }
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +65,13 @@ class PatientViewPage extends StatelessWidget {
                                   child: Column(
                                     children: [
                                       SizedBox(height: 20,),
-                                      Text(patient.name, style: nameSytle,),
-                                      Text('${patient.age} years', style: profileStyle,),
-                                      Text(patient.gender, style: profileStyle),
-                                      Text(patient.phone, style: profileStyle),
-                                      Text(patient.email, style: profileStyle),
+                                      Text(name1.toString(), style: nameSytle,),
+                                      Text('${age1.toString()} years', style: profileStyle,),
+                                      Text(gender1.toString(), style: profileStyle),
+                                      Text(phone1.toString(), style: profileStyle),
+                                      Text(email1.toString(), style: profileStyle),
                                       Text('Aadhaar: Not available', style: profileStyle),
-                                      Text('${patient.height}cm / ${patient.weight}Kg', style: profileStyle)
+                                      Text('${height1}cm / ${weight1}Kg', style: profileStyle)
                                     ],
                                   ),
                                 ),
@@ -88,7 +113,7 @@ class PatientViewPage extends StatelessWidget {
                           height: 67,
                           child: Center(
                               child: Text(
-                                  patient.name,
+                                  name1.toString(),
                                   style: titleStyle
                               )
                           ),

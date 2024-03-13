@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
+import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
+import 'package:healing_hand/apiconnection/doctorhttp.dart';
+import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
 import 'package:provider/provider.dart';
+import 'package:healing_hand/PatientPages/PatientAccountPage.dart' as hp;
+String? password;
 
 final editorKey = GlobalKey<FormState>();
 final TextEditingController nameController = TextEditingController(text: PatientUser.name);
@@ -68,36 +74,36 @@ class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
                               labelText: 'Name',
                               icon: Icons.person,
                             ),
-                            SizedBox(height: 10),
-                            DropdownButtonFormField<String>(
-                              value: selectedGender,
-                              autovalidateMode: AutovalidateMode.onUserInteraction,
-                              decoration: InputDecoration(
-                                labelText: 'Gender',
-                                icon: const Icon(Icons.people),
-                                floatingLabelAlignment: FloatingLabelAlignment.center,
-                                border: OutlineInputBorder(
-                                  borderSide: const BorderSide(),
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                              ),
-                              items: ['Select', 'Male', 'Female', 'Other']
-                                  .map((gender) => DropdownMenuItem(
-                                value: gender,
-                                child: Text(gender),
-                              )).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedGender = value!;
-                                });
-                              },
-                              validator: (value) {
-                                if (value == null || value.isEmpty || value == 'Select') {
-                                  return 'Required';
-                                }
-                                return null;
-                              },
-                            ),
+                            // SizedBox(height: 10),
+                            // DropdownButtonFormField<String>(
+                            //   value: selectedGender,
+                            //   autovalidateMode: AutovalidateMode.onUserInteraction,
+                            //   decoration: InputDecoration(
+                            //     labelText: 'Gender',
+                            //     icon: const Icon(Icons.people),
+                            //     floatingLabelAlignment: FloatingLabelAlignment.center,
+                            //     border: OutlineInputBorder(
+                            //       borderSide: const BorderSide(),
+                            //       borderRadius: BorderRadius.circular(15),
+                            //     ),
+                            //   ),
+                            //   items: ['Select', 'Male', 'Female', 'Other']
+                            //       .map((gender) => DropdownMenuItem(
+                            //     value: gender,
+                            //     child: Text(gender),
+                            //   )).toList(),
+                            //   onChanged: (value) {
+                            //     setState(() {
+                            //       selectedGender = value!;
+                            //     });
+                            //   },
+                            //   validator: (value) {
+                            //     if (value == null || value.isEmpty || value == 'Select') {
+                            //       return 'Required';
+                            //     }
+                            //     return null;
+                            //   },
+                            // ),
                             SizedBox(height: 10),
                             CustomTextFormField(
                               controller: ageController,
@@ -150,7 +156,7 @@ class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
                                         ),
                                         elevation: 8,
                                       ),
-                                      onPressed: (){
+                                      onPressed: () async{
                                         if(editorKey.currentState!.validate()){
                                           PatientModel.createUser(
                                               name: nameController.text,
@@ -161,6 +167,11 @@ class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
                                               height: int.parse(heightController.text),
                                               weight: int.parse(weightController.text)
                                           );
+                                          print(password);
+                                          postApihttp http=new postApihttp();
+                                          int j=await http.saveData2(emailController.text.toString(), password!,nameController.text.toString(),
+                                           heightController.text.toString(), weightController.text.toString(), "male", ageController.text.toString());
+                                          
                                         }
                                         Navigator.pop(context);
                                       },

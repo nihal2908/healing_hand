@@ -46,7 +46,6 @@ class DoctorTile extends StatelessWidget{
         title: Text(name1.toString()),
         subtitle: Text(category1.toString()),
         onTap: (){
-          print("ggg");
          print(email1);
           Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorViewPage(name: name1,
                                     email: email1,category: category1,gender:gender1,

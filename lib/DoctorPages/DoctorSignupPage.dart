@@ -166,7 +166,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                               );
                               if(isLogin){
                                 postApihttp http = postApihttp();
-                            await http.saveData(phoneController.text.toString(),
+                            await http.saveData1(phoneController.text.toString(),
                                 passwordController.text.toString());
                             int j = await http.givedata(0);
                               

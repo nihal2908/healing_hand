@@ -4,6 +4,7 @@ import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/AppointmentContainerForDoctor.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
+import 'package:healing_hand/modelclass/appoinment.dart';
 import 'package:provider/provider.dart';
 
 class DoctorHomePage extends StatefulWidget {
@@ -18,7 +19,48 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return  FutureBuilder<List<prodModal2>>(
+      future: http.getAllPost2(""),
+      builder: ((context, snapshot) {
+        print("calm down");
+        // print(key);
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Scaffold(
+              body:
+                  Center(heightFactor: 1.4, child: CircularProgressIndicator()),
+            );
+          case ConnectionState.waiting:
+            return Scaffold(
+              body:
+                  Center(heightFactor: 0.4, child: CircularProgressIndicator()),
+            );
+          case ConnectionState.active:
+          if(snapshot.data!=null)
+            //return CircularProgressIndicator();
+            return ShowPostList(context, snapshot.data!);
+            else
+            return CircularProgressIndicator();
+          case ConnectionState.done:
+          if(snapshot.data!=null)
+            //return CircularProgressIndicator();
+            return ShowPostList(context, snapshot.data!);
+            else
+            return CircularProgressIndicator();
+        }
+        //}
+
+        //else{
+        //return CircularProgressIndicator();
+        //}
+
+        //  return CircularProgressIndicator();
+      }),
+    );
+      }
+    Widget ShowPostList(BuildContext context,List<prodModal2> posts)
+    {
+      return Padding(
       padding: EdgeInsets.all(15),
       child: Column(
         children: [
@@ -50,33 +92,31 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           Text('Scheduled Appointments', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),),
           Expanded(
             //color: Colors.black,
-            child: Consumer<DoctorProvider>(
-              builder: (context, DoctorModel, child) =>
-                  SingleChildScrollView(
+            child:          SingleChildScrollView(
                     child: Column(
                       children: [
                         ListView.builder(
                           shrinkWrap: true,
                           itemBuilder: (context, index){
-                            if(appointments[index].date.isAfter(DateTime.now()) && appointments[index].status == 'accepted')
+                            if(DateTime.parse(posts[index].date.toString()).isAfter(DateTime.now()) && posts[index].status == 'accepted')
                               return Column(
                                 children: [
-                                  DocAppointmentContainer(appointment: appointments[index]),
+                                  DocAppointmentContainer(posts[index].phone.toString(),posts[index].date,posts[index].enddate),
                                   SizedBox(height: 10,)
                                 ],
                               );
                             else
                               return Container();
                           },
-                          itemCount: appointments.length,
+                          itemCount: posts.length,
                         ),
                       ],
                     ),
                   ),
             ),
-          ),
-        ],
-      ),
+
+    ]),
     );
-  }
+
+    }
 }

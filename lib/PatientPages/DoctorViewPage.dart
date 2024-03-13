@@ -316,9 +316,11 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                     ),
                     TextButton(
                         onPressed: () async {
+                          DateTime date=DateTime.now();
+                          String r=date.toString();
                           // request sent with date of 14/09/2024 it will be changed when doctor accepts request
                           int h = await http.saverec(email1.toString(), p.phoneController.toString(),
-                              "14-09-2024", "7:40 A.M", "wait", purposeController.text.toString());
+                              r,DateTime.now().toString(),"wait",purposeController.text.toString());
                           Navigator.pop(context);
                         },
                         child: Text('Send Request')

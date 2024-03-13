@@ -4,13 +4,30 @@ import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/DoctorTile.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
-
+ String? phone1;
+ String? email1;
+ String? date1;
+ String? time1;
+ String? status1; 
+String? purpose1;
+String? enddate1;
 class AppointmentContainer extends StatelessWidget {
-  Appointment appointment;
+//  Appointment appointment;
 
   //abto appointment class ke according data aega nhi yha ?? to ui me changes karne padenge
 
-  AppointmentContainer({required this.appointment});
+  AppointmentContainer({phone,email,date,time,status,purpose,enddate})
+  {
+    phone1=phone;
+    email1=email;
+    date1=date;
+    time1=time;
+    status1=status;
+    purpose1=purpose;
+    enddate1=enddate;
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +38,16 @@ class AppointmentContainer extends StatelessWidget {
       child: InkWell(
 
         // there will be option for patient to call doctor between start ans endtime
-        onTap: (appointment.status == 'accepted' && appointment.date.day == now.day && appointment.date.month == now.month &&
-            appointment.date.year == now.year && appointment.startTime.hour < now.hour &&
-            appointment.startTime.minute < now.minute && appointment.endTime.hour < now.hour &&
-            appointment.endTime.minute < now.minute) ? (){
+        onTap: (status1 == 'accepted' && DateTime.parse(date1.toString()).day == now.day && DateTime.parse(date1.toString()).month == now.month &&
+            DateTime.parse(date1.toString()).year == now.year && DateTime.parse(date1.toString()).hour > now.hour &&
+            DateTime.parse(date1.toString()).minute > now.minute && DateTime.parse(enddate1.toString()).hour < now.hour &&
+            DateTime.parse(enddate1.toString()).minute < now.minute) ? (){
           showAppointmentActions(context);
         } : null,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(appointment.purpose, style: nameSytle,),
+            Text(purpose1.toString(), style: nameSytle,),
             SizedBox(height: 5,),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -41,12 +58,12 @@ class AppointmentContainer extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(appointment.date.day.toString()+'-'+appointment.date.month.toString()+'-'+appointment.date.year.toString()),
-                      Text('${appointment.startTime.hour.toString()+':'+appointment.startTime.minute.toString()}-${appointment.endTime.hour.toString()+':'+appointment.endTime.minute.toString()}')
+                      Text(DateTime.parse(date1.toString()).day.toString()+'-'+DateTime.parse(date1.toString()).month.toString()+'-'+DateTime.parse(date1.toString()).year.toString()),
+                      Text('${DateTime.parse(date1.toString()).hour.toString()+':'+DateTime.parse(date1.toString()).minute.toString()}-${DateTime.parse(enddate1.toString()).hour.toString()+':'+DateTime.parse(enddate1.toString()).minute.toString()}')
                     ],
                   ),
                 ),
-                Text(appointment.type),
+               // Text(appointment.type),
               ],
             ),
             SizedBox(height: 5,),
@@ -62,7 +79,7 @@ class AppointmentContainer extends StatelessWidget {
         context: context,
         builder: (context){
           return AlertDialog(
-            title: Text(appointment.purpose),
+            title: Text(purpose1.toString()),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
