@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
 import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
 import 'package:healing_hand/apiconnection/doctorhttp.dart';
+import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
+import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -26,15 +28,15 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      //backgroundColor: Colors.deepPurple,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Colors.grey.shade200,
-        foregroundColor: Colors.black,
+        //backgroundColor: Colors.grey.shade200,
+        //foregroundColor: Colors.black,
         title: const Text('Doctor signup'),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(bottom: Radius.circular(15), top: Radius.circular(15))
-        ),
+        // shape: RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.vertical(bottom: Radius.circular(15), top: Radius.circular(15))
+        // ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -43,22 +45,22 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
             children: [
               const Text('Hello Doctor', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30),),
               const SizedBox(height: 30,),
-              Container(
-                padding: const EdgeInsets.only(top: 5, bottom: 10, left: 10, right: 10),
-                //height: 490,
-                decoration: BoxDecoration(
-                  color: Colors.deepPurple.shade50,
-                  borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
-                  boxShadow: const [
-                    BoxShadow(
-                      color: Colors.deepPurple,
-                      blurRadius: 5
-                    )
-                  ]
-                ),
+              WhiteContainer(
+                // padding: const EdgeInsets.only(top: 5, bottom: 10, left: 10, right: 10),
+                // //height: 490,
+                // decoration: BoxDecoration(
+                //   color: Colors.deepPurple.shade50,
+                //   borderRadius: BorderRadius.circular(20),
+                //   border: Border.all(
+                //     color: Colors.black,
+                //   ),
+                //   boxShadow: const [
+                //     BoxShadow(
+                //       color: Colors.deepPurple,
+                //       blurRadius: 5
+                //     )
+                //   ]
+                // ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -69,47 +71,24 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                           fontWeight: FontWeight.w600
                       ),
                     ),
+                    SizedBox(height: 15,),
                     Form(
                       key: formKey,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          if(!isLogin) TextFormField(
-                            controller: nameController,
-                            decoration: InputDecoration(
-                              labelText: 'Name',
-                              icon: const Icon(Icons.person),
-                              border: OutlineInputBorder(
-                                  borderSide: const BorderSide(),
-                                  borderRadius: BorderRadius.circular(15)
-                              ),
-                              floatingLabelAlignment: FloatingLabelAlignment.center,
-                            ),
-                            validator: (value){
-                              if(value == null || value.isEmpty){
-                                return 'Required';
-                              }
-                              return null;
-                            },
+                          if(!isLogin)
+                          CustomTextFormField(
+                            controller: phoneController,
+                            labelText: 'Name',
+                            icon: Icons.person,
                           ),
                           const SizedBox(height: 10,),
-                          TextFormField(
-                            controller: phoneController,
-                            decoration: InputDecoration(
+                          CustomTextFormField(
+                              controller: phoneController,
                               labelText: 'Phone number',
-                              icon: const Icon(Icons.phone),
-                              border: OutlineInputBorder(
-                                borderSide: const BorderSide(),
-                                borderRadius: BorderRadius.circular(15)
-                              ),
-                              floatingLabelAlignment: FloatingLabelAlignment.center,
-                            ),
-                            validator: (value){
-                              if(value == null || value.isEmpty){
-                                return 'Required';
-                              }
-                              return null;
-                            },
+                              icon: Icons.phone,
+                              keyboardType: TextInputType.number,
                           ),
                           const SizedBox(height: 10,),
                           TextFormField(
@@ -143,6 +122,14 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                         ],
                       ),
                     ),
+                    if(isLogin) const SizedBox(height: 10,),
+                    if(isLogin) TextButton(
+                      onPressed: (){
+                        forgotPass();
+                      },
+                      child: Text('Forgot Password?'),
+                    ),
+                    SizedBox(height: 15,),
                     Column(
                       children: [
                         ElevatedButton(
@@ -167,12 +154,11 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                               );
                               if(isLogin){
                                 postApihttp http = postApihttp();
-                            await http.saveData1(phoneController.text.toString(),
+                                await http.saveData1(phoneController.text.toString(),
                                 passwordController.text.toString());
-                            int j = await http.givedata(0);
+                                int j = await http.givedata(0);
                               
-                              if(j==0)
-                              {
+                                if(j==0) {
                                   Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(builder: (context) => DoctorLandingPage())
@@ -184,16 +170,19 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                                 else
                                 {
                                   showDialog(
-                                  context: context,
-                                  builder: ((context) => AlertDialog(
-                                      title: Text(
-                                          "Invalid email or password entered"),
-                                      content: ElevatedButton(
-                                        child: Text("O.K"),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ))));
+                                    context: context,
+                                    builder: (
+                                      (context) => AlertDialog(
+                                        title: Text("Invalid email or password entered"),
+                                        content: ElevatedButton(
+                                          child: Text("O.K"),
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                        )
+                                      )
+                                    )
+                                  );
                                 }
                                 // Navigator.pushReplacement(
                                 //     context,
@@ -227,5 +216,33 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
           )
       ),
     );
+  }
+
+  void forgotPass() {
+    showDialog(context: context, builder: (context){
+      TextEditingController emialController = TextEditingController();
+      return AlertDialog(
+        title: Text('Enter your registered email:'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('An email will be sent to your email id...'),
+            TextField(controller: emialController,)
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+              onPressed: (){
+                //send otp to emial
+                ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Check your Mail box...'))
+                );
+                Navigator.pop(context);
+              },
+              child: Text('Send')
+          )
+        ],
+      );
+    });
   }
 }

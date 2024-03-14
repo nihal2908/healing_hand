@@ -1,47 +1,39 @@
 import 'package:flutter/material.dart';
-import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
-import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
-import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
-import 'package:healing_hand/customWidgets/WhiteContainer.dart';
-import 'package:healing_hand/modelclass/doctor.dart';
 import 'package:provider/provider.dart';
-import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart' as pp;
-import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
-final detailKey = GlobalKey<FormState>();
 
-class DoctorDetailPage extends StatefulWidget {
-  const DoctorDetailPage({super.key});
+final editorKey = GlobalKey<FormState>();
+final TextEditingController nameController = TextEditingController(text: DoctorUser.name);
+final TextEditingController phoneController = TextEditingController(text: DoctorUser.phone);
+final TextEditingController ageController = TextEditingController(text: DoctorUser.age.toString());
+final TextEditingController emailController = TextEditingController(text: DoctorUser.email);
+final TextEditingController bioController = TextEditingController(text: DoctorUser.bio);
+final TextEditingController addressController = TextEditingController(text: DoctorUser.address);
+String? editedGender;
+String? selectedCategory;
+
+class DoctorProfileEditPage extends StatefulWidget {
+  const DoctorProfileEditPage({super.key});
 
   @override
-  State<DoctorDetailPage> createState() => _DoctorDetailPageState();
+  State<DoctorProfileEditPage> createState() => _DoctorProfileEditPageState();
 }
 
-final TextEditingController ageController = TextEditingController();
-final TextEditingController emailController = TextEditingController();
-final TextEditingController addressController = TextEditingController();
-TextEditingController bioController = TextEditingController();
-
-
-String selectedGender = 'Select';
-String selectedCategory = 'Select';
-
-class _DoctorDetailPageState extends State<DoctorDetailPage> {
+class _DoctorProfileEditPageState extends State<DoctorProfileEditPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        title: Text('Doctor signup'),
+        title: Text('Edit Your Profile'),
         //backgroundColor: Colors.grey.shade200,
         //foregroundColor: Colors.black,
         centerTitle: true,
-        // shape: RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.circular(15)
-        // ),
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15)
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(15),
@@ -49,25 +41,25 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Text('Lets create your profile', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
               const SizedBox(height: 15,),
-              WhiteContainer(
-                  // padding: const EdgeInsets.all(10),
-                  // decoration: BoxDecoration(
-                  //     color: Colors.deepPurple.shade50,
-                  //     borderRadius: BorderRadius.circular(20),
-                  //     border: Border.all(
-                  //       color: Colors.deepPurple,
-                  //     ),
-                  //     boxShadow: const [
-                  //       BoxShadow(
-                  //           color: Colors.deepPurple,
-                  //           blurRadius: 5
-                  //       )
-                  //     ]
-                  // ),
+              Container(
+                  padding: const EdgeInsets.all(10),
+                  //height: 480,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).cardColor,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: Colors.deepPurple,
+                      ),
+                      boxShadow: const [
+                        BoxShadow(
+                            color: Colors.deepPurple,
+                            blurRadius: 5
+                        )
+                      ]
+                  ),
                   child: Form(
-                    key: detailKey,
+                    key: editorKey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -76,15 +68,14 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                           controller: nameController,
                           labelText: 'Name',
                           icon: Icons.person,
-                          readOnly: true,
                         ),
                         SizedBox(height: 10),
                         DropdownButtonFormField<String>(
-                          value: selectedGender,
+                          value: editedGender,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           decoration: InputDecoration(
                             labelText: 'Gender',
-                            icon: const Icon(Icons.people),
+                            icon: const Icon(Icons.female),
                             floatingLabelAlignment: FloatingLabelAlignment.center,
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(),
@@ -98,7 +89,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                           )).toList(),
                           onChanged: (value) {
                             setState(() {
-                              selectedGender = value!;
+                              editedGender = value!;
                             });
                           },
                           validator: (value) {
@@ -120,7 +111,7 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                           controller: phoneController,
                           labelText: 'Phone Number',
                           icon: Icons.phone,
-                          readOnly: true,
+                          keyboardType: TextInputType.number,
                         ),
                         SizedBox(height: 10),
                         CustomTextFormField(
@@ -139,14 +130,14 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                         SizedBox(height: 10),
                         CustomTextFormField(
                           controller: bioController,
-                          labelText: 'Qualification',
-                          icon: Icons.person,
+                          labelText: 'Bio',
+                          icon: Icons.school,
                         ),
                         SizedBox(height: 10),
                         CustomTextFormField(
                           controller: addressController,
                           labelText: 'Address',
-                          icon: Icons.person,
+                          icon: Icons.home,
                         ),
                         SizedBox(height: 10),
                         DropdownButtonFormField<String>(
@@ -190,25 +181,27 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                                     ),
                                     elevation: 8,
                                   ),
-                                  onPressed: () async {
-                                    
-                                    if(detailKey.currentState!.validate()){
+                                  onPressed: () async{
+                                    if(editorKey.currentState!.validate()){
                                       DoctorModel.createUser(
                                           name: nameController.text,
-                                          gender: selectedGender,
+                                          gender: editedGender!,
                                           age: int.parse(ageController.text),
-                                          category: selectedCategory,
                                           phone: phoneController.text,
                                           email: emailController.text,
-                                          address: addressController.text,
                                           bio: bioController.text,
+                                          address: addressController.text,
+                                          category: selectedCategory!
                                       );
-                                      SaveRecord(context);
-                                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      prefs.setString('FIRST_PAGE', 'doctor');
-                                      //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> DoctorLandingPage()), (route) => false);
-                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
+
+                                      // add function to update doctors details
+
+                                      // print(password);
+                                      // postApihttp http=new postApihttp();
+                                      // await http.saveData2(emailController.text.toString(), password!,nameController.text.toString(),
+                                      //     heightController.text.toString(), weightController.text.toString(),editedGender.toString(), ageController.text.toString());
                                     }
+                                    Navigator.pop(context);
                                   },
                                   child: const Text('Save')
                               );
@@ -224,45 +217,4 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
       ),
     );
   }
-  SaveRecord(context) async
-{
-  print(pp.nameController.text.toString());
-User user= new User(pp.nameController.text.toString(),emailController.text.trim(),pp.passwordController.text.toString(),pp.phoneController.text.toString(),
-selectedCategory,addressController.text.toString(),ageController.text.toString(),selectedGender.toString());
-try{
-var res=await http.post(Uri.parse(
-  "http://handycraf.000webhostapp.com/helping_hand/signup1.php"
-),body:user.toJson());
-if(res.statusCode==200)
-{
-  //var resBody1=jsonDecode(res.body);
-  String resBody=res.body;
-  print(resBody);
-  print(resBody);
-    if((resBody)=="false")
-  {
- Future.delayed(Duration.zero,()=>showDialog(context: context, builder: ((context) => AlertDialog(
-                  title:Text("Record Saved "),
-                  content:ElevatedButton(child:Text("O.K"),onPressed: () {Navigator.pop(context);},)))));   
-  }
-  else{
-    AlertDialog(
-        content: Text("Record already exist"),
-        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
-
-      );    
-  }
-}
-else{
-  AlertDialog(
-        content: Text("Record Saved now go to login page"),
-        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
-
-      );    
-}
-}
-catch(e){
-  print(e);
-}
-}
 }

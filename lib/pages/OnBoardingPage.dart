@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:healing_hand/main.dart';
-import 'package:healing_hand/pages/HomePage.dart';
 import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -38,11 +36,11 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'Healing Hand',
           style: TextStyle(
             fontWeight: FontWeight.bold,
-            color: Colors.deepPurple,
+            color: Theme.of(context).brightness == Brightness.light ? Colors.deepPurple : Colors.white,
             fontSize: 30,
           ),
         ),
@@ -53,12 +51,12 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         dotsDecorator: DotsDecorator(
           size: const Size(10,10),
           color: Colors.grey.shade400,
-          activeColor: Colors.deepPurple,
+          activeColor: Colors.white,
           activeSize: const Size(10,10)
         ),
-        done: const Text('Get Started'),
-        next: const Text('Next'),
-        skip: const Text('Skip'),
+        done: const Text('Get Started', style: TextStyle(color: Colors.white),),
+        next: const Text('Next', style: TextStyle(color: Colors.white),),
+        skip: const Text('Skip', style: TextStyle(color: Colors.white),),
         showDoneButton: true,
         showSkipButton: true,
         showNextButton: true,
@@ -82,16 +80,21 @@ PageViewModel CustomPageViewModal(String title, body, Image image){
       titleTextStyle: const TextStyle(
           fontSize: 25,
           fontWeight: FontWeight.bold,
-          fontStyle: FontStyle.italic
+          fontStyle: FontStyle.italic,
+        color: Colors.white
+      ),
+      bodyTextStyle: TextStyle(
+        color: Colors.white,
+        fontSize: 18
       ),
       imageFlex: 1,
       footerFlex: 0,
       bodyAlignment: Alignment.bottomCenter,
       imagePadding: const EdgeInsets.only(top: 20, bottom: 20),
-      boxDecoration: BoxDecoration(
-        color: Colors.deepPurple.shade50,
-        borderRadius: BorderRadius.circular(20),
-      ),
+      // boxDecoration: BoxDecoration(
+      //   //color: Colors.deepPurple.shade50,
+      //   borderRadius: BorderRadius.circular(20),
+      // ),
       bodyPadding: const EdgeInsets.all(10),
       pageMargin: const EdgeInsets.all(15),
     )

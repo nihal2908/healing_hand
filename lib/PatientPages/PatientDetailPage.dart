@@ -84,7 +84,7 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           decoration: InputDecoration(
                             labelText: 'Gender',
-                            icon: const Icon(Icons.people),
+                            icon: const Icon(Icons.female),
                             floatingLabelAlignment: FloatingLabelAlignment.center,
                             border: OutlineInputBorder(
                               borderSide: const BorderSide(),

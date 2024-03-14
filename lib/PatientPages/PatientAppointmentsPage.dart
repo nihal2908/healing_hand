@@ -27,7 +27,7 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
     return FutureBuilder<List<prodModal2>>(
       future: http.getAllPost2(key),
       builder: ((context, snapshot) {
-        print("calm down");
+        print("calm downn");
         // print(key);
         switch (snapshot.connectionState) {
           case ConnectionState.none:
@@ -67,15 +67,18 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
   {
     bool noUpComApp = true;
     bool noPastApp = true;
-    for(int i=0; i<posts.length; i++){
+    print(posts.length);
+    for(int i=2; i<posts.length; i++){
       print("flag");
       print(posts[i].status);
       print(DateTime.parse(posts[i].date.toString()));
       print(DateTime.parse(posts[i].enddate.toString()));
-      if(DateTime.parse(posts[i].date!).isAfter(DateTime.now()))
+      if(DateTime.parse(posts[i].date.toString()).isAfter(DateTime.now()))
         noUpComApp = false;
       else
         noPastApp = false;
+      print(noPastApp);
+      print(noUpComApp);
     }
     return  SingleChildScrollView(
       child: Padding(
@@ -95,8 +98,8 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
             if(posts.length == 0 || noUpComApp)
               WhiteContainer(child: Text('No Upcoming Appointments', style: nameSytle,)),
             //not used listview builder because it altered the scroll above the list
-            for(int i=0; i<posts.length; i++)
-              if(DateTime.parse(posts[i].date.toString()).isAfter(DateTime.now()) && posts[i].phone==remember.toString())
+            for(int i=2; i<posts.length; i++)
+              if(posts[i].phone==remember.toString() && posts[i].status == 'accepted' && DateTime.parse(posts[i].enddate.toString()).isAfter(DateTime.now()))
               Column(
                 children: [
                   AppointmentContainer(email:posts[i].email,enddate: posts[i].enddate,date: posts[i].date,
@@ -113,8 +116,8 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
             if(posts.length == 0 || noPastApp)
               WhiteContainer(child: Text('No Past Consultations', style: nameSytle,)),
             //not used listview builder because it altered the scroll above the list
-            for(int i=0; i<posts.length; i++)
-              if(DateTime.parse(posts[i].date.toString()).isBefore(DateTime.now()) && posts[i].phone==remember.toString())
+            for(int i=2; i<posts.length; i++)
+              if(posts[i].phone==remember.toString() && posts[i].status == 'accepted' && DateTime.parse(posts[i].enddate.toString()).isBefore(DateTime.now()))
               Column(
                 children: [
                   AppointmentContainer(email:posts[i].email,enddate: posts[i].enddate,date: posts[i].date,

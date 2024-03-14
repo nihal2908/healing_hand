@@ -68,11 +68,11 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
             foregroundColor: Colors.white,
             backgroundColor: Colors.transparent,
             leadingWidth: 300,
-            toolbarHeight: 130,
+            toolbarHeight: 150,
             leading: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CircleImage(image: AssetImage('assets/images/doctor.png')),
+                CircleImage(image: DoctorUser.profile.image),
                 Text('Welcome back,'),
                 Text(DoctorUser.name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
               ],
@@ -98,6 +98,8 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                         ListView.builder(
                           shrinkWrap: true,
                           itemBuilder: (context, index){
+                            if(index == 0 || index == 1) return null; // abhi ke lie pahle do appointment skip kar die
+                            // hain unme error aa rahi hai ,,, bad me ye condition hata denge
                             if(DateTime.parse(posts[index].date.toString()).isAfter(DateTime.now()) && posts[index].status == 'accepted')
                               return Column(
                                 children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/EditNotePage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/NoteTile.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
@@ -17,23 +18,21 @@ class _NoteSearchPageState extends State<NoteSearchPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        title: Text('Search Notes', style: TextStyle(color: Colors.white),),
+        title: Text('Search Notes'),
         centerTitle: true,
-        backgroundColor: Colors.transparent,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(8),
-            child: TextFormField(
+      body: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Column(
+          children: [
+            TextFormField(
               controller: searchController,
               decoration: InputDecoration(
                 hintText: 'Patient name or content..',
                 floatingLabelAlignment: FloatingLabelAlignment.center,
                 prefixIcon: Icon(Icons.search),
-                fillColor: Colors.white,
+                fillColor: Theme.of(context).cardColor,
                 filled: true,
                 border: OutlineInputBorder(
                     borderSide: const BorderSide(),
@@ -50,18 +49,28 @@ class _NoteSearchPageState extends State<NoteSearchPage> {
                 });
               },
             ),
-          ),
-          Expanded(
-            child: ListView.separated(
-              separatorBuilder: (context, index) =>
-                  SizedBox(height: 5,),
-              itemCount: filteredNotes.length,
-              itemBuilder: (context, index) {
-                return NoteTile(note: filteredNotes[index]);
-              },
+            SizedBox(height: 10,),
+            Expanded(
+              child: ListView.separated(
+                separatorBuilder: (context, index) =>
+                    SizedBox(height: 5,),
+                itemCount: filteredNotes.length,
+                itemBuilder: (context, index) {
+                  List<String> parts = filteredNotes[index].split(': ');
+                  return WhiteContainer(
+                      child: ListTile(
+                        title: Text(parts[0]),
+                        subtitle: Text(parts[1], overflow: TextOverflow.ellipsis,),
+                        onTap: (){
+                          Navigator.push(context, MaterialPageRoute(builder: (context)=> EditNotePage(note: filteredNotes[index],)));
+                        },
+                      )
+                  );
+                },
+              ),
             ),
-          ),
-        ]
+          ]
+        ),
       )
     );
   }

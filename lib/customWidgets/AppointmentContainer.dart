@@ -39,10 +39,7 @@ class AppointmentContainer extends StatelessWidget {
       child: InkWell(
 
         // there will be option for patient to call doctor between start ans endtime
-        onTap: (status1 == 'accepted' && DateTime.parse(date1.toString()).day == now.day && DateTime.parse(date1.toString()).month == now.month &&
-            DateTime.parse(date1.toString()).year == now.year && DateTime.parse(date1.toString()).hour > now.hour &&
-            DateTime.parse(date1.toString()).minute > now.minute && DateTime.parse(enddate1.toString()).hour < now.hour &&
-            DateTime.parse(enddate1.toString()).minute < now.minute) ? (){
+        onTap: (status1 == 'accepted' && DateTime.parse(date1.toString()).isAfter(DateTime.now()) && DateTime.parse(enddate1.toString()).isBefore(DateTime.now())) ? (){
           showAppointmentActions(context);
         } : null,
         child: Column(

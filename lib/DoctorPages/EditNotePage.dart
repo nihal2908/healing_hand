@@ -4,7 +4,7 @@ import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 
 class EditNotePage extends StatelessWidget {
-  String note;
+  final String note;
   EditNotePage({super.key, required this.note});
 
   @override
@@ -13,10 +13,7 @@ class EditNotePage extends StatelessWidget {
     TextEditingController editorController = TextEditingController(text: parts[1]);
 
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
         title: Text(parts[0]),
         actions: [
           IconButton(
@@ -43,7 +40,7 @@ class EditNotePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)
                   ),
                   filled: true,
-                  fillColor: Colors.white
+                  fillColor: Theme.of(context).cardColor
                 ),
               ),
             ),

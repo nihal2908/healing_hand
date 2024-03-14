@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:healing_hand/PatientPages/PatientProfileEditPage.dart';
@@ -80,44 +79,35 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                   Column(
                     children: [
                       const SizedBox(height: 100,),
-                      Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: BoxDecoration(
-                              color: Theme.of(context).cardColor,
-                              borderRadius: BorderRadius.circular(25)
-                          ),
+                      WhiteContainer(
                           child: Column(
                             children: [
-                              Container(
-                                padding: const EdgeInsets.all(20),
-                                height: 250,
-                                child: Column(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: IconButton(
-                                        onPressed: (){
-                                        dd.password=posts[0].pass.toString();
-                                          dd.nameController.text=posts[0].user_name.toString();
-                                          dd.emailController.text=posts[0].user_email.toString();
-                                          dd.editedGender=posts[0].gender.toString();
-                                          dd.heightController.text=posts[0].height.toString();
-                                          dd.weightController.text=posts[0].weight.toString();
-                                          dd.phoneController.text=remember.toString();
-                                          dd.ageController.text=24.toString();
-                                          Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientProfileEditPage()));
-                                        },
-                                        icon: const Icon(Icons.edit),
-                                      ),
+                              Column(
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: IconButton(
+                                      onPressed: (){
+                                      dd.password=posts[0].pass.toString();
+                                        dd.nameController.text=posts[0].user_name.toString();
+                                        dd.emailController.text=posts[0].user_email.toString();
+                                        dd.editedGender=posts[0].gender.toString();
+                                        dd.heightController.text=posts[0].height.toString();
+                                        dd.weightController.text=posts[0].weight.toString();
+                                        dd.phoneController.text=remember.toString();
+                                        dd.ageController.text=24.toString();
+                                        Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientProfileEditPage()));
+                                      },
+                                      icon: const Icon(Icons.edit),
                                     ),
-                                    Text(posts[0].user_name.toString(), style: nameSytle,),
-                                    Text('${posts[0].age} years', style: profileStyle,),
-                                    Text(posts[0].gender.toString(), style: profileStyle),
-                                    Text(remember, style: profileStyle),
-                                    Text(posts[0].user_email.toString(), style: profileStyle),
-                                    Text('${posts[0].height}cm / ${posts[0].weight}Kg', style: profileStyle)
-                                  ],
-                                ),
+                                  ),
+                                  Text(posts[0].user_name.toString(), style: nameSytle,),
+                                  Text('${posts[0].age} years', style: profileStyle,),
+                                  Text(posts[0].gender.toString(), style: profileStyle),
+                                  Text(remember, style: profileStyle),
+                                  Text(posts[0].user_email.toString(), style: profileStyle),
+                                  Text('${posts[0].height}cm / ${posts[0].weight}Kg', style: profileStyle)
+                                ],
                               ),
                             ],
                           )
@@ -193,7 +183,9 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
               ),
               content: content,
               actions: [
-                Row(
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     ElevatedButton(
                         onPressed: ()async{
@@ -211,20 +203,26 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                         },
                         child: Text('Change Image')
                     ),
-                    ElevatedButton(
-                        onPressed: (){
-                          Navigator.pop(context);
-                        },
-                        child: Text('Cancel')
-                    ),
-                    ElevatedButton(
-                      onPressed: (){
-                        setState(() {
-                          PatientUser.profile = content;
-                        });
-                        Navigator.pop(context);
-                      },
-                      child: Text('Save'),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel')
+                        ),
+                        ElevatedButton(
+                          onPressed: (){
+                            setState(() {
+                              PatientUser.profile = content;
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: Text('Save'),
+                        ),
+                      ],
                     ),
                   ],
                 )

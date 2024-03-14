@@ -1,11 +1,19 @@
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:healing_hand/DoctorPages/DoctorProfileEditPage.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
+import 'package:healing_hand/customWidgets/WhiteContainer.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
 import '../customWidgets/styles.dart';
+
+Image dpContent = Image.asset('assets/images/doctor.png', fit: BoxFit.fill,);
 
 class DoctorAccountPage extends StatefulWidget {
   final Doctor doc;
@@ -26,10 +34,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
     bool noReview = (doc.reviews == null);
 
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -40,59 +45,50 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
               Column(
                 children: [
                   const SizedBox(height: 100,),
-                  Container(
-                      width: MediaQuery.of(context).size.width,
-                      decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(25)
-                      ),
+                  WhiteContainer(
                       child: Column(
                         children: [
-                          Container(
-                            padding: const EdgeInsets.all(20),
-                            //height: 250,
-                            child: Column(
-                              children: [
-                                SizedBox(height: 30,),
-                                Text(doc.name, style: nameSytle,),
-                                Text(doc.category, style: profileStyle),
-                                Text('${doc.age} years', style: profileStyle,),
-                                Text(doc.gender, style: profileStyle),
-                                Text(doc.email, style: profileStyle),
-                                RatingBar.builder(
-                                  initialRating: doc.rating,
-                                  minRating: 1,
-                                  direction: Axis.horizontal,
-                                  allowHalfRating: true,
-                                  itemCount: 5,
-                                  itemSize: 25,
-                                  ignoreGestures: true,
-                                  itemBuilder: (context, _) => Icon(
-                                    Icons.star,
-                                    color: Colors.amber,
-                                  ),
-                                  onRatingUpdate: (newRating) {
-                                    setState(() {
-                                      doc.rating = newRating;
-                                    });
-                                  },
-                                ),
-                                Text('${doc.rating} / 5', style: profileStyle),
-                              ],
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: IconButton(
+                              onPressed: (){
+
+                                //pass the current values to the edit page
+
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> DoctorProfileEditPage()));
+                              },
+                              icon: Icon(Icons.edit)
                             ),
                           ),
+                          Text(doc.name, style: nameSytle,),
+                          Text(doc.category.toString(), style: profileStyle),
+                          Text('${doc.age} years', style: profileStyle,),
+                          Text(doc.gender.toString(), style: profileStyle),
+                          Text(doc.email.toString(), style: profileStyle),
+                          RatingBar.builder(
+                            initialRating: doc.rating,
+                            minRating: 1,
+                            direction: Axis.horizontal,
+                            allowHalfRating: true,
+                            itemCount: 5,
+                            itemSize: 25,
+                            ignoreGestures: true,
+                            itemBuilder: (context, _) => Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                            ),
+                            onRatingUpdate: (newRating) {
+                              setState(() {
+                                doc.rating = newRating;
+                              });
+                            },
+                          ),
+                          Text('${doc.rating} / 5', style: profileStyle),
                         ],
                       )
                   ),
                   const SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    width: MediaQuery.of(context).size.width,
-                    //height: 200,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(25)
-                    ),
+                  WhiteContainer(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -113,7 +109,6 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                         ),
                         Container(
                             width: MediaQuery.of(context).size.width,
-                            //height: 150,
                             child: Column(
                               children: [
                                 noReview? Padding(padding: EdgeInsets.all(10), child: Text('No recent Reviews')):
@@ -143,35 +138,28 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                     ),
                   ),
                   SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(25)
-                    ),
-                    child: InkWell(
-                        onTap: (){
-                          print('Change password');
-                        },
-                        child: Center(child: Text('Change Password', style: nameSytle,))
+                  WhiteContainer(
+                    child: Container(
+                      height: 30,
+                      child: InkWell(
+                          onTap: (){
+                            changePassword();
+                            print('Change password');
+                          },
+                          child: Center(child: Text('Change Password', style: nameSytle,))
+                      ),
                     ),
                   ),
                   SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(25)
-                    ),
-                    child: InkWell(
-                        onTap: (){
-                          print('Logout pressed');
-                        },
-                        child: Center(child: Text('Log-out', style: nameSytle,))
+                  WhiteContainer(
+                    child: Container(
+                      height: 30,
+                      child: InkWell(
+                          onTap: (){
+                            print('Logout pressed');
+                          },
+                          child: Center(child: Text('Log-out', style: nameSytle,))
+                      ),
                     ),
                   )
                 ],
@@ -187,7 +175,12 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                         )
                     ),
                   ),
-                  CircleImage(image: AssetImage('assets/images/doctor.png')),
+                  CircleImage(
+                      image: DoctorUser.profile.image,
+                    onTap: (){
+                        showImage();
+                    },
+                  ),
                 ],
               ),
             ],
@@ -196,4 +189,116 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
       ),
     );
   }
+
+  void showImage() {
+    showDialog(context: context, builder: (context){
+      return StatefulBuilder(
+          builder: (context, dpState) {
+
+            return AlertDialog(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Your Profile Image'),
+                  IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close))
+                ],
+              ),
+              content: dpContent,
+              actions: [
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: ()async{
+                          Uint8List? _imageBytes;
+                          final picker = ImagePicker();
+                          final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+                          dpState(() { //refresh the alert box
+                            if (pickedFile != null){
+                              _imageBytes = File(pickedFile.path).readAsBytesSync();
+                              dpContent = Image.memory(_imageBytes!);
+                            } else {
+                              print('No image selected.');
+                            }
+                          });
+                        },
+                        child: Text('Change Image')
+                    ),
+                    Row(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        ElevatedButton(
+                            onPressed: (){
+                              Navigator.pop(context);
+                            },
+                            child: Text('Cancel')
+                        ),
+                        ElevatedButton(
+                          onPressed: (){
+                            setState(() {
+                              DoctorUser.profile = dpContent;
+                            });
+                            Navigator.pop(context);
+                          },
+                          child: Text('Save'),
+                        ),
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            );
+          }
+      );
+    });
+  }
+
+  void changePassword(){
+    showDialog(context: context, builder: (context){
+      TextEditingController curPassController = TextEditingController();
+      TextEditingController newPassController1 = TextEditingController();
+      TextEditingController newPassController2 = TextEditingController();
+      return AlertDialog(
+        surfaceTintColor: Colors.deepPurple,
+        title: Text('Enter current and new passwrd'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: curPassController,
+              decoration: InputDecoration(hintText: 'Current Password'),
+            ),
+            TextField(
+              controller: newPassController1,
+              decoration: InputDecoration(hintText: 'New Password'),
+            ),
+            TextField(
+              controller: newPassController2,
+              decoration: InputDecoration(hintText: 'Re-enter new Password'),
+            ),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+              onPressed: (){
+                Navigator.pop(context);
+              },
+              child: Text('Cancel')
+          ),
+          ElevatedButton(
+              onPressed: () {
+                //check whether password is correct and both new one are
+                //then send request to change password
+                print('Change password in database.......');
+                Navigator.pop(context);
+              },
+              child: Text('Change', style: TextStyle(color: Colors.red),)
+          ),
+        ],
+      );
+    });
+  }
+
 }

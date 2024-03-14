@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
 import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
 import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
@@ -80,6 +81,7 @@ class MyApp extends StatelessWidget {
             home: UserTypePage(),
             //home: DoctorLandingPage(),
             //home: page,
+            //home: DoctorDetailPage(),
           );
         }
       )

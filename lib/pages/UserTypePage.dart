@@ -9,7 +9,7 @@ class UserTypePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
+      //backgroundColor: Colors.deepPurple,
       resizeToAvoidBottomInset: false,
       body: Center(
         child: Column(

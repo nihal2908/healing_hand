@@ -73,7 +73,7 @@ class _AppointmentRequestPageState extends State<AppointmentRequestPage> {
                                 subtitle: Text(posts[index].email.toString()),
                               ),
                               Divider(),
-                              posts[index].status == "wait" ? Text('Status: Waiting') : Text('Status: Denied'),
+                              posts[index].status == "wait" ? Text('Status: Waiting') : Text('Status: Denied', style: TextStyle(color: Colors.red),),
                             ],
                           )
                       ),

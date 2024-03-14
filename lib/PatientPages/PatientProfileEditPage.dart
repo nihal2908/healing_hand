@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/apiconnection/doctorhttp.dart';
-import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
 import 'package:provider/provider.dart';
-import 'package:healing_hand/PatientPages/PatientAccountPage.dart' as hp;
+
 String? password;
 
 final editorKey = GlobalKey<FormState>();
@@ -15,7 +13,6 @@ final TextEditingController ageController = TextEditingController(text: PatientU
 final TextEditingController emailController = TextEditingController(text: PatientUser.email);
 final TextEditingController heightController = TextEditingController(text: PatientUser.height.toString());
 final TextEditingController weightController = TextEditingController(text: PatientUser.weight.toString());
-
 String? editedGender;
 
 class PatientProfileEditPage extends StatefulWidget {
@@ -113,6 +110,15 @@ class _PatientProfileEditPageState extends State<PatientProfileEditPage> {
                               controller: phoneController,
                               labelText: 'Phone Number',
                               icon: Icons.phone,
+                              keyboardType: TextInputType.number,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Required';
+                                } else if (value.toString().length != 10) {
+                                  return 'Number must be 10 digit';
+                                }
+                                return null;
+                              },
                             ),
                             SizedBox(height: 10),
                             CustomTextFormField(

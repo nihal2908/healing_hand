@@ -34,17 +34,19 @@ class _NotificationPageState extends State<NotificationPage> {
                   Center(heightFactor: 0.4, child: CircularProgressIndicator()),
             );
           case ConnectionState.active:
-          if(snapshot.data!=null)
+          if(snapshot.data!=null) {
             //return CircularProgressIndicator();
             return ShowPostList(context, snapshot.data!);
-            else
+          } else {
             return CircularProgressIndicator();
+          }
           case ConnectionState.done:
-          if(snapshot.data!=null)
+          if(snapshot.data!=null) {
             //return CircularProgressIndicator();
             return ShowPostList(context, snapshot.data!);
-            else
+          } else {
             return CircularProgressIndicator();
+          }
         }
         //}
 
@@ -59,10 +61,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget ShowPostList(BuildContext context,List<prodModal2> posts)
   {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
         title: Text('Notifications'),
       ),
       body: SingleChildScrollView(
@@ -71,7 +70,7 @@ class _NotificationPageState extends State<NotificationPage> {
           child: ListView.builder(
               shrinkWrap: true,
               itemBuilder: (context, index){
-                if(posts[index].status == "wait")
+                if(posts[index].status == "wait") {
                   return Column(
                     children: [
                       WhiteContainer(
@@ -116,8 +115,9 @@ class _NotificationPageState extends State<NotificationPage> {
                       SizedBox(height: 7,)
                     ],
                   );
-                else
+                } else {
                   return Container();
+                }
               },
               itemCount: posts.length
           ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/EditNotePage.dart';
 import 'package:healing_hand/DoctorPages/NoteSearchPage.dart';
-import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/NoteTile.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
@@ -41,8 +40,15 @@ class _DoctorNotePageState extends State<DoctorNotePage> {
                 separatorBuilder: (context, index)=>
                 SizedBox(height: 10,),
                 itemBuilder: (context, index){
-                  return NoteTile(
-                    note: DoctorUser.notes[index],
+                  List<String> parts = DoctorUser.notes[index].split(': ');
+                  return WhiteContainer(
+                    child: ListTile(
+                      title: Text(parts[0]),
+                      subtitle: Text(parts[1], overflow: TextOverflow.ellipsis,),
+                      onTap: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=> EditNotePage(note: DoctorUser.notes[index],)));
+                      },
+                    ),
                   );
                 },
                 itemCount: DoctorUser.notes.length,
