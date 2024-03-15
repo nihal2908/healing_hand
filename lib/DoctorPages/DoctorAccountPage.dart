@@ -4,10 +4,14 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:healing_hand/DoctorPages/DoctorProfileEditPage.dart';
+import 'package:healing_hand/DoctorPages/DoctorProfileEditPage.dart' as t;
+import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
+import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
+import 'package:healing_hand/modelclass/prodmodal.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -22,7 +26,7 @@ class DoctorAccountPage extends StatefulWidget {
   @override
   State<DoctorAccountPage> createState() => _DoctorAccountPageState(doc: doc);
 }
-
+httpServices13 http=new httpServices13();
 class _DoctorAccountPageState extends State<DoctorAccountPage> {
   final Doctor doc;
   _DoctorAccountPageState({required this.doc});
@@ -31,9 +35,50 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
   @override
   Widget build(BuildContext context) {
 
-    bool noReview = (doc.reviews == null);
+    
+    return FutureBuilder<List<prodModal>>(
+      future: http.getAllPost(""),
+      builder: ((context, snapshot) {
+        print("calm down");
+        // print(key);
+        switch (snapshot.connectionState) {
+          case ConnectionState.none:
+            return Scaffold(
+              body:
+                  Center(heightFactor: 1.4, child: CircularProgressIndicator()),
+            );
+          case ConnectionState.waiting:
+            return Scaffold(
+              body:
+                  Center(heightFactor: 0.4, child: CircularProgressIndicator()),
+            );
+          case ConnectionState.active:
+            return ShowPostList(context, snapshot.data!);
 
-    return Scaffold(
+          case ConnectionState.done:
+
+            //return CircularProgressIndicator();
+            return ShowPostList(context, snapshot.data!);
+        }
+        //}
+
+        //else{
+        //return CircularProgressIndicator();
+        //}
+
+        //  return CircularProgressIndicator();
+      }),
+    );
+  }
+  Widget ShowPostList(BuildContext context,List<prodModal> posts)
+  {int i=0;
+  print(posts[0].phone);
+    bool noReview = (doc.reviews == null);
+   for(i=0;i<posts.length;i++)
+   {
+    print(posts[i].phone);
+    if(posts[i].phone==dno)
+    {return Scaffold(
       appBar: AppBar(
       ),
       body: SingleChildScrollView(
@@ -52,21 +97,27 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                             alignment: Alignment.centerRight,
                             child: IconButton(
                               onPressed: (){
-
+                                t.rating=posts[i].rating.toString();
+                                t.emailController.text=posts[i].email.toString();
                                 //pass the current values to the edit page
-
+                                t.nameController.text=posts[i].name.toString();
+                                t.addressController.text=posts[i].address.toString();
+                                t.ageController.text="24";
+                                t.editedGender=posts[i].gender.toString();
+                                t.phoneController.text=posts[i].phone.toString();
+                                t.selectedCategory=posts[i].category.toString();
                                 Navigator.push(context, MaterialPageRoute(builder: (context)=> DoctorProfileEditPage()));
                               },
                               icon: Icon(Icons.edit)
                             ),
                           ),
-                          Text(doc.name, style: nameSytle,),
-                          Text(doc.category.toString(), style: profileStyle),
-                          Text('${doc.age} years', style: profileStyle,),
-                          Text(doc.gender.toString(), style: profileStyle),
-                          Text(doc.email.toString(), style: profileStyle),
+                          Text(posts[i].name.toString(), style: nameSytle,),
+                          Text(posts[i].category.toString(), style: profileStyle),
+                          Text('24 years', style: profileStyle,),
+                          Text(posts[i].gender.toString(), style: profileStyle),
+                          Text(posts[i].email.toString(), style: profileStyle),
                           RatingBar.builder(
-                            initialRating: doc.rating,
+                            initialRating: double.parse(posts[i].rating.toString()),
                             minRating: 1,
                             direction: Axis.horizontal,
                             allowHalfRating: true,
@@ -83,7 +134,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                               });
                             },
                           ),
-                          Text('${doc.rating} / 5', style: profileStyle),
+                          Text('${posts[i].rating} / 5', style: profileStyle),
                         ],
                       )
                   ),
@@ -188,6 +239,10 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
         ),
       ),
     );
+    }
+    else print("hi");
+   }
+return CircularProgressIndicator();
   }
 
   void showImage() {

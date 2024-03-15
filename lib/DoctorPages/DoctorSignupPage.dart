@@ -6,7 +6,7 @@ import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+String? dno;
 final formKey = GlobalKey<FormState>();
 
 class DoctorSignupPage extends StatefulWidget {
@@ -89,9 +89,11 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                               labelText: 'Phone number',
                               icon: Icons.phone,
                               keyboardType: TextInputType.number,
+                        
                           ),
                           const SizedBox(height: 10,),
                           TextFormField(
+                            
                             controller: passwordController,
                             decoration: InputDecoration(
                               labelText: 'Password',
@@ -153,6 +155,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                                   )
                               );
                               if(isLogin){
+                                dno=phoneController.text.toString();
                                 postApihttp http = postApihttp();
                                 await http.saveData1(phoneController.text.toString(),
                                 passwordController.text.toString());

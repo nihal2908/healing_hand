@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
+import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
+import 'package:healing_hand/apiconnection/doctorhttp.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
 import 'package:provider/provider.dart';
 
 
 final editorKey = GlobalKey<FormState>();
-final TextEditingController nameController = TextEditingController(text: DoctorUser.name);
-final TextEditingController phoneController = TextEditingController(text: DoctorUser.phone);
-final TextEditingController ageController = TextEditingController(text: DoctorUser.age.toString());
-final TextEditingController emailController = TextEditingController(text: DoctorUser.email);
-final TextEditingController bioController = TextEditingController(text: DoctorUser.bio);
-final TextEditingController addressController = TextEditingController(text: DoctorUser.address);
+final TextEditingController nameController = TextEditingController();
+final TextEditingController phoneController = TextEditingController();
+final TextEditingController ageController = TextEditingController();
+final TextEditingController emailController = TextEditingController();
+final TextEditingController bioController = TextEditingController();
+final TextEditingController addressController = TextEditingController();
 String? editedGender;
 String? selectedCategory;
+String? rating;
 
 class DoctorProfileEditPage extends StatefulWidget {
   const DoctorProfileEditPage({super.key});
@@ -197,9 +201,9 @@ class _DoctorProfileEditPageState extends State<DoctorProfileEditPage> {
                                       // add function to update doctors details
 
                                       // print(password);
-                                      // postApihttp http=new postApihttp();
-                                      // await http.saveData2(emailController.text.toString(), password!,nameController.text.toString(),
-                                      //     heightController.text.toString(), weightController.text.toString(),editedGender.toString(), ageController.text.toString());
+                                     postApihttp http=new postApihttp();
+                                       await http.saveData4(emailController.text.toString(), passwordController.text.toString()!,nameController.text.toString(),
+                                         selectedCategory.toString(), rating.toString(),addressController.text.toString(),editedGender.toString(), ageController.text.toString());
                                     }
                                     Navigator.pop(context);
                                   },
