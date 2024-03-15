@@ -4,6 +4,7 @@ import 'package:healing_hand/PatientPages/CategoryViewPage.dart';
 import 'package:healing_hand/PatientPages/DoctorViewPage.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/PatientPages/SearchPage.dart';
+import 'package:healing_hand/PatientPages/nearby_places_screen.dart';
 import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
@@ -13,7 +14,10 @@ import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/modelclass/prodmodal.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 String key="";
+String? lang1,long1;
 class PatientHomePage extends StatefulWidget {
   const PatientHomePage({super.key});
 
@@ -197,8 +201,11 @@ Widget ShowPostList(BuildContext context,List<prodModal> posts)
                                 foregroundColor: Colors.red,
                                 padding: EdgeInsets.symmetric(vertical: 15, horizontal: 50)
                               ),
-                                onPressed: (){
-                                  print('Go to Google Map');
+                                onPressed: ()async{
+                                 await _determinePosition();
+                                                               Navigator.push(context, MaterialPageRoute(builder: (context)=>NearByPlacesScreen()));
+        
+                            print('Go to Google Map');
                                 },
                                 child: Text('Find now', style: TextStyle(color: Colors.red),)
                             )
@@ -213,5 +220,34 @@ Widget ShowPostList(BuildContext context,List<prodModal> posts)
         ],
       ),
     );
+  }
+  Future<Position> _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled');
+    }
+
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+
+      if (permission == LocationPermission.denied) {
+        return Future.error("Location permission denied");
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error('Location permissions are permanently denied');
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+lang1=position.latitude.toString();
+long1=position.longitude.toString();
+    return position;
   }
 }

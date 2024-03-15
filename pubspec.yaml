@@ -40,8 +40,13 @@ dependencies:
   provider:
   flutter_rating_bar: ^4.0.1
   url_launcher: ^6.2.5
-  http: ^1.2.1
+  http: ^0.13.0
   image_picker: ^1.0.7
+  google_maps_flutter: ^2.6.0
+  google_api_headers: ^1.0.0
+  geolocator: ^11.0.0
+  google_maps_webservice: ^0.0.20-nullsafety.5
+  awesome_snackbar_content: ^0.1.3
 
 
 dev_dependencies:
