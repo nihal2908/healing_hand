@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
+import 'package:healing_hand/DoctorPages/DoctorProfileEditPage.dart';
 import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
 import 'package:healing_hand/PatientPages/PatientProfileEditPage.dart';
 import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
+import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:healing_hand/modelclass/user.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -22,7 +24,6 @@ class PatientDetailPage extends StatefulWidget {
 }
 
 final TextEditingController ageController = TextEditingController();
-final TextEditingController emailController = TextEditingController();
 final TextEditingController heightController = TextEditingController();
 final TextEditingController weightController = TextEditingController();
 final TextEditingController gender=TextEditingController();
@@ -32,25 +33,22 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: AppBar(
         title: Text('Individual signup'),
-        backgroundColor: Colors.grey.shade200,
-        foregroundColor: Colors.black,
         centerTitle: true,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15)
+            borderRadius: BorderRadius.circular(15)
         ),
       ),
       body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text('Lets create your profile', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
-                const SizedBox(height: 15,),
-                Container(
+        padding: const EdgeInsets.all(15),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              const Text('Lets create your profile', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
+              const SizedBox(height: 15,),
+              Container(
                   padding: const EdgeInsets.all(10),
                   //height: 480,
                   decoration: BoxDecoration(
@@ -118,23 +116,9 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                         SizedBox(height: 10),
                         CustomTextFormField(
                           controller: pp.phoneController,
-                          labelText: 'Phone Number',
-                          icon: Icons.phone,
-                          readOnly: true,
-                        ),
-                        SizedBox(height: 10),
-                        CustomTextFormField(
-                          controller: emailController,
                           labelText: 'Email',
                           icon: Icons.email,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Required';
-                            } else if (!value.contains('@')) {
-                              return 'Invalid email address';
-                            }
-                            return null;
-                          },
+                          readOnly: true,
                         ),
                         SizedBox(height: 10),
                         CustomTextFormField(
@@ -162,22 +146,26 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                                     elevation: 8,
                                   ),
                                   onPressed: () async {
-                                    if(detailKey.currentState!.validate()){
-                                      PatientModel.createUser(
-                                          name: pp.nameController.text,
-                                          gender: selectedGender,
-                                          age: int.parse(ageController.text),
-                                          phone: pp.phoneController.text,
-                                          email: emailController.text,
-                                          height: int.parse(heightController.text),
-                                          weight: int.parse(weightController.text)
-                                      );
+                                    if (detailKey.currentState!.validate()) {
+                                      // PatientModel.createUser(
+                                      //     name: pp.nameController.text,
+                                      //     gender: selectedGender,
+                                      //     age: int.parse(ageController.text),
+                                      //     phone: pp.phoneController.text,
+                                      //     email: emailController.text,
+                                      //     height: int.parse(heightController.text),
+                                      //     weight: int.parse(weightController.text)
+                                      // );
+                                      signin();
+                                      SaveRecord(context);
+                                      // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
+                                      // SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      // prefs.setString('FIRST_PAGE', 'patient');
+                                      Navigator.pushReplacement(context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  PatientLandingPage()));
                                     }
-                                    SaveRecord(context);
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
-                                    SharedPreferences prefs = await SharedPreferences.getInstance();
-                                    prefs.setString('FIRST_PAGE', 'patient');
-                                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
                                   },
                                   child: const Text('Save')
                               );
@@ -188,50 +176,62 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
                   )
               ),
             ],
-                    ),
           ),
+        ),
       ),
     );
   }
-  
-SaveRecord(context) async
-{
-  print(pp.nameController.text.toString());
-User user= User(pp.nameController.text.toString(),emailController.text.trim(),pp.passwordController.text.toString(),pp.phoneController.text.toString(),
-weightController.text.toString(),heightController.text.toString(),ageController.text.toString(),selectedGender.toString());
-try{
-var res=await http.post(Uri.parse(
-  "http://handycraf.000webhostapp.com/helping_hand/signup.php"
-),body:user.toJson());
-if(res.statusCode==200)
-{
-  //var resBody1=jsonDecode(res.body);
-  String resBody=res.body;
-  print(resBody);
-    if((resBody)=="false")
+
+  SaveRecord(context) async
   {
- Future.delayed(Duration.zero,()=>showDialog(context: context, builder: ((context) => AlertDialog(
-                  title:Text("Record Saved "),
-                  content:ElevatedButton(child:Text("O.K"),onPressed: () {Navigator.pop(context);},)))));   
-  }
-  else{
-    AlertDialog(
-        content: Text("Record already exist"),
-        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+    print(pp.nameController.text.toString());
+    User user= User(pp.nameController.text.toString(),pp.phoneController.text.trim(),pp.passwordController.text.toString(),pp.phoneController.text.toString(),
+        weightController.text.toString(),heightController.text.toString(),ageController.text.toString(),selectedGender.toString());
+    try{
+      var res=await http.post(Uri.parse(
+          "http://handycraf.000webhostapp.com/helping_hand/signup.php"
+      ),body:user.toJson());
+      if(res.statusCode==200)
+      {
+        //var resBody1=jsonDecode(res.body);
+        String resBody=res.body;
+        print(resBody);
+        if((resBody)=="false")
+        {
+          Future.delayed(Duration.zero,()=>showDialog(context: context, builder: ((context) => AlertDialog(
+              title:Text("Record Saved "),
+              content:ElevatedButton(child:Text("O.K"),onPressed: () {Navigator.pop(context);},)))));
+        }
+        else{
+          AlertDialog(
+            content: Text("Record already exist"),
+            actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
 
-      );    
-  }
-}
-else{
-  AlertDialog(
-        content: Text("Record Saved now go to login page"),
-        actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
+          );
+        }
+      }
+      else{
+        AlertDialog(
+          content: Text("Record Saved now go to login page"),
+          actions: [ElevatedButton(onPressed: () {Navigator.pop(context);}, child: Text("O.K"))],
 
-      );    
-}
-}
-catch(e){
-  print(e);
-}
-}
+        );
+      }
+    }
+    catch(e){
+      print(e);
+    }
+  }
+
+  void signin()async{
+    final auth = AuthServices();
+    try{
+      //await auth.signUpWithEmailPassword(phoneController.text, passwordController.text);
+      await auth.patientSignin(pp.phoneController.text, pp.passwordController.text, pp.nameController.text, []);
+      //Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
+    }
+    catch (e) {
+      print(e.toString());
+    }
+  }
 }

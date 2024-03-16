@@ -4,6 +4,7 @@ import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
 import 'package:healing_hand/apiconnection/userhttp.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
+import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final formKey = GlobalKey<FormState>();
@@ -100,20 +101,19 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                             controller: phoneController,
                             autovalidateMode: AutovalidateMode.onUserInteraction,
                             decoration: InputDecoration(
-                              labelText: 'Phone number',
-                              icon: const Icon(Icons.phone),
+                              labelText: 'Email',
+                              icon: const Icon(Icons.email),
                               border: OutlineInputBorder(
                                   borderSide: const BorderSide(),
                                   borderRadius: BorderRadius.circular(15)
                               ),
                               floatingLabelAlignment: FloatingLabelAlignment.center,
                             ),
-                            keyboardType: TextInputType.number,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return 'Required';
                               } //else if (value.toString().length != 10) {
-                                //return 'Number must be 10 digit';
+                              //return 'Number must be 10 digit';
                               //}
                               return null;
                             },
@@ -153,10 +153,10 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     ),
                     if(isLogin) const SizedBox(height: 10,),
                     if(isLogin) TextButton(
-                        onPressed: (){
-                          forgotPass();
-                        },
-                        child: Text('Forgot Password?'),
+                      onPressed: (){
+                        forgotPass();
+                      },
+                      child: Text('Forgot Password?'),
                     ),
                     const SizedBox(height: 15,),
                     Column(
@@ -172,51 +172,49 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                             onPressed: () async{
                               if(formKey.currentState!.validate()){
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          'Successful\n'
-                                              '${!isLogin? nameController.text:''}'
-                                              '${phoneController.text}\n'
-                                              '${passwordController.text}'
-                                      )
-                                  )
+                                    SnackBar(
+                                        content: Text(
+                                            'Successful\n'
+                                                '${!isLogin? nameController.text:''}'
+                                                '${phoneController.text}\n'
+                                                '${passwordController.text}'
+                                        )
+                                    )
                                 );
                                 remember=phoneController.text.toString();
                                 if(isLogin){
+                                  login();
+                                  postApihttp http = postApihttp();
+                                  await http.saveData(phoneController.text.toString(),
+                                      passwordController.text.toString());
+                                  int j = await http.givedata(0);
 
-
-
-                            postApihttp http = postApihttp();
-                            await http.saveData(phoneController.text.toString(),
-                                passwordController.text.toString());
-                            int j = await http.givedata(0);
-
-                              if(j==0)
-                              {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => const PatientLandingPage())
-                                  );
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  prefs.setString('FIRST_PAGE', 'patient');
-                                  print('Add here login verification');
+                                  if(j==0){
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => const PatientLandingPage())
+                                    );
+                                    // SharedPreferences prefs = await SharedPreferences.getInstance();
+                                    // prefs.setString('FIRST_PAGE', 'patient');
+                                    // print('Add here login verification');
+                                  }
+                                  else {
+                                    showDialog(
+                                        context: context,
+                                        builder: ((context) => AlertDialog(
+                                            title: const Text(
+                                                "Invalid email or password entered"),
+                                            content: ElevatedButton(
+                                              child: const Text("O.K"),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            )
+                                        )));
+                                  }
                                 }
                                 else
-                                {
-                                  showDialog(
-                                  context: context,
-                                  builder: ((context) => AlertDialog(
-                                      title: const Text(
-                                          "Invalid email or password entered"),
-                                      content: ElevatedButton(
-                                        child: const Text("O.K"),
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                      ))));
-                                }}
-                                else
-                                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const PatientDetailPage()));
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const PatientDetailPage()));
                               }
                             },
                             child: !isLogin? const Text('Sign-Up') : const Text('Login')
@@ -259,7 +257,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
               onPressed: (){
                 //send otp to emial
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Check your Mail box...'))
+                    SnackBar(content: Text('Check your Mail box...'))
                 );
                 Navigator.pop(context);
               },
@@ -269,4 +267,22 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
       );
     });
   }
+
+  void login()async{
+    //get instance
+    final authService = AuthServices();
+
+    //try login
+    try{
+      //await authService.signInWithEmailPassword(phoneController.text, passwordController.text);
+      await authService.patientLogin(phoneController.text, passwordController.text);
+      //Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientLandingPage()));
+    }
+
+    //catch error
+    catch (e) {
+      print(e.toString());
+    }
+  }
+
 }

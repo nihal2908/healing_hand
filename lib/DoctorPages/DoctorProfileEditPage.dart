@@ -112,13 +112,6 @@ class _DoctorProfileEditPageState extends State<DoctorProfileEditPage> {
                         ),
                         SizedBox(height: 10),
                         CustomTextFormField(
-                          controller: phoneController,
-                          labelText: 'Phone Number',
-                          icon: Icons.phone,
-                          keyboardType: TextInputType.number,
-                        ),
-                        SizedBox(height: 10),
-                        CustomTextFormField(
                           controller: emailController,
                           labelText: 'Email',
                           icon: Icons.email,

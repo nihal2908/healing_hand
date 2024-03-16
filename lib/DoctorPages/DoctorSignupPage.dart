@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
 import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
 import 'package:healing_hand/apiconnection/doctorhttp.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
+import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 String? dno;
@@ -39,28 +41,13 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
         // ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(15),
+          padding: const EdgeInsets.all(15),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               const Text('Hello Doctor', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30),),
               const SizedBox(height: 30,),
               WhiteContainer(
-                // padding: const EdgeInsets.only(top: 5, bottom: 10, left: 10, right: 10),
-                // //height: 490,
-                // decoration: BoxDecoration(
-                //   color: Colors.deepPurple.shade50,
-                //   borderRadius: BorderRadius.circular(20),
-                //   border: Border.all(
-                //     color: Colors.black,
-                //   ),
-                //   boxShadow: const [
-                //     BoxShadow(
-                //       color: Colors.deepPurple,
-                //       blurRadius: 5
-                //     )
-                //   ]
-                // ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -78,22 +65,20 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           if(!isLogin)
-                          CustomTextFormField(
-                            controller: phoneController,
-                            labelText: 'Name',
-                            icon: Icons.person,
-                          ),
+                            CustomTextFormField(
+                              controller: nameController,
+                              labelText: 'Name',
+                              icon: Icons.person,
+                            ),
                           const SizedBox(height: 10,),
                           CustomTextFormField(
-                              controller: phoneController,
-                              labelText: 'Phone number',
-                              icon: Icons.phone,
-                              keyboardType: TextInputType.number,
-                        
+                            controller: phoneController,
+                            labelText: 'Email',
+                            icon: Icons.email,
                           ),
                           const SizedBox(height: 10,),
                           TextFormField(
-                            
+
                             controller: passwordController,
                             decoration: InputDecoration(
                               labelText: 'Password',
@@ -135,70 +120,71 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                     Column(
                       children: [
                         ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              elevation: 8,
                             ),
-                            elevation: 8,
-                          ),
-                          onPressed: ()async {
-                            if(formKey.currentState!.validate()){
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                      content: Text(
-                                          'Successful\n'
-                                              '${!isLogin? nameController.text:''}'
-                                              '${phoneController.text}\n'
-                                              '${passwordController.text}'
-                                      )
-                                  )
-                              );
-                              if(isLogin){
-                                dno=phoneController.text.toString();
-                                postApihttp http = postApihttp();
-                                await http.saveData1(phoneController.text.toString(),
-                                passwordController.text.toString());
-                                int j = await http.givedata(0);
-                              
-                                if(j==0) {
-                                  Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (context) => DoctorLandingPage())
-                                  );
-                                  SharedPreferences prefs = await SharedPreferences.getInstance();
-                                  prefs.setString('FIRST_PAGE', 'doctor');
+                            onPressed: ()async {
+                              if(formKey.currentState!.validate()){
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        content: Text(
+                                            'Successful\n'
+                                                '${!isLogin? nameController.text:''}'
+                                                '${phoneController.text}\n'
+                                                '${passwordController.text}'
+                                        )
+                                    )
+                                );
+                                if(isLogin){
+                                  login();
+                                  dno=phoneController.text.toString();
+                                  postApihttp http = postApihttp();
+                                  await http.saveData1(phoneController.text.toString(),
+                                      passwordController.text.toString());
+                                  int j = await http.givedata(0);
+
+                                  if(j==0) {
+                                    Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (context) => DoctorLandingPage())
+                                    );
+                                    // SharedPreferences prefs = await SharedPreferences.getInstance();
+                                    // prefs.setString('FIRST_PAGE', 'doctor');
+                                    // print('Add here login verification');
+                                  }
+                                  else
+                                  {
+                                    showDialog(
+                                        context: context,
+                                        builder: (
+                                                (context) => AlertDialog(
+                                                title: Text("Invalid email or password entered"),
+                                                content: ElevatedButton(
+                                                  child: Text("O.K"),
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                  },
+                                                )
+                                            )
+                                        )
+                                    );
+                                  }
+                                  // Navigator.pushReplacement(
+                                  //     context,
+                                  //     MaterialPageRoute(builder: (context) => DoctorLandingPage())
+                                  // );
                                   print('Add here login verification');
                                 }
                                 else
-                                {
-                                  showDialog(
-                                    context: context,
-                                    builder: (
-                                      (context) => AlertDialog(
-                                        title: Text("Invalid email or password entered"),
-                                        content: ElevatedButton(
-                                          child: Text("O.K"),
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                          },
-                                        )
-                                      )
-                                    )
-                                  );
-                                }
-                                // Navigator.pushReplacement(
-                                //     context,
-                                //     MaterialPageRoute(builder: (context) => DoctorLandingPage())
-                                // );
-                                print('Add here login verification');
+                                  Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorDetailPage()));
+                                //for checking, currently using push,, afterwards it should be pushReplacement or pushandrmoveuntil
                               }
-                              else
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorDetailPage()));
-                              //for checking, currently using push,, afterwards it should be pushReplacement or pushandrmoveuntil
-                            }
-                          },
-                          child: !isLogin? const Text('Sign-Up') : const Text('Login')
+                            },
+                            child: !isLogin? const Text('Sign-Up') : const Text('Login')
                         ),
                         const SizedBox(height: 10,),
                         TextButton(
@@ -206,7 +192,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                               setState(() {
                                 isLogin = !isLogin;
                               });
-                              
+
                             },
                             child: !isLogin? const Text('Already have account? Login') : const Text('New to Helping Hand? SignUp')
                         ),
@@ -248,4 +234,22 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
       );
     });
   }
+
+  void login()async{
+    //get instance
+    final authService = AuthServices();
+
+    //try login
+    try{
+      UserCredential cred = await authService.doctorLogin(phoneController.text, passwordController.text);
+      String hasdoctors = cred.user!.uid;
+      //Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
+    }
+
+    //catch error
+    catch (e) {
+      print(e.toString());
+    }
+  }
+
 }

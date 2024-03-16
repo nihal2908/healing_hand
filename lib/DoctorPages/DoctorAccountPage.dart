@@ -138,56 +138,6 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                         ],
                       )
                   ),
-                  const SizedBox(height: 20,),
-                  WhiteContainer(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Customer reviews', style: nameSytle,),
-                            if (widget.doc.reviews!.length > 2)
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    showAllReviews = !showAllReviews;
-                                  });
-                                },
-                                child: Text(showAllReviews ? 'Hide' : 'See all'),
-                              ),
-                          ],
-                        ),
-                        Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              children: [
-                                noReview? Padding(padding: EdgeInsets.all(10), child: Text('No recent Reviews')):
-                                Column(
-                                  children: [
-                                    // Display two recent reviews
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: showAllReviews ? doc.reviews!.length : doc.reviews!.length>=2 ? 2 : doc.reviews!.length,
-                                      itemBuilder: (context, index) {
-                                        String review = doc.reviews![index];
-                                        List<String> parts = review.split(': ');
-
-                                        return ListTile(
-                                          title: Text(parts[0]),
-                                          subtitle: Text(parts[1]),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-
-                        )
-                      ],
-                    ),
-                  ),
                   SizedBox(height: 20,),
                   WhiteContainer(
                     child: Container(

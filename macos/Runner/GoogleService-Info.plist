@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyASQ_QkT_hEPRmm9hZ7fhOSqGBANurofkc</string>
+	<key>GCM_SENDER_ID</key>
+	<string>131870480283</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.healingHand.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>healing-hand-a4fe1</string>
+	<key>STORAGE_BUCKET</key>
+	<string>healing-hand-a4fe1.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:131870480283:ios:39e4a61362593ffd81333e</string>
+</dict>
+</plist>

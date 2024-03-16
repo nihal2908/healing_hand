@@ -3,6 +3,7 @@ import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/PatientPages/PatientHomePage.dart';
 import 'package:healing_hand/PatientPages/PatientAppointmentsPage.dart';
 import 'package:healing_hand/PatientPages/PatientSettingPage.dart';
+import 'package:healing_hand/pages/ChatPage.dart';
 
 class PatientLandingPage extends StatefulWidget {
   const PatientLandingPage({super.key});
@@ -14,6 +15,7 @@ class PatientLandingPage extends StatefulWidget {
 List<Widget> HomePageScreen = [
   PatientHomePage(),
   PatientSchedulePage(),
+  ChatPage2(usertype: 'patient',),
   PatientSettingPage(),
 ];
 
@@ -42,6 +44,11 @@ class _PatientLandingPageState extends State<PatientLandingPage> {
             selectedIcon: Icon(Icons.calendar_month),
             icon: Icon(Icons.calendar_month_outlined),
             label: 'Appointments',
+          ),
+          NavigationDestination(
+            //selectedIcon: Icon(),
+            icon: Icon(Icons.message),
+            label: 'Chats',
           ),
           NavigationDestination(
             //selectedIcon: Icon(),

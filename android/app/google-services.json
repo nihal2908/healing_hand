@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "945013281355",
+    "project_id": "healing-hand-37032",
+    "storage_bucket": "healing-hand-37032.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:945013281355:android:b09b67e9300897dd28f3ce",
+        "android_client_info": {
+          "package_name": "com.example.healing_hand"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDMclRuS-mxUs7bXB9kAwQitMnD46GOB_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

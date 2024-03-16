@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
 import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
@@ -6,6 +7,7 @@ import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/Providers/ThemeProvider.dart';
+import 'package:healing_hand/firebase_options.dart';
 import 'package:healing_hand/pages/HomePage.dart';
 import 'package:healing_hand/pages/OnBoardingPage.dart';
 import 'package:healing_hand/pages/UserTypePage.dart';
@@ -18,22 +20,27 @@ Widget page = Container(child: Text('error'),);
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SharedPreferences.getInstance();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  if(prefs.getString('FIRST_PAGE')!=null){
-    firstPage = prefs.getString('FIRST_PAGE')!;
-  }
-  switch(firstPage){
-    case'onboarding': page = OnBoardingPage();
-    break;
-    case'userselection' : page = UserTypePage();
-    break;
-    case'patient' : page = PatientLandingPage();
-    break;
-    case'doctor' : page = DoctorLandingPage();
-    break;
-    default: page = OnBoardingPage();
-  }
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // await SharedPreferences.getInstance();
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // if(prefs.getString('FIRST_PAGE')!=null){
+  //   firstPage = prefs.getString('FIRST_PAGE')!;
+  // }
+  // switch(firstPage){
+  //   case'onboarding': page = OnBoardingPage();
+  //   break;
+  //   case'userselection' : page = UserTypePage();
+  //   break;
+  //   case'patient' : page = PatientLandingPage();
+  //   break;
+  //   case'doctor' : page = DoctorLandingPage();
+  //   break;
+  //   default: page = OnBoardingPage();
+  // }
   runApp(const MyApp());
 }
 

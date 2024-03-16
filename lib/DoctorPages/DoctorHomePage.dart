@@ -4,7 +4,9 @@ import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/AppointmentContainerForDoctor.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
+import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/modelclass/appoinment.dart';
+import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart' as ds;
 import 'package:provider/provider.dart';
 
 class DoctorHomePage extends StatefulWidget {
@@ -16,6 +18,7 @@ class DoctorHomePage extends StatefulWidget {
 
 class _DoctorHomePageState extends State<DoctorHomePage> {
   bool gotLocation = false;
+  bool nosched = true;
 
   @override
   Widget build(BuildContext context) {
@@ -58,8 +61,15 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
       }),
     );
       }
-    Widget ShowPostList(BuildContext context,List<prodModal2> posts)
-    {
+    Widget ShowPostList(BuildContext context,List<prodModal2> posts) {
+
+    for(int i=1; i<posts.length; i++){
+      if(posts[i].email == ds.phoneController.text && posts[i].status == 'accepted' && DateTime.parse(posts[i].enddate!).isAfter(DateTime.now())){
+        nosched = false;
+      }
+    }
+
+
       return Padding(
       padding: EdgeInsets.all(15),
       child: Column(
@@ -90,23 +100,41 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
             ],
           ),
           Text('Scheduled Appointments', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),),
+          SizedBox(height: 20,),
           Expanded(
             //color: Colors.black,
-            child:          SingleChildScrollView(
-                    child: Column(
+            child: SingleChildScrollView(
+                    child: nosched ?
+                    WhiteContainer(
+                        child: Container(
+                          height: 150,
+                          width: 80,
+                          child: Center(
+                            child: Text('Your do not have any Upcomming Appointments.\n'
+                                'Check Notifications for any new appointment request',textAlign: TextAlign.center,),
+                          ),
+                        )
+                    ):
+                    Column(
                       children: [
                         ListView.builder(
                           shrinkWrap: true,
                           itemBuilder: (context, index){
-                            if(index == 0 || index == 1) return null; // abhi ke lie pahle do appointment skip kar die
+                            print('ye hai galat');
+                            print(posts[0].date); // null hai kuchh hai hi nhi
+                            if(index == 0 ) return null; // abhi ke lie pahle do appointment skip kar die
                             // hain unme error aa rahi hai ,,, bad me ye condition hata denge
-                            if(DateTime.parse(posts[index].date.toString()).isAfter(DateTime.now()) && posts[index].status == 'accepted')
+                            if(posts[index].email == ds.phoneController.text && posts[index].status == 'accepted' && DateTime.parse(posts[index].enddate!).isAfter(DateTime.now())){
+
                               return Column(
                                 children: [
-                                  DocAppointmentContainer(posts[index].phone.toString(),posts[index].date,posts[index].enddate),
+                                  DocAppointmentContainer(
+                                      posts[index].phone.toString(),
+                                      posts[index].date, posts[index].enddate),
                                   SizedBox(height: 10,)
                                 ],
                               );
+                            }
                             else
                               return Container();
                           },

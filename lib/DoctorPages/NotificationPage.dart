@@ -4,7 +4,10 @@ import 'package:healing_hand/apiconnection/doctorhttp.dart';
 import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
+import 'package:healing_hand/customWidgets/styles.dart';
 import 'package:healing_hand/modelclass/appoinment.dart';
+import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart' as ds;
+
 String? date;
 String? time;
 class NotificationPage extends StatefulWidget {
@@ -15,6 +18,9 @@ class NotificationPage extends StatefulWidget {
 }
 httpServices13 http=new httpServices13();
 class _NotificationPageState extends State<NotificationPage> {
+
+  bool hasNotification = false;
+
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<List<prodModal2>>(
@@ -60,17 +66,23 @@ class _NotificationPageState extends State<NotificationPage> {
   }
   Widget ShowPostList(BuildContext context,List<prodModal2> posts)
   {
+    for(int i=0; i<posts.length; i++){
+      if(posts[i].email == ds.phoneController.text && posts[i].status == 'wait'){
+        print(posts[i].status);
+        hasNotification = true;
+      }
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text('Notifications'),
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.all(8),
-          child: ListView.builder(
+          padding: EdgeInsets.all(10),
+          child: hasNotification ? ListView.builder(
               shrinkWrap: true,
               itemBuilder: (context, index){
-                if(posts[index].status == "wait") {
+                if(posts[index].status == "wait" && posts[index].email == ds.phoneController.text) {
                   return Column(
                     children: [
                       WhiteContainer(
@@ -118,9 +130,13 @@ class _NotificationPageState extends State<NotificationPage> {
                 } else {
                   return Container();
                 }
+                // }
+                // else{
+                //   return WhiteContainer(child: Center(child: Text('You have no new Appointment requests', style: nameSytle,),));
+                // }
               },
               itemCount: posts.length
-          ),
+          ) : WhiteContainer(child: Center(child: Text('You have no new Appointment requests', style: nameSytle,),))
         ),
       ),
     );

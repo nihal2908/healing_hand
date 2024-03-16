@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
 import 'package:healing_hand/Providers/AppointmentProvider.dart';
+import 'package:healing_hand/chat_services/chatServices.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/DoctorTile.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
+import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/pages/ChatRoom.dart';
 import 'package:url_launcher/url_launcher.dart';
- String? phone1;
- String? email1;
- String? date1;
- String? time1;
- String? status1; 
+String? phone1;
+String? email1;
+String? date1;
+String? time1;
+String? status1;
 String? purpose1;
 String? enddate1;
 class AppointmentContainer extends StatelessWidget {
@@ -36,40 +39,40 @@ class AppointmentContainer extends StatelessWidget {
 
 
     return WhiteContainer(
-      child: InkWell(
+        child: InkWell(
 
-        // there will be option for patient to call doctor between start ans endtime
-        onTap: (status1 == 'accepted' && DateTime.parse(date1.toString()).isAfter(DateTime.now()) && DateTime.parse(enddate1.toString()).isBefore(DateTime.now())) ? (){
-          showAppointmentActions(context);
-        } : null,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(purpose1.toString(), style: TextStyle(fontSize: 19, color: Colors.white),),
-            SizedBox(height: 5,),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(Icons.access_time_filled),
-                SizedBox(width: 10,),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(DateTime.parse(date1.toString()).day.toString()+'-'+DateTime.parse(date1.toString()).month.toString()+'-'+DateTime.parse(date1.toString()).year.toString()),
-                      Text('${DateTime.parse(date1.toString()).hour.toString()+':'+DateTime.parse(date1.toString()).minute.toString()}-${DateTime.parse(enddate1.toString()).hour.toString()+':'+DateTime.parse(enddate1.toString()).minute.toString()}')
-                    ],
+          // there will be option for patient to call doctor between start ans endtime
+          onTap: (status1 == 'accepted' && DateTime.parse(date1.toString()).isBefore(DateTime.now()) && DateTime.parse(enddate1.toString()).isAfter(DateTime.now())) ? (){
+            showAppointmentActions(context);
+          } : null,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(purpose1.toString(), style: TextStyle(fontSize: 19, color: Colors.white),),
+              SizedBox(height: 5,),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(Icons.access_time_filled),
+                  SizedBox(width: 10,),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(DateTime.parse(date1.toString()).day.toString()+'-'+DateTime.parse(date1.toString()).month.toString()+'-'+DateTime.parse(date1.toString()).year.toString()),
+                        Text('${DateTime.parse(date1.toString()).hour.toString()+':'+DateTime.parse(date1.toString()).minute.toString()}-${DateTime.parse(enddate1.toString()).hour.toString()+':'+DateTime.parse(enddate1.toString()).minute.toString()}')
+                      ],
+                    ),
                   ),
-                ),
-               Text('Online')
-               // Text(appointment.type),
-              ],
-            ),
-            SizedBox(height: 5,),
-            //DoctorTile(doc: appointment.doctor)
-          ],
-        ),
-      )
+                  Text('Online')
+                  // Text(appointment.type),
+                ],
+              ),
+              SizedBox(height: 5,),
+              //DoctorTile(doc: appointment.doctor)
+            ],
+          ),
+        )
     );
   }
 
@@ -83,7 +86,11 @@ class AppointmentContainer extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ElevatedButton(
-                    onPressed: (){
+                    onPressed: ()async{
+                      //ChatService chat = ChatService();
+                      //String docId = await chat.getUIDFromEmail(phone1!);
+                      //chat.connectDoctorPatient(docId, currentUserId);
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatRoom2(senderemail: currentUserEmail, recieveremail: phone1!)));
                       print('Chat with Doctor');
                     },
                     child: Column(children: [Icon(Icons.message), Text('Chat with Doctor')],)
@@ -93,7 +100,7 @@ class AppointmentContainer extends StatelessWidget {
                     onPressed: (){
                       print('Make a voice call');
                       launchUrl(
-                          Uri(scheme: 'tel', path: '9569399487'),
+                          Uri(scheme: 'tel', path: '9569399400'),
                           mode: LaunchMode.externalApplication
                       );
                     },
