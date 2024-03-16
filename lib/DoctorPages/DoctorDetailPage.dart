@@ -54,20 +54,6 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
               const Text('Lets create your profile', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
               const SizedBox(height: 15,),
               WhiteContainer(
-                // padding: const EdgeInsets.all(10),
-                // decoration: BoxDecoration(
-                //     color: Colors.deepPurple.shade50,
-                //     borderRadius: BorderRadius.circular(20),
-                //     border: Border.all(
-                //       color: Colors.deepPurple,
-                //     ),
-                //     boxShadow: const [
-                //       BoxShadow(
-                //           color: Colors.deepPurple,
-                //           blurRadius: 5
-                //       )
-                //     ]
-                // ),
                   child: Form(
                     key: detailKey,
                     child: Column(

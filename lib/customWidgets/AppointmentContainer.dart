@@ -8,30 +8,32 @@ import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:healing_hand/pages/ChatRoom.dart';
 import 'package:url_launcher/url_launcher.dart';
-String? phone1;
-String? email1;
-String? date1;
-String? time1;
-String? status1;
-String? purpose1;
-String? enddate1;
+
 class AppointmentContainer extends StatelessWidget {
 //  Appointment appointment;
+  final String? phone1;
+  final String? email1;
+  final String? date1;
+  final String? time1;
+  final String? status1;
+  final String? purpose1;
+  final String? enddate1;
 
   //abto appointment class ke according data aega nhi yha ?? to ui me changes karne padenge
 
-  AppointmentContainer({phone,email,date,time,status,purpose,enddate})
-  {
-    phone1=phone;
-    email1=email;
-    date1=date;
-    time1=time;
-    status1=status;
-    purpose1=purpose;
-    enddate1=enddate;
-
-
-  }
+  AppointmentContainer({required this.phone1, required this.email1,
+  required this.date1, required this.status1, required this.enddate1, required this.purpose1, required this.time1});
+  // {
+  //   phone1=phone;
+  //   email1=email;
+  //   date1=date;
+  //   time1=time;
+  //   status1=status;
+  //   purpose1=purpose;
+  //   enddate1=enddate;
+  //
+  //
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +42,8 @@ class AppointmentContainer extends StatelessWidget {
 
     return WhiteContainer(
         child: InkWell(
-
-          // there will be option for patient to call doctor between start ans endtime
-          onTap: (status1 == 'accepted' && DateTime.parse(date1.toString()).isBefore(DateTime.now()) && DateTime.parse(enddate1.toString()).isAfter(DateTime.now())) ? (){
+          // there will be option for patient to call/chat with doctor between start ans endtime
+          onTap: (DateTime.parse(date1.toString()).isBefore(DateTime.now()) && DateTime.parse(enddate1.toString()).isAfter(DateTime.now())) ? (){
             showAppointmentActions(context);
           } : null,
           child: Column(
@@ -59,8 +60,8 @@ class AppointmentContainer extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(DateTime.parse(date1.toString()).day.toString()+'-'+DateTime.parse(date1.toString()).month.toString()+'-'+DateTime.parse(date1.toString()).year.toString()),
-                        Text('${DateTime.parse(date1.toString()).hour.toString()+':'+DateTime.parse(date1.toString()).minute.toString()}-${DateTime.parse(enddate1.toString()).hour.toString()+':'+DateTime.parse(enddate1.toString()).minute.toString()}')
+                        Text(DateTime.parse(date1.toString()).day.toString()+' - '+DateTime.parse(date1.toString()).month.toString()+' - '+DateTime.parse(date1.toString()).year.toString()),
+                        Text(DateTime.parse(date1.toString()).hour.toString()+':'+DateTime.parse(date1.toString()).minute.toString()+' - '+DateTime.parse(enddate1.toString()).hour.toString()+':'+DateTime.parse(enddate1.toString()).minute.toString())
                       ],
                     ),
                   ),
@@ -87,10 +88,7 @@ class AppointmentContainer extends StatelessWidget {
               children: [
                 ElevatedButton(
                     onPressed: ()async{
-                      //ChatService chat = ChatService();
-                      //String docId = await chat.getUIDFromEmail(phone1!);
-                      //chat.connectDoctorPatient(docId, currentUserId);
-                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatRoom2(senderemail: currentUserEmail, recieveremail: phone1!)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=>ChatRoom3(senderemail: currentUserEmail, recieveremail: email1!, name: email1!,)));
                       print('Chat with Doctor');
                     },
                     child: Column(children: [Icon(Icons.message), Text('Chat with Doctor')],)

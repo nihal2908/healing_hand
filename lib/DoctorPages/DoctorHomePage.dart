@@ -62,8 +62,14 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
     );
       }
     Widget ShowPostList(BuildContext context,List<prodModal2> posts) {
-
-    for(int i=1; i<posts.length; i++){
+    print(posts.length);
+    for(int i=0; i<posts.length; i++){
+      // print(posts[i].email);
+      // print(posts[i].phone);
+      // print(posts[i].purpose);
+      // print(posts[i].enddate);
+      // print(posts[i].date);
+      // print(posts[i].status);
       if(posts[i].email == ds.phoneController.text && posts[i].status == 'accepted' && DateTime.parse(posts[i].enddate!).isAfter(DateTime.now())){
         nosched = false;
       }
@@ -84,7 +90,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               children: [
                 CircleImage(image: DoctorUser.profile.image),
                 Text('Welcome back,'),
-                Text(DoctorUser.name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
+                Text('Doctor', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
               ],
             ),
             actionsIconTheme: IconThemeData(
@@ -122,13 +128,14 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                           itemBuilder: (context, index){
                             print('ye hai galat');
                             print(posts[0].date); // null hai kuchh hai hi nhi
-                            if(index == 0 ) return null; // abhi ke lie pahle do appointment skip kar die
+                            //if(index == 0 ) return null; // abhi ke lie pahle do appointment skip kar die
                             // hain unme error aa rahi hai ,,, bad me ye condition hata denge
                             if(posts[index].email == ds.phoneController.text && posts[index].status == 'accepted' && DateTime.parse(posts[index].enddate!).isAfter(DateTime.now())){
 
                               return Column(
                                 children: [
                                   DocAppointmentContainer(
+                                    posts[index].purpose!,
                                       posts[index].phone.toString(),
                                       posts[index].date, posts[index].enddate),
                                   SizedBox(height: 10,)

@@ -7,6 +7,7 @@ import 'package:healing_hand/PatientPages/PatientProfileEditPage.dart';
 import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
 import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
+import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:healing_hand/modelclass/user.dart';
 import 'package:provider/provider.dart';
@@ -48,22 +49,7 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
             children: [
               const Text('Lets create your profile', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
               const SizedBox(height: 15,),
-              Container(
-                  padding: const EdgeInsets.all(10),
-                  //height: 480,
-                  decoration: BoxDecoration(
-                      color: Colors.deepPurple.shade50,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.deepPurple,
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.deepPurple,
-                            blurRadius: 5
-                        )
-                      ]
-                  ),
+              WhiteContainer(
                   child: Form(
                     key: detailKey,
                     child: Column(

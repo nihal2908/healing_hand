@@ -79,19 +79,13 @@ Widget ShowPostList(BuildContext context,List<prodModal> posts)
               children: [
                 CircleImage(image: PatientUser.profile.image),
                 Text('Welcome back,'),
-                Text(PatientUser.name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
+                Text('Health Partner', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
               ],
             ),
             actionsIconTheme: IconThemeData(
               size: 30,
             ),
             actions: [
-              IconButton(
-                  onPressed: (){
-                    //add here google map functionality
-                  },
-                  icon: Icon(Icons.location_pin)
-              ),
               IconButton(
                   onPressed: (){
                     Navigator.push(context, MaterialPageRoute(builder: (context)=>AppointmentRequestPage()));

@@ -16,12 +16,13 @@ TextStyle nameSytle = const TextStyle(
     color: Colors.black,
     fontWeight: FontWeight.w600
 );
-String? num1,date1,time1;
+String? num1,date1,time1, purpose1;
 DateTime? sdate,edate;
 class DocAppointmentContainer extends StatelessWidget {
   //final Appointment appointment;
-  DocAppointmentContainer(String num, String? date, String? time)
+  DocAppointmentContainer(String purpose, String num, String? date, String? time)
   {
+    purpose1 = purpose;
     num1=num;
     date1=date;
     time1=time;
@@ -66,22 +67,21 @@ class DocAppointmentContainer extends StatelessWidget {
   }
   Widget ShowPostList(BuildContext context,List<prodModal3> posts)
   {
-    return Container(
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(20)
-        ),
-        child: GestureDetector(
-          onTap: (){
-            (sdate!.isAfter(DateTime.now()) && edate!.isBefore(DateTime.now())) ?
-            showAppointmentActions(context) :
-            null ;
-          },
+    return GestureDetector(
+      onTap: (){
+        (sdate!.isAfter(DateTime.now()) && edate!.isBefore(DateTime.now())) ?
+        showAppointmentActions(context) : null ;
+      },
+      child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(20)
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(purpose1.toString(), style: nameSytle,),
+              Text(purpose1.toString(), style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),),
               SizedBox(height: 5,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -105,7 +105,6 @@ class DocAppointmentContainer extends StatelessWidget {
                 width: MediaQuery.of(context).size.width,
                 padding: const EdgeInsets.all(0),
                 decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: ListTile(
@@ -140,8 +139,8 @@ class DocAppointmentContainer extends StatelessWidget {
                 ),
               )
             ],
-          ),
-        )
+          )
+      ),
     );
   }
   void showAppointmentActions(BuildContext context) {
@@ -159,7 +158,7 @@ class DocAppointmentContainer extends StatelessWidget {
                       //String docId = await chat.getUIDFromEmail(phone1!);
                       //chat.connectDoctorPatient(docId, currentUserId);
                       Navigator.push(context, MaterialPageRoute(builder:
-                          (context)=>ChatRoom2(senderemail: ds.phoneController.text, recieveremail: num1!)));
+                          (context)=>ChatRoom3(senderemail: ds.phoneController.text, recieveremail: num1!, name: num1!,)));
                       print('Chat with Patient');
                     },
                     child: Column(children: [Icon(Icons.message), Text('Chat with Patient')],)

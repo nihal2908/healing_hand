@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/modelclass/appoinment.dart';
+import 'package:healing_hand/PatientPages/PatientSignupPage.dart' as ps;
+
+import '../customWidgets/styles.dart';
 httpServices13 http=new httpServices13();
 class AppointmentRequestPage extends StatefulWidget {
   const AppointmentRequestPage({super.key});
@@ -51,6 +53,20 @@ class _AppointmentRequestPageState extends State<AppointmentRequestPage> {
   }
   Widget ShowPostList(BuildContext context,List<prodModal2> posts)
   {
+
+    bool waiting = false;
+    bool denied = false;
+
+    for(int i=0; i<posts.length; i++){
+      if(posts[i].phone == ps.phoneController.text && posts[i].status == 'wait'){
+        waiting = true;
+      }
+      else if(posts[i].phone == ps.phoneController.text && posts[i].status == 'denied'){
+        denied = true;
+      }
+    }
+
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Notifications'),
@@ -58,32 +74,73 @@ class _AppointmentRequestPageState extends State<AppointmentRequestPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.all(8),
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (context, index){
-                if(posts[index].status.toString() == "wait" || posts[index].status.toString() == "denied")
-                  return Column(
-                    children: [
-                      WhiteContainer(
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: CircleImage(image: AssetImage('assets/images/doctor.png')),
-                                title: Text(posts[index].purpose.toString()),
-                                subtitle: Text(posts[index].email.toString()),
-                              ),
-                              Divider(),
-                              posts[index].status == "wait" ? Text('Status: Waiting') : Text('Status: Denied', style: TextStyle(color: Colors.red),),
-                            ],
-                          )
-                      ),
-                      SizedBox(height: 7,)
-                    ],
-                  );
-                else
-                  return Container();
-              },
-              itemCount: posts.length
+          child: Column(
+            children: [
+              Text(
+                'Pending Requests',
+                style: headingStyle,
+              ),
+              SizedBox(height: 15,),
+              waiting ? ListView.builder(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index){
+                    if(posts[index].phone == ps.phoneController.text && posts[index].status.toString() == "wait")
+                      return Column(
+                        children: [
+                          WhiteContainer(
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: CircleImage(image: AssetImage('assets/images/doctor.png')),
+                                    title: Text(posts[index].purpose.toString()),
+                                    subtitle: Text(posts[index].email.toString()),
+                                  ),
+                                  Divider(),
+                                  Text('Status: Pending', style: TextStyle(color: Colors.blue),) // Text('Status: Denied', style: TextStyle(color: Colors.red),),
+                                ],
+                              )
+                          ),
+                          SizedBox(height: 7,)
+                        ],
+                      );
+                    else
+                      return Container();
+                  },
+                  itemCount: posts.length
+              ) : WhiteContainer(child: Text('No Pending Requests', style: nameSytle,)),
+              Text(
+                'Denied Requests',
+                style: headingStyle,
+              ),
+              SizedBox(height: 15,),
+              denied ? ListView.builder(
+                  shrinkWrap: true,
+                  itemBuilder: (context, index){
+                    if(posts[index].phone == ps.phoneController.text && posts[index].status.toString() == "denied")
+                      return Column(
+                        children: [
+                          WhiteContainer(
+                              child: Column(
+                                children: [
+                                  ListTile(
+                                    leading: CircleImage(image: AssetImage('assets/images/doctor.png')),
+                                    title: Text(posts[index].purpose.toString()),
+                                    subtitle: Text(posts[index].email.toString()),
+                                  ),
+                                  Divider(),
+                                  Text('Status: Denied', style: TextStyle(color: Colors.red),) // Text('Status: Denied', style: TextStyle(color: Colors.red),),
+                                ],
+                              )
+                          ),
+                          SizedBox(height: 7,)
+                        ],
+                      );
+                    else
+                      return Container();
+                  },
+                  itemCount: posts.length
+              ) : WhiteContainer(child: Text('No Denied Requests', style: nameSytle,)),
+            ],
           ),
         ),
       ),

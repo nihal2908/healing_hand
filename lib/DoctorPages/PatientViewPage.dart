@@ -35,10 +35,7 @@ gender1=gender;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.white,
       ),
       body: Consumer<PatientProvider>(
           builder: (context, UserModal, child){
@@ -69,8 +66,8 @@ gender1=gender;
                                       Text('${age1.toString()} years', style: profileStyle,),
                                       Text(gender1.toString(), style: profileStyle),
                                       Text(phone1.toString(), style: profileStyle),
-                                      Text(email1.toString(), style: profileStyle),
-                                      Text('Aadhaar: Not available', style: profileStyle),
+                                      //Text(email1.toString(), style: profileStyle),
+                                      //Text('Aadhaar: Not available', style: profileStyle),
                                       Text('${height1}cm / ${weight1}Kg', style: profileStyle)
                                     ],
                                   ),

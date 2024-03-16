@@ -8,6 +8,7 @@ import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/modelclass/userer.dart';
+import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:healing_hand/PatientPages/PatientProfileEditPage.dart' as dd;
@@ -105,7 +106,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                                   Text('${posts[0].age} years', style: profileStyle,),
                                   Text(posts[0].gender.toString(), style: profileStyle),
                                   Text(remember, style: profileStyle),
-                                  Text(posts[0].user_email.toString(), style: profileStyle),
+                                  //Text(posts[0].user_email.toString(), style: profileStyle),
                                   Text('${posts[0].height}cm / ${posts[0].weight}Kg', style: profileStyle)
                                 ],
                               ),
@@ -131,6 +132,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                           height: 30,
                           child: InkWell(
                               onTap: (){
+                                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const UserTypePage()), (route) => false);
                                 print('Logout pressed');
                               },
                               child: Center(child: Text('Log-out', style: nameSytle,))

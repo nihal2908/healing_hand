@@ -1,10 +1,6 @@
-
-
 import 'package:flutter/material.dart';
-import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
-import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
+import 'package:healing_hand/PatientPages/PatientSignupPage.dart' as ps;
 import 'package:healing_hand/PatientPages/SearchPage.dart';
-import 'package:healing_hand/Providers/AppointmentProvider.dart';
 import 'package:healing_hand/apiconnection/doctorview.dart';
 import 'package:healing_hand/customWidgets/AppointmentContainer.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
@@ -68,12 +64,23 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
     bool noUpComApp = true;
     bool noPastApp = true;
     print(posts.length);
-    for(int i=0; i<posts.length; i++){
+    for(int i=0; i<posts.length; i++) {
+      if (posts[i].phone == ps.phoneController.text && posts[i].status == 'accepted') {
+        if (DateTime.parse(posts[i].enddate!).isBefore(DateTime.now())) {
+          noPastApp = false;
+        }
+        else if(DateTime.parse(posts[i].enddate!).isAfter(DateTime.now())){
+          noUpComApp = false;
+        }
+      }
       print("flag");
       print(posts[i].status);
+      print(posts[i].purpose);
+      print(posts[i].email);
+      print(posts[i].phone);
       print(posts[i].toString());
-      // print(DateTime.parse(posts[i].date.toString()));
-      // print(DateTime.parse(posts[i].enddate.toString()));
+      print(DateTime.parse(posts[i].date.toString()));
+      print(DateTime.parse(posts[i].enddate.toString()));
       // if(DateTime.parse(posts[i].date.toString()).isAfter(DateTime.now()))
       //   noUpComApp = false;
       // else
@@ -96,36 +103,61 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
               style: headingStyle,
             ),
             SizedBox(height: 15,),
-            if(posts.length == 0 || noUpComApp)
-              WhiteContainer(child: Text('No Upcoming Appointments', style: nameSytle,)),
-            //not used listview builder because it altered the scroll above the list
-            for(int i=2; i<posts.length; i++)
-              if(/*posts[i].phone==remember.toString() && */posts[i].status == 'accepted' && DateTime.parse(posts[i].enddate.toString()).isAfter(DateTime.now()))
-                Column(
-                  children: [
-                    AppointmentContainer(email:posts[i].email,enddate: posts[i].enddate,date: posts[i].date,
-                      status: posts[i].status,phone: posts[i].phone,purpose: posts[i].purpose,),
-                    SizedBox(height: 10),
-                  ],
-                ),
+            !noUpComApp ?
+            ListView(
+              shrinkWrap: true,
+              children: posts.map((e) =>
+                (e.phone == ps.phoneController.text && e.status == 'accepted' && DateTime.parse(e.enddate!).isAfter(DateTime.now()))?
+                  //print(e.purpose);
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: AppointmentContainer(
+                      email1: e.email,
+                      enddate1: e.enddate,
+                      date1: e.date,
+                      status1: e.status,
+                      phone1: e.phone,
+                      purpose1: e.purpose,
+                      time1: e.enddate,
+                    ),
+                  )
+                 :
+                  // Return an empty container if the condition doesn't match
+                  Container()
+              ).toList(),
+            ) : WhiteContainer(child: Text('No Upcoming Consultations', style: nameSytle,)),
             SizedBox(height: 15,),
             Text(
               'Past Consultations',
               style: headingStyle,
             ),
             SizedBox(height: 15,),
-            if(posts.length == 0 || noPastApp)
-              WhiteContainer(child: Text('No Past Consultations', style: nameSytle,)),
-            //not used listview builder because it altered the scroll above the list
-            for(int i=2; i<posts.length; i++)
-              if(posts[i].phone==remember.toString() && posts[i].status == 'accepted' && DateTime.parse(posts[i].enddate.toString()).isBefore(DateTime.now()))
-                Column(
-                  children: [
-                    AppointmentContainer(email:posts[i].email,enddate: posts[i].enddate,date: posts[i].date,
-                      status: posts[i].status,phone: posts[i].phone,purpose: posts[i].purpose,),
-                    SizedBox(height: 10),
-                  ],
-                ),
+            noPastApp ?
+              WhiteContainer(child: Text('No Past Consultations', style: nameSytle,)) :
+            ListView(
+              shrinkWrap: true,
+              children: posts.map((e) {
+                if (e.phone == ps.phoneController.text && e.status == 'accepted' && DateTime.parse(e.enddate!).isBefore(DateTime.now())) {
+                  print(e.purpose);
+                  return Column(
+                    children: [
+                      AppointmentContainer(
+                        email1: e.email,
+                        enddate1: e.enddate,
+                        date1: e.date,
+                        status1: e.status,
+                        phone1: e.phone,
+                        purpose1: e.purpose,
+                        time1: e.enddate,
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  );
+                } else {
+                  return SizedBox.shrink();
+                }
+              }).toList(),
+            )
           ],
         ),
       ),

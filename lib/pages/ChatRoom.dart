@@ -298,7 +298,7 @@ class ChatRoom3 extends StatelessWidget {
           padding: EdgeInsets.only(left: 10, right: 10, bottom: 5, top: 5),
           margin: EdgeInsets.all(3),
           child: Text(
-              data['message']
+              data['message'], style: TextStyle(fontSize: 17),
           )
       ),
     );

@@ -87,15 +87,18 @@ class _NearByPlacesScreenState extends State<NearByPlacesScreen> {
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
       padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(border: Border.all(color: Colors.black),borderRadius: BorderRadius.circular(10)),
+      //decoration: BoxDecoration(border: Border.all(color: Colors.black),borderRadius: BorderRadius.circular(10)),
       child: WhiteContainer(
-        child: Column(
-          children: [
-            Text("Name: " + "results.name!"),
-            //Text(results..toString()),
-            Text("Location: " + "results.geometry!.location!.lat.toString()" + " , " + "results.geometry!.location!.lng.toString()"),
-            Text("results.openingHours != null ?" "Open" ":" "Closed"),
-          ],
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Name: " + results.name!, style: TextStyle(fontSize: 17),textAlign: TextAlign.center,),
+              //Text(results..toString()),
+              Text("Location: " + results.geometry!.location!.lat.toString() + " , " + results.geometry!.location!.lng.toString(), style: TextStyle(fontSize: 17),textAlign: TextAlign.center,),
+              Text(results.openingHours != null ? "Open" : "Closed", style: TextStyle(fontSize: 17),textAlign: TextAlign.center,),
+            ],
+          ),
         ),
       ),
     );
