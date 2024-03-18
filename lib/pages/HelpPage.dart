@@ -7,7 +7,7 @@ TextStyle heading = TextStyle(fontSize: 20, color: Colors.white, fontWeight: Fon
 class HelpPage extends StatelessWidget {
 
   void _launchYouTube() async {
-    const url = 'https://www.youtube.com/watch?v=Wyd9cYmLZ10&ab_channel=VladandNiki';
+    const url = 'https://youtu.be/QYlGUI28ZDc?feature=shared';
     if (await canLaunchUrl(Uri.parse(url))) {
       await launchUrl(Uri.parse(url));
     } else {
