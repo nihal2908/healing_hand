@@ -138,19 +138,19 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                         ],
                       )
                   ),
-                  SizedBox(height: 20,),
-                  WhiteContainer(
-                    child: Container(
-                      height: 30,
-                      child: InkWell(
-                          onTap: (){
-                            changePassword();
-                            print('Change password');
-                          },
-                          child: Center(child: Text('Change Password', style: nameSytle,))
-                      ),
-                    ),
-                  ),
+                  // SizedBox(height: 20,),
+                  // WhiteContainer(
+                  //   child: Container(
+                  //     height: 30,
+                  //     child: InkWell(
+                  //         onTap: (){
+                  //           changePassword();
+                  //           print('Change password');
+                  //         },
+                  //         child: Center(child: Text('Change Password', style: nameSytle,))
+                  //     ),
+                  //   ),
+                  // ),
                   SizedBox(height: 20,),
                   WhiteContainer(
                     child: Container(

@@ -179,8 +179,8 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
                                       );
 
                                       SaveRecord(context);
-                                      SharedPreferences prefs = await SharedPreferences.getInstance();
-                                      prefs.setString('FIRST_PAGE', 'doctor');
+                                      // SharedPreferences prefs = await SharedPreferences.getInstance();
+                                      // prefs.setString('FIRST_PAGE', 'doctor');
                                       //Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=> DoctorLandingPage()), (route) => false);
                                       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
                                     }

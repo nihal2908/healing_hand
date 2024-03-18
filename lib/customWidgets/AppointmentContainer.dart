@@ -49,7 +49,7 @@ class AppointmentContainer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(purpose1.toString(), style: TextStyle(fontSize: 19, color: Colors.white),),
+              Text(purpose1.toString(), style: TextStyle(fontSize: 19,),),
               SizedBox(height: 5,),
               Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -93,24 +93,24 @@ class AppointmentContainer extends StatelessWidget {
                     },
                     child: Column(children: [Icon(Icons.message), Text('Chat with Doctor')],)
                 ),
-                SizedBox(height: 5,),
-                ElevatedButton(
-                    onPressed: (){
-                      print('Make a voice call');
-                      launchUrl(
-                          Uri(scheme: 'tel', path: '9569399400'),
-                          mode: LaunchMode.externalApplication
-                      );
-                    },
-                    child: Column(children: [Icon(Icons.call), Text('Make a Voice Call')],)
-                ),
-                SizedBox(height: 5,),
-                ElevatedButton(
-                    onPressed: (){
-                      print('Make a video call');
-                    },
-                    child: Column(children: [Icon(Icons.video_call), Text('Make a Video Call')],)
-                ),
+                // SizedBox(height: 5,),
+                // ElevatedButton(
+                //     onPressed: (){
+                //       print('Make a voice call');
+                //       launchUrl(
+                //           Uri(scheme: 'tel', path: '9569399400'),
+                //           mode: LaunchMode.externalApplication
+                //       );
+                //     },
+                //     child: Column(children: [Icon(Icons.call), Text('Make a Voice Call')],)
+                // ),
+                // SizedBox(height: 5,),
+                // ElevatedButton(
+                //     onPressed: (){
+                //       print('Make a video call');
+                //     },
+                //     child: Column(children: [Icon(Icons.video_call), Text('Make a Video Call')],)
+                // ),
               ],
             ),
           );

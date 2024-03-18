@@ -166,16 +166,19 @@ class _NotificationPageState extends State<NotificationPage> {
                               initialDate: DateTime.now(),
                               firstDate: DateTime.now(),
                               lastDate: DateTime(2024, 12, 30),
+                              helpText: 'Select date for Appointment'
                             );
                             if (pickedDate != null) {
                               pickedStartTime = await showTimePicker(
                                 context: context,
                                 initialTime: TimeOfDay.now(),
+                                helpText: 'Select Start time'
                               );
                               if (pickedStartTime != null) {
                                 pickedEndTime = await showTimePicker(
                                   context: context,
                                   initialTime: TimeOfDay.now(),
+                                  helpText: 'Select End time'
                                 );
                                 if (pickedEndTime != null) {
                                   boxState(() {});
@@ -205,10 +208,10 @@ class _NotificationPageState extends State<NotificationPage> {
 
                             // this setstate is only for testing,,, remove it and take the date String, time String above
                             setState(() {
-                              appointments[index].date = pickedDate!;
-                              appointments[index].startTime = pickedStartTime!;
-                              appointments[index].endTime = pickedEndTime!;
-                              appointments[index].status = 'accepted';
+                              // appointments[index].date = pickedDate!;
+                              // appointments[index].startTime = pickedStartTime!;
+                              // appointments[index].endTime = pickedEndTime!;
+                              // appointments[index].status = 'accepted';
                             });
                                postApihttp http=postApihttp();
                                      

@@ -25,19 +25,16 @@ String? name1;
   String? review1;
 List<prodModal1> ff=[];
 class DoctorViewPage extends StatefulWidget {
-  DoctorViewPage({
-    name,email,category,age,gender,phone,address,rating
-  })
+  DoctorViewPage({name,email,category,age,gender,phone,address,rating})
   {
-name1=name;
- phone1=phone;
-   email1=email;
-   category1=category;
-   address1=address;
- gender1=gender;
-   age1=age; 
-   rating1=rating;
-  
+    name1=name;
+    phone1=phone;
+    email1=email;
+    category1=category;
+    address1=address;
+    gender1=gender;
+    age1=age;
+    rating1=rating;
   }
   
   @override
@@ -45,11 +42,8 @@ name1=name;
   {
     return _DoctorViewPageState();
   }
-  // DoctorViewPage({super.key, this.name,this.email,this.category,this.password,this.gender,this.age,});
-
-  // @override
-  // State<DoctorViewPage> createState() => _DoctorViewPageState(doc: doc);
 }
+
 httpServices13 http=new httpServices13();
 class _DoctorViewPageState extends State<DoctorViewPage> {
   //final Doctor doc;
@@ -90,13 +84,6 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
             //return CircularProgressIndicator();
             return ShowPostList(context, snapshot.data!);
         }
-        //}
-
-        //else{
-        //return CircularProgressIndicator();
-        //}
-
-        //  return CircularProgressIndicator();
       }),
     );
   }
@@ -140,10 +127,10 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                                 SizedBox(height: 30,),
                                 Text(name1.toString(), style: nameSytle,),
                                 Text(category1.toString(), style: profileStyle),
-                                Text('${age1.toString()} years',
-                                  style: profileStyle,),
+                                //Text('${age1.toString()} years', style: profileStyle,),
                                 Text(gender1.toString(), style: profileStyle),
                                 Text(email1.toString(), style: profileStyle),
+                                Text(address1.toString(), style: profileStyle,),
                                 RatingBar.builder(
                                   initialRating: double.parse(
                                       rating1.toString()),
@@ -389,13 +376,16 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
             TextButton(
               onPressed: () async {
                 int j = await http.saverec1(
-                    "random user", email1.toString(), review.toString());
+                    'Anonymous user', email1.toString(), review.toString());
                 if (j == 0)
                   print("success");
                 else
                   print("failure");
                 //_addReview();
                 Navigator.pop(context);
+                setState(() {
+
+                });
               },
               child: Text('Post'),
             ),

@@ -62,9 +62,9 @@ class HelpPage extends StatelessWidget {
               style: heading,
             ),
             SizedBox(height: 16),
-            FAQItem(question: 'How do I schedule an appointment?', answer: 'To schedule an appointment, go to the "Book Appointment" section and follow the instructions.'),
-            FAQItem(question: 'Can I cancel an appointment?', answer: 'Yes, you can cancel appointments in the "My Appointments" section.'),
-            FAQItem(question: 'How to access ambulance services?', answer: 'In case of an emergency, click on the "Emergency" button to request an ambulance.'),
+            FAQItem(question: 'How do I schedule an appointment?', answer: 'Your appointments will be accepted by the doctor and the timings will be set by the doctor only.'),
+            FAQItem(question: 'Can I cancel an appointment?', answer: 'No, you can not cancel an appointment once made. You can get the doctor to know that you can not attend it through Chat.'),
+            FAQItem(question: 'How to get info about nearest health services?', answer: 'In case of any emergency, you can click on the Emergency "Find now" button on home page. It will list out nearest healthcare providers. You have to turn on location for that.'),
 
             SizedBox(height: 32),
       

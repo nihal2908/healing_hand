@@ -13,6 +13,7 @@ import 'package:healing_hand/customWidgets/AppointmentContainer.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/modelclass/prodmodal.dart';
+import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -139,7 +140,7 @@ Widget ShowPostList(BuildContext context,List<prodModal> posts)
                                   onTap: (){
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorViewPage(name: posts[index].name,
                                     email: posts[index].email,category: posts[index].category,gender:posts[index].gender,
-                                    phone: posts[index].phone,)));
+                                    phone: posts[index].phone, age: posts[index].age, rating: posts[index].rating, address: posts[index].address,)));
                                   },
                                 ),
                                 SizedBox(width: 85, child: Center(child: Text(posts[index].name.toString(), style: const TextStyle(color: Colors.white), overflow: TextOverflow.ellipsis,)))

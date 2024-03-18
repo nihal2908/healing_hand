@@ -96,7 +96,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                                         dd.heightController.text=posts[0].height.toString();
                                         dd.weightController.text=posts[0].weight.toString();
                                         dd.phoneController.text=remember.toString();
-                                        dd.ageController.text=24.toString();
+                                        dd.ageController.text=posts[0].age.toString();
                                         Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientProfileEditPage()));
                                       },
                                       icon: const Icon(Icons.edit),
@@ -113,19 +113,19 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                             ],
                           )
                       ),
-                      SizedBox(height: 20,),
-                      WhiteContainer(
-                        child: Container(
-                          height: 30,
-                          child: InkWell(
-                              onTap: (){
-                                changePassword();
-                                print('Change password');
-                              },
-                              child: Center(child: Text('Change Password', style: nameSytle,))
-                          ),
-                        ),
-                      ),
+                      // SizedBox(height: 20,),
+                      // WhiteContainer(
+                      //   child: Container(
+                      //     height: 30,
+                      //     child: InkWell(
+                      //         onTap: (){
+                      //           changePassword();
+                      //           print('Change password');
+                      //         },
+                      //         child: Center(child: Text('Change Password', style: nameSytle,))
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(height: 20,),
                       WhiteContainer(
                         child: Container(

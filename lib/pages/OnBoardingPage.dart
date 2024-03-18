@@ -26,9 +26,9 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       Image.asset('assets/images/medical-app.png'),
     ),
     CustomPageViewModal(
-      'Access Lab Results and Tests',
-      'Stay informed with easy access to lab results. '
-        'Your health data, on demand, directly from the app.',
+      'Get Appointments on few taps',
+      'Send Appointment requests to desired doctor. '
+          'Track your future and past Appointments effortlessly',
       Image.asset('assets/images/medical-result.png'),
     ),
   ];
