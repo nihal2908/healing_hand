@@ -1,39 +1,44 @@
 import 'package:flutter/material.dart';
-import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
-import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/Providers/DoctorProvider.dart';
-import 'package:healing_hand/apiconnection/doctorhttp.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
-import 'package:provider/provider.dart';
-
+import 'package:healing_hand/firebase/AuthServices.dart';
 
 final editorKey = GlobalKey<FormState>();
-final TextEditingController nameController = TextEditingController();
-final TextEditingController phoneController = TextEditingController();
-final TextEditingController ageController = TextEditingController();
-final TextEditingController emailController = TextEditingController();
-final TextEditingController bioController = TextEditingController();
-final TextEditingController addressController = TextEditingController();
-String? editedGender;
-String? selectedCategory;
-String? rating;
+final AuthServices auth = AuthServices();
 
-class DoctorProfileEditPage extends StatefulWidget {
-  const DoctorProfileEditPage({super.key});
+class DoctorProfileEditPage extends StatelessWidget {
+  final String name;
+  final String phone;
+  final String gender;
+  final int age;
+  final String bio;
+  final String address;
+  final String category;
 
-  @override
-  State<DoctorProfileEditPage> createState() => _DoctorProfileEditPageState();
-}
+  const DoctorProfileEditPage({
+    super.key,
+    required this.name,
+    required this.phone,
+    required this.bio,
+    required this.address,
+    required this.gender,
+    required this.age,
+    required this.category
+  });
 
-class _DoctorProfileEditPageState extends State<DoctorProfileEditPage> {
   @override
   Widget build(BuildContext context) {
+    String editedGender = gender;
+    String selectedCategory = category;
+    final TextEditingController nameController = TextEditingController(text: name);
+    final TextEditingController phoneController = TextEditingController(text: phone);
+    final TextEditingController ageController = TextEditingController(text: age.toString());
+    final TextEditingController bioController = TextEditingController(text: bio);
+    final TextEditingController addressController = TextEditingController(text: address);
+
     return Scaffold(
-      //backgroundColor: Colors.deepPurple,
       appBar: AppBar(
-        title: Text('Edit Your Profile'),
-        //backgroundColor: Colors.grey.shade200,
-        //foregroundColor: Colors.black,
+        title: const Text('Edit Your Profile'),
         centerTitle: true,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15)
@@ -48,7 +53,6 @@ class _DoctorProfileEditPageState extends State<DoctorProfileEditPage> {
               const SizedBox(height: 15,),
               Container(
                   padding: const EdgeInsets.all(10),
-                  //height: 480,
                   decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(20),
@@ -67,150 +71,131 @@ class _DoctorProfileEditPageState extends State<DoctorProfileEditPage> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(height: 10,),
+                        const SizedBox(height: 10,),
                         CustomTextFormField(
                           controller: nameController,
                           labelText: 'Name',
                           icon: Icons.person,
                         ),
-                        SizedBox(height: 10),
-                        DropdownButtonFormField<String>(
-                          value: editedGender,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: InputDecoration(
-                            labelText: 'Gender',
-                            icon: const Icon(Icons.female),
-                            floatingLabelAlignment: FloatingLabelAlignment.center,
-                            border: OutlineInputBorder(
-                              borderSide: const BorderSide(),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          items: ['Select', 'Male', 'Female', 'Other']
-                              .map((gender) => DropdownMenuItem(
-                            value: gender,
-                            child: Text(gender),
-                          )).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              editedGender = value!;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty || value == 'Select') {
-                              return 'Required';
+                        const SizedBox(height: 10),
+                        StatefulBuilder(
+                            builder: (context, refresh) {
+                              return DropdownButtonFormField<String>(
+                                value: editedGender,
+                                autovalidateMode: AutovalidateMode.onUserInteraction,
+                                decoration: InputDecoration(
+                                  labelText: 'Gender',
+                                  icon: const Icon(Icons.people),
+                                  floatingLabelAlignment: FloatingLabelAlignment.center,
+                                  border: OutlineInputBorder(
+                                    borderSide: const BorderSide(),
+                                    borderRadius: BorderRadius.circular(15),
+                                  ),
+                                ),
+                                items: ['Select', 'Male', 'Female', 'Other']
+                                    .map((gender) => DropdownMenuItem(
+                                  value: gender,
+                                  child: Text(gender),
+                                )).toList(),
+                                onChanged: (value) {
+                                  refresh(() {
+                                    editedGender = value!;
+                                  });
+                                },
+                                validator: (value) {
+                                  if (value == null || value.isEmpty || value == 'Select') {
+                                    return 'Required';
+                                  }
+                                  return null;
+                                },
+                              );
                             }
-                            return null;
-                          },
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         CustomTextFormField(
                           controller: ageController,
                           labelText: 'Age',
                           icon: Icons.calendar_today,
                           keyboardType: TextInputType.number,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         CustomTextFormField(
                           controller: phoneController,
                           labelText: 'Phone Number',
                           icon: Icons.phone,
                           keyboardType: TextInputType.number,
                         ),
-                        SizedBox(height: 10),
-                        CustomTextFormField(
-                          controller: emailController,
-                          labelText: 'Email',
-                          icon: Icons.email,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Required';
-                            } else if (!value.contains('@')) {
-                              return 'Invalid email address';
-                            }
-                            return null;
-                          },
-                        ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         CustomTextFormField(
                           controller: bioController,
                           labelText: 'Bio',
                           icon: Icons.school,
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         CustomTextFormField(
                           controller: addressController,
                           labelText: 'Address',
                           icon: Icons.home,
                         ),
-                        SizedBox(height: 10),
-                        DropdownButtonFormField<String>(
-                          menuMaxHeight: 300,
-                          value: null,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: InputDecoration(
-                            labelText: 'Specialisation',
-                            icon: const Icon(Icons.people),
-                            floatingLabelAlignment: FloatingLabelAlignment.center,
-                            border: OutlineInputBorder(
-                              borderSide: const BorderSide(),
-                              borderRadius: BorderRadius.circular(15),
-                            ),
-                          ),
-                          items: DoctorCategories
-                              .map((cat) => DropdownMenuItem(
-                            value: cat,
-                            child: Text(cat),
-                          )).toList(),
-                          onChanged: (value) {
-                            setState(() {
-                              selectedCategory = value!;
-                            });
-                          },
-                          validator: (value) {
-                            if (value == null || value.isEmpty || value == 'Select') {
-                              return 'Required';
-                            }
-                            return null;
-                          },
+                        const SizedBox(height: 10),
+                        StatefulBuilder(
+                          builder: (context, refresh) {
+                            return DropdownButtonFormField<String>(
+                              menuMaxHeight: 300,
+                              value: selectedCategory,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              decoration: InputDecoration(
+                                labelText: 'Specialisation',
+                                icon: const Icon(Icons.people),
+                                floatingLabelAlignment: FloatingLabelAlignment.center,
+                                border: OutlineInputBorder(
+                                  borderSide: const BorderSide(),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              items: DoctorCategories
+                                  .map((cat) => DropdownMenuItem(
+                                value: cat,
+                                child: Text(cat),
+                              )).toList(),
+                              onChanged: (value) {
+                                refresh(() {
+                                  selectedCategory = value!;
+                                });
+                              },
+                              validator: (value) {
+                                if (value == null || value.isEmpty || value == 'Select') {
+                                  return 'Required';
+                                }
+                                return null;
+                              },
+                            );
+                          }
                         ),
-                        SizedBox(height: 10),
-                        Consumer<DoctorProvider>(
-                            builder: (context, DoctorModel, child){
-                              return ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(horizontal: 80, vertical: 20),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    elevation: 8,
-                                  ),
-                                  onPressed: () async{
-                                    if(editorKey.currentState!.validate()){
-                                      DoctorModel.createUser(
-                                          name: nameController.text,
-                                          gender: editedGender!,
-                                          age: int.parse(ageController.text),
-                                          phone: phoneController.text,
-                                          email: emailController.text,
-                                          bio: bioController.text,
-                                          address: addressController.text,
-                                          category: selectedCategory!
-                                      );
-
-                                      // add function to update doctors details
-
-                                      // print(password);
-                                     postApihttp http=new postApihttp();
-                                       await http.saveData4(emailController.text.toString(), passwordController.text.toString()!,nameController.text.toString(),
-                                         selectedCategory.toString(), rating.toString(),addressController.text.toString(),editedGender.toString(), ageController.text.toString());
-                                    }
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Save')
+                        const SizedBox(height: 10),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 20),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            elevation: 8,
+                          ),
+                          onPressed: () async{
+                            if(editorKey.currentState!.validate()){
+                              auth.editDocRecord(name: nameController.text,
+                                phone: phoneController.text,
+                                bio: bioController.text,
+                                address: addressController.text,
+                                category: selectedCategory,
+                                age: int.parse(ageController.text),
+                                gender: editedGender
                               );
                             }
-                        )
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Save')
+                        ),
                       ],
                     ),
                   )

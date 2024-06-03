@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
 
-
 class UserTypePage extends StatelessWidget {
   const UserTypePage({super.key});
 

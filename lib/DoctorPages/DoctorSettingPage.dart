@@ -29,7 +29,7 @@ class _DoctorSettingPageState extends State<DoctorSettingPage> {
             children: [
               SizedBox(
                 height: 100,
-                child: Center(child: Text('Settings', style: titleStyle,)),
+                child: Center(child: Text('Settings', )),
               ),
               WhiteContainer(
                   child: Column(
@@ -39,7 +39,7 @@ class _DoctorSettingPageState extends State<DoctorSettingPage> {
                         leading: const Icon(Icons.person),
                         title: const Text('Your Profile'),
                         onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorAccountPage(doc: DoctorUser,)));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => DoctorAccountRequest()));
                         },
                       ),
                       ListTile(

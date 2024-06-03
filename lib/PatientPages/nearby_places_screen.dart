@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:healing_hand/PatientPages/PatientHomePage.dart';
 import 'package:healing_hand/modelclass/nearby_response.dart';
 import 'package:http/http.dart' as http;
-//import 'package:sid/screens/current_location_screen.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class NearByPlacesScreen extends StatefulWidget {
   const NearByPlacesScreen({Key? key}) : super(key: key);
@@ -64,20 +64,33 @@ class _NearByPlacesScreenState extends State<NearByPlacesScreen> {
 
   Widget nearbyPlacesWidget(Results results) {
 
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
-      padding: const EdgeInsets.all(5),
-      decoration: BoxDecoration(border: Border.all(color: Colors.black),borderRadius: BorderRadius.circular(10)),
-      child: Column(
-        children: [
-          Text("Name: " + results.name!),
-          //Text(results..toString()),
-          Text("Location: " + results.geometry!.location!.lat.toString() + " , " + results.geometry!.location!.lng.toString()),
-          Text(results.openingHours != null ? "Open" : "Closed"),
-        ],
-      ),
+    return GestureDetector(
+      onTap: () {
+        _launchGoogleMaps(results.geometry!.location!.lat!, results.geometry!.location!.lng!);
+      },
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        margin: const EdgeInsets.only(top: 10,left: 10,right: 10),
+        padding: const EdgeInsets.all(5),
+        decoration: BoxDecoration(border: Border.all(color: Colors.black),borderRadius: BorderRadius.circular(10)),
+        child: Column(
+          children: [
+            Text("Name: " + results.name!),
+            //Text(results..toString()),
+            Text("Location: " + results.geometry!.location!.lat.toString() + " , " + results.geometry!.location!.lng.toString()),
+            Text(results.openingHours != null ? "Open" : "Closed"),
+          ],
+        ),
+      )
     );
+  }
 
+  Future<void> _launchGoogleMaps(double latitude, double longitude) async {
+    final url = 'https://www.google.com/maps/search/?api=1&query=$latitude,$longitude';
+    if (await canLaunchUrl(Uri.parse(url))) {
+      await launchUrl(Uri.parse(url));
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 }

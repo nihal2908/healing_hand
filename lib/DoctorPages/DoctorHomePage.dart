@@ -1,11 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorAccountPage.dart';
 import 'package:healing_hand/DoctorPages/NotificationPage.dart';
-import 'package:healing_hand/Providers/AppointmentProvider.dart';
-import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/AppointmentContainerForDoctor.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
-import 'package:healing_hand/modelclass/appoinment.dart';
-import 'package:provider/provider.dart';
+import 'package:healing_hand/firebase/AuthServices.dart';
 
 class DoctorHomePage extends StatefulWidget {
   const DoctorHomePage({super.key});
@@ -15,110 +14,100 @@ class DoctorHomePage extends StatefulWidget {
 }
 
 class _DoctorHomePageState extends State<DoctorHomePage> {
-  bool gotLocation = false;
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
-    return  FutureBuilder<List<prodModal2>>(
-      future: http.getAllPost2(""),
-      builder: ((context, snapshot) {
-        print("calm down");
-        // print(key);
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Scaffold(
-              body:
-                  Center(heightFactor: 1.4, child: CircularProgressIndicator()),
-            );
-          case ConnectionState.waiting:
-            return Scaffold(
-              body:
-                  Center(heightFactor: 0.4, child: CircularProgressIndicator()),
-            );
-          case ConnectionState.active:
-          if(snapshot.data!=null)
-            //return CircularProgressIndicator();
-            return ShowPostList(context, snapshot.data!);
-            else
-            return CircularProgressIndicator();
-          case ConnectionState.done:
-          if(snapshot.data!=null)
-            //return CircularProgressIndicator();
-            return ShowPostList(context, snapshot.data!);
-            else
-            return CircularProgressIndicator();
-        }
-        //}
-
-        //else{
-        //return CircularProgressIndicator();
-        //}
-
-        //  return CircularProgressIndicator();
-      }),
-    );
-      }
-    Widget ShowPostList(BuildContext context,List<prodModal2> posts)
-    {
-      return Padding(
-      padding: EdgeInsets.all(15),
-      child: Column(
-        children: [
-          AppBar(
-            foregroundColor: Colors.white,
-            backgroundColor: Colors.transparent,
-            leadingWidth: 300,
-            toolbarHeight: 150,
-            leading: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                CircleImage(image: DoctorUser.profile.image),
-                Text('Welcome back,'),
-                Text(DoctorUser.name, style: TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
-              ],
-            ),
-            actionsIconTheme: IconThemeData(
-              size: 30,
-            ),
-            actions: [
-              IconButton(
-                  onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationPage()));
-                  },
-                  icon: Icon(Icons.notifications)
-              ),
-            ],
-          ),
-          Text('Scheduled Appointments', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),),
-          Expanded(
-            //color: Colors.black,
-            child:          SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        ListView.builder(
-                          shrinkWrap: true,
-                          itemBuilder: (context, index){
-                            if(index == 0 || index == 1) return null; // abhi ke lie pahle do appointment skip kar die
-                            // hain unme error aa rahi hai ,,, bad me ye condition hata denge
-                            if(DateTime.parse(posts[index].date.toString()).isAfter(DateTime.now()) && posts[index].status == 'accepted')
-                              return Column(
-                                children: [
-                                  DocAppointmentContainer(posts[index].phone.toString(),posts[index].date,posts[index].enddate),
-                                  SizedBox(height: 10,)
-                                ],
-                              );
-                            else
-                              return Container();
+      return FutureBuilder(
+          future: firestore.collection('Doctor').doc(currentUserId).get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return const Center(child: Text('No data found for this doctor.'));
+            }
+            else {
+              if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}');
+              }
+              else {
+                Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                List<String> appointmentIds = List<String>.from(data['appointments'] ?? []);
+                return Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      AppBar(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.transparent,
+                        leadingWidth: 300,
+                        toolbarHeight: 150,
+                        leading: GestureDetector(
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const DoctorAccountRequest()));
                           },
-                          itemCount: posts.length,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              data['profile'] == null ?
+                              CircleImage(image: const AssetImage('assets/images/default_dp.jpg')) :
+                              CircleImage(image: NetworkImage(data['profile'])),
+                              const Text('Welcome back,'),
+                              Text(data['name'], style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
+                        actionsIconTheme: const IconThemeData(
+                          size: 30,
+                        ),
+                        actions: [
+                          IconButton(
+                              onPressed: (){
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=>NotificationPage(appId: appointmentIds,)));
+                              },
+                              icon: const Icon(Icons.notifications)
+                          ),
+                        ],
+                      ),
+                      const Text('Scheduled Appointments', style: TextStyle(fontWeight: FontWeight.w600, color: Colors.white, fontSize: 20),),
+                      Expanded(
+                        child: SingleChildScrollView(
+                            child: Column(
+                              children: appointmentIds.map((appointmentId) {
+                                return FutureBuilder<DocumentSnapshot>(
+                                  future: firestore.collection('Appointments').doc(appointmentId).get(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState == ConnectionState.waiting) {
+                                      return const CircularProgressIndicator();
+                                    }
+                                    if (!snapshot.hasData || !snapshot.data!.exists) {
+                                      return const SizedBox(); // Or some error widget
+                                    }
+                                    if (snapshot.hasError) {
+                                      return Text('Error: ${snapshot.error}');
+                                    }
+
+                                    Map<String, dynamic> appointmentData = snapshot.data!.data() as Map<String, dynamic>;
+                                    return Padding(
+                                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                      child: DocAppointmentContainer(
+                                        app: appointmentData,
+                                      ),
+                                    );
+                                  },
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ),
+                    ]
                   ),
-            ),
-
-    ]),
-    );
-
+                );
+              }
+            }
+          }
+        );
     }
 }

@@ -1,86 +1,106 @@
 import 'dart:io';
-import 'dart:typed_data';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:flutter/services.dart';
 import 'package:healing_hand/DoctorPages/DoctorProfileEditPage.dart';
-import 'package:healing_hand/DoctorPages/DoctorProfileEditPage.dart' as t;
-import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
-import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
-import 'package:healing_hand/Providers/DoctorProvider.dart';
-import 'package:healing_hand/apiconnection/doctorview.dart';
-import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
-import 'package:healing_hand/modelclass/prodmodal.dart';
+import 'package:healing_hand/customWidgets/circularIndicator.dart';
+import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:provider/provider.dart';
 
-import '../customWidgets/styles.dart';
+Image content = Image.asset('assets/images/default_dp.jpg');
+ImageProvider<Object>? currentDp;
 
-Image dpContent = Image.asset('assets/images/doctor.png', fit: BoxFit.fill,);
+TextStyle nameSytle = const TextStyle(
+    fontSize: 17,
+    color: Colors.black,
+    fontWeight: FontWeight.w600
+);
 
-class DoctorAccountPage extends StatefulWidget {
-  final Doctor doc;
-  DoctorAccountPage({super.key, required this.doc});
+TextStyle profileStyle =  const TextStyle(
+    fontSize: 15,
+    color: Colors.black87,
+    fontWeight: FontWeight.w400
+);
 
-  @override
-  State<DoctorAccountPage> createState() => _DoctorAccountPageState(doc: doc);
-}
-httpServices13 http=new httpServices13();
-class _DoctorAccountPageState extends State<DoctorAccountPage> {
-  final Doctor doc;
-  _DoctorAccountPageState({required this.doc});
-  bool showAllReviews = false;
+TextStyle titleStyle = const TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.bold,
+    color: Colors.white
+);
+
+final FirebaseFirestore firestore = FirebaseFirestore.instance;
+final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
+class DoctorAccountRequest extends StatelessWidget {
+  const DoctorAccountRequest({super.key});
 
   @override
   Widget build(BuildContext context) {
-
-    
-    return FutureBuilder<List<prodModal>>(
-      future: http.getAllPost(""),
-      builder: ((context, snapshot) {
-        print("calm down");
-        // print(key);
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Scaffold(
-              body:
-                  Center(heightFactor: 1.4, child: CircularProgressIndicator()),
-            );
-          case ConnectionState.waiting:
-            return Scaffold(
-              body:
-                  Center(heightFactor: 0.4, child: CircularProgressIndicator()),
-            );
-          case ConnectionState.active:
-            return ShowPostList(context, snapshot.data!);
-
-          case ConnectionState.done:
-
-            //return CircularProgressIndicator();
-            return ShowPostList(context, snapshot.data!);
+    return FutureBuilder(
+        future: firestore.collection('Doctor').doc(currentUserId).get(),
+        builder: (context, snapshot){
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          else {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            else {
+              Map<String, dynamic> userData = snapshot.data!.data() as Map<String, dynamic>;
+              return DoctorAccountPage(data: userData);
+            }
+          }
         }
-        //}
-
-        //else{
-        //return CircularProgressIndicator();
-        //}
-
-        //  return CircularProgressIndicator();
-      }),
     );
   }
-  Widget ShowPostList(BuildContext context,List<prodModal> posts)
-  {int i=0;
-  print(posts[0].phone);
-    bool noReview = (doc.reviews == null);
-   for(i=0;i<posts.length;i++)
-   {
-    print(posts[i].phone);
-    if(posts[i].phone==dno)
-    {return Scaffold(
-      appBar: AppBar(
-      ),
+}
+
+
+class DoctorAccountPage extends StatefulWidget {
+  final Map<String, dynamic> data;
+  const DoctorAccountPage({required this.data, super.key});
+
+  @override
+  State<DoctorAccountPage> createState() => _DoctorAccountPageState();
+}
+
+class _DoctorAccountPageState extends State<DoctorAccountPage> {
+  String? _profileImageUrl;
+
+  @override
+  void initState() {
+    super.initState();
+    loadProfileImage();
+  }
+
+  Future<void> loadProfileImage() async {
+    try {
+      // Retrieve profile image URL from Firestore
+      DocumentSnapshot userSnapshot =
+      await FirebaseFirestore.instance.collection('Doctor').doc(currentUserId).get();
+      setState(() {
+        _profileImageUrl = userSnapshot['profile'];
+      });
+    } catch (error) {
+      print('Error loading profile image: $error');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    Map<String , dynamic> data = widget.data;
+    if(data['profile']==null){
+      currentDp = const AssetImage('assets/images/default_dp.jpg');
+    }
+    else{
+      currentDp = NetworkImage(data['profile']);
+    }
+    return Scaffold(
+      appBar: AppBar(),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10),
@@ -91,134 +111,76 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                 children: [
                   const SizedBox(height: 100,),
                   WhiteContainer(
-                      child: Column(
-                        children: [
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: IconButton(
-                              onPressed: (){
-                                t.rating=posts[i].rating.toString();
-                                t.emailController.text=posts[i].email.toString();
-                                //pass the current values to the edit page
-                                t.nameController.text=posts[i].name.toString();
-                                t.addressController.text=posts[i].address.toString();
-                                t.ageController.text="24";
-                                t.editedGender=posts[i].gender.toString();
-                                t.phoneController.text=posts[i].phone.toString();
-                                t.selectedCategory=posts[i].category.toString();
-                                Navigator.push(context, MaterialPageRoute(builder: (context)=> DoctorProfileEditPage()));
-                              },
-                              icon: Icon(Icons.edit)
-                            ),
-                          ),
-                          Text(posts[i].name.toString(), style: nameSytle,),
-                          Text(posts[i].category.toString(), style: profileStyle),
-                          Text('24 years', style: profileStyle,),
-                          Text(posts[i].gender.toString(), style: profileStyle),
-                          Text(posts[i].email.toString(), style: profileStyle),
-                          RatingBar.builder(
-                            initialRating: double.parse(posts[i].rating.toString()),
-                            minRating: 1,
-                            direction: Axis.horizontal,
-                            allowHalfRating: true,
-                            itemCount: 5,
-                            itemSize: 25,
-                            ignoreGestures: true,
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Colors.amber,
-                            ),
-                            onRatingUpdate: (newRating) {
-                              setState(() {
-                                doc.rating = newRating;
-                              });
-                            },
-                          ),
-                          Text('${posts[i].rating} / 5', style: profileStyle),
-                        ],
-                      )
-                  ),
-                  const SizedBox(height: 20,),
-                  WhiteContainer(
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Customer reviews', style: nameSytle,),
-                            if (widget.doc.reviews!.length > 2)
-                              TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    showAllReviews = !showAllReviews;
-                                  });
-                                },
-                                child: Text(showAllReviews ? 'Hide' : 'See all'),
-                              ),
-                          ],
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: IconButton(
+                            onPressed: (){
+                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorProfileEditPage(
+                                name: data['name'],
+                                age: data['age'],
+                                gender: data['gender'],
+                                phone: data['phone'],
+                                address: data['address'],
+                                bio: data['bio'],
+                                category: data['category'],
+                              )));
+                            },
+                            icon: const Icon(Icons.edit),
+                          ),
                         ),
-                        Container(
-                            width: MediaQuery.of(context).size.width,
-                            child: Column(
-                              children: [
-                                noReview? Padding(padding: EdgeInsets.all(10), child: Text('No recent Reviews')):
-                                Column(
-                                  children: [
-                                    // Display two recent reviews
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: showAllReviews ? doc.reviews!.length : doc.reviews!.length>=2 ? 2 : doc.reviews!.length,
-                                      itemBuilder: (context, index) {
-                                        String review = doc.reviews![index];
-                                        List<String> parts = review.split(': ');
-
-                                        return ListTile(
-                                          title: Text(parts[0]),
-                                          subtitle: Text(parts[1]),
-                                        );
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            )
-
-                        )
+                        Text(data['name'], style: nameSytle,),
+                        Text(data['category'], style: profileStyle),
+                        Text('${data['age']} years', style: profileStyle,),
+                        Text(data['gender'], style: profileStyle),
+                        Text(data['phone'], style: profileStyle),
+                        Text(data['email'], style: profileStyle),
+                        Text(data['bio'], style: profileStyle),
+                        Text(data['address'], style: profileStyle),
                       ],
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  WhiteContainer(
-                    child: Container(
-                      height: 30,
-                      child: InkWell(
-                          onTap: (){
-                            changePassword();
-                            print('Change password');
-                          },
-                          child: Center(child: Text('Change Password', style: nameSytle,))
-                      ),
+                  const SizedBox(height: 20,),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(25)
+                    ),
+                    child: InkWell(
+                        onTap: (){
+                          print('Change password');
+                          forgotPassword(context);
+                        },
+                        child: Center(child: Text('Change Password', style: nameSytle,))
                     ),
                   ),
-                  SizedBox(height: 20,),
-                  WhiteContainer(
-                    child: Container(
-                      height: 30,
-                      child: InkWell(
-                          onTap: (){
-                            print('Logout pressed');
-                          },
-                          child: Center(child: Text('Log-out', style: nameSytle,))
-                      ),
+                  const SizedBox(height: 20,),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    width: MediaQuery.of(context).size.width,
+                    height: 50,
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade200,
+                        borderRadius: BorderRadius.circular(25)
+                    ),
+                    child: InkWell(
+                        onTap: () async {
+                          print('Logout pressed');
+                          logOut();
+                        },
+                        child: Center(child: Text('Log-out', style: nameSytle,))
                     ),
                   )
                 ],
               ),
               Column(
                 children: [
-                  Container(
-                    height: 67,
+                  SizedBox(
+                    height: 65,
                     child: Center(
                         child: Text(
                             'Your Profile',
@@ -226,11 +188,32 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
                         )
                     ),
                   ),
-                  CircleImage(
-                      image: DoctorUser.profile.image,
-                    onTap: (){
-                        showImage();
-                    },
+                  Container(
+                    width: 75.0,
+                    height: 75.0,
+                    decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.white,
+                    ),
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => _buildChangeImageDialog(),
+                          );
+                        },
+                        child: _profileImageUrl != null ?
+                        CircleAvatar(
+                          radius: 35,
+                          backgroundImage: NetworkImage(_profileImageUrl!),
+                        ) :
+                        const CircleAvatar(
+                          radius: 35,
+                          child: Icon(Icons.person),
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -239,121 +222,189 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
         ),
       ),
     );
-    }
-    else print("hi");
-   }
-return CircularProgressIndicator();
   }
 
-  void showImage() {
-    showDialog(context: context, builder: (context){
-      return StatefulBuilder(
-          builder: (context, dpState) {
+  Widget _buildChangeImageDialog() {
+    return AlertDialog(
+      title: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('Your Profile Image'),
+          IconButton(onPressed: (){Navigator.pop(context);}, icon: const Icon(Icons.close))
+        ],
+      ),
+      content: SizedBox(
+        height: 200,
+        width: 200,
+        child: _profileImageUrl != null
+            ? Image.network(
+          _profileImageUrl!,
+          height: 200,
+          width: 200,
+          fit: BoxFit.fitHeight,
+        )
+            : Icon(Icons.person, size: 180, color: Colors.grey.shade700,),
+      ),
+      actions: [
+        IconButton(
+          onPressed: (){
+            pickImage().then((imageFile) {
+              if (imageFile != null) {
+                Navigator.pop(context);
+                uploadImage(imageFile).then((imageUrl) {
+                  setState(() {
+                    _profileImageUrl = imageUrl;
+                  });
+                });
+              }
+            });
+          },
+          icon: const Icon(Icons.edit,),
+        ),
+        IconButton(
+          onPressed: (){
+            confirmDelete();
+          },
+          icon: const Icon(Icons.delete),
+        ),
+      ],
+    );
+  }
 
-            return AlertDialog(
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text('Your Profile Image'),
-                  IconButton(onPressed: (){Navigator.pop(context);}, icon: Icon(Icons.close))
-                ],
-              ),
-              content: dpContent,
+  Future<File?> pickImage() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      return File(pickedImage.path);
+    } else {
+      return null;
+    }
+  }
+
+  Future<String?> uploadImage(File imageFile) async {
+    showCircularProgressIndicator(context);
+    try {
+      // Upload image to Firebase Storage
+      String imageName = '${currentUserId}_profile_picture.jpg'; // You can use a unique name for the image
+      firebase_storage.Reference ref =
+      firebase_storage.FirebaseStorage.instance.ref().child('images').child(imageName);
+      await ref.putFile(imageFile);
+
+      // Get download URL of the uploaded image
+      String downloadURL = await ref.getDownloadURL();
+
+      // Update profile image URL in Firestore
+      await FirebaseFirestore.instance.collection('Doctor').doc(currentUserId).update({
+        'profile': downloadURL,
+      });
+      Navigator.pop(context);
+      return downloadURL;
+    } catch (error) {
+      print('Error uploading image: $error');
+      return null;
+    }
+  }
+
+  Future<void> confirmDelete() async {
+    showDialog(
+        context: context,
+        builder: (context)=>
+            AlertDialog(
+              content: const Text('Do you wnat to remove your Profile Picture?'),
               actions: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    ElevatedButton(
-                        onPressed: ()async{
-                          Uint8List? _imageBytes;
-                          final picker = ImagePicker();
-                          final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-                          dpState(() { //refresh the alert box
-                            if (pickedFile != null){
-                              _imageBytes = File(pickedFile.path).readAsBytesSync();
-                              dpContent = Image.memory(_imageBytes!);
-                            } else {
-                              print('No image selected.');
-                            }
-                          });
-                        },
-                        child: Text('Change Image')
-                    ),
-                    Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ElevatedButton(
-                            onPressed: (){
-                              Navigator.pop(context);
-                            },
-                            child: Text('Cancel')
-                        ),
-                        ElevatedButton(
-                          onPressed: (){
-                            setState(() {
-                              DoctorUser.profile = dpContent;
-                            });
-                            Navigator.pop(context);
-                          },
-                          child: Text('Save'),
-                        ),
-                      ],
-                    ),
+                    ElevatedButton(onPressed: () async {
+                      Navigator.pop(context);
+                      showCircularProgressIndicator(context);
+                      await deleteProfileImage().then((_) {
+                        setState(() {
+                          _profileImageUrl = null;
+                        });
+                        Navigator.pop(context);
+                      });
+                    }, child: const Text('Delete')),
+                    ElevatedButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: const Text('Cancel'))
                   ],
                 )
               ],
-            );
-          }
-      );
-    });
+            )
+    );
   }
 
-  void changePassword(){
+  Future<void> deleteProfileImage() async {
+    try {
+      // Remove 'profile' field from the user's document
+      await FirebaseFirestore.instance.collection('Doctor').doc(currentUserId).update({
+        'profile': FieldValue.delete(),
+      });
+      print('Profile image deleted');
+    } catch (error) {
+      print('Error deleting profile image: $error');
+    }
+  }
+
+  void logOut(){
     showDialog(context: context, builder: (context){
-      TextEditingController curPassController = TextEditingController();
-      TextEditingController newPassController1 = TextEditingController();
-      TextEditingController newPassController2 = TextEditingController();
       return AlertDialog(
-        surfaceTintColor: Colors.deepPurple,
-        title: Text('Enter current and new passwrd'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: curPassController,
-              decoration: InputDecoration(hintText: 'Current Password'),
-            ),
-            TextField(
-              controller: newPassController1,
-              decoration: InputDecoration(hintText: 'New Password'),
-            ),
-            TextField(
-              controller: newPassController2,
-              decoration: InputDecoration(hintText: 'Re-enter new Password'),
-            ),
-          ],
-        ),
+        content: const Text('Do you want to Log-out? This will close the app.'),
         actions: [
           ElevatedButton(
               onPressed: (){
                 Navigator.pop(context);
               },
-              child: Text('Cancel')
+              child: const Text('Cancel')
           ),
           ElevatedButton(
-              onPressed: () {
-                //check whether password is correct and both new one are
-                //then send request to change password
-                print('Change password in database.......');
-                Navigator.pop(context);
+              onPressed: () async {
+                // SharedPreferences prefs = await SharedPreferences.getInstance();
+                // prefs.setString('FIRST_PAGE', 'userselection');
+
+                if (Platform.isAndroid) {
+                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                } else if (Platform.isIOS) {
+                  exit(0);
+                }
               },
-              child: Text('Change', style: TextStyle(color: Colors.red),)
+              child: const Text('Log-out', style: TextStyle(color: Colors.red),)
           ),
         ],
       );
     });
   }
 
+  void forgotPassword(BuildContext context){
+    showDialog(
+        context: context,
+        builder: (context){
+          TextEditingController forgotController = TextEditingController();
+          String message = 'Email Sent';
+          return AlertDialog(
+            title: const Text('Forgot Password'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('Enter your email, a password reset link will be sent to your email'),
+                TextField(
+                  controller: forgotController,
+                ),
+                ElevatedButton(onPressed: () async {
+                  try {
+                    await firebaseAuth.sendPasswordResetEmail(
+                        email: forgotController.text.trim());
+                  }
+                  catch (e){
+                    message = e.toString();
+                  }
+                  print(message);
+                }, child: const Text('Confirm'))
+              ],
+            ),
+          );
+        }
+    );
+  }
 }

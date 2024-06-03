@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 
-TextStyle nameSytle = const TextStyle(
+TextStyle nameStyle = const TextStyle(
     fontSize: 19,
     fontWeight: FontWeight.w600
 );

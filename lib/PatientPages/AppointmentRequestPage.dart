@@ -1,10 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:healing_hand/Providers/AppointmentProvider.dart';
-import 'package:healing_hand/apiconnection/doctorview.dart';
+import 'package:healing_hand/customWidgets/AppointmentContainerForDoctor.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
-import 'package:healing_hand/modelclass/appoinment.dart';
-httpServices13 http=new httpServices13();
+import 'package:healing_hand/firebase/AuthServices.dart';
+
 class AppointmentRequestPage extends StatefulWidget {
   const AppointmentRequestPage({super.key});
 
@@ -13,80 +13,117 @@ class AppointmentRequestPage extends StatefulWidget {
 }
 
 class _AppointmentRequestPageState extends State<AppointmentRequestPage> {
+
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<prodModal2>>(
-      future: http.getAllPost2(""),
-      builder: ((context, snapshot) {
-        print("calm down");
-        // print(key);
-        switch (snapshot.connectionState) {
-          case ConnectionState.none:
-            return Scaffold(
-              body:
-                  Center(heightFactor: 1.4, child: CircularProgressIndicator()),
-            );
-          case ConnectionState.waiting:
-            return Scaffold(
-              body:
-                  Center(heightFactor: 0.4, child: CircularProgressIndicator()),
-            );
-          case ConnectionState.active:
-            return ShowPostList(context, snapshot.data!);
-
-          case ConnectionState.done:
-
-            //return CircularProgressIndicator();
-            return ShowPostList(context, snapshot.data!);
-        }
-        //}
-
-        //else{
-        //return CircularProgressIndicator();
-        //}
-
-        //  return CircularProgressIndicator();
-      }),
-    ); 
-  }
-  Widget ShowPostList(BuildContext context,List<prodModal2> posts)
-  {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: Text('Appointment Requests'),
+        centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(8),
-          child: ListView.builder(
-              shrinkWrap: true,
-              itemBuilder: (context, index){
-                if(posts[index].status.toString() == "wait" || posts[index].status.toString() == "denied")
-                  return Column(
-                    children: [
-                      WhiteContainer(
-                          child: Column(
-                            children: [
-                              ListTile(
-                                leading: CircleImage(image: AssetImage('assets/images/doctor.png')),
-                                title: Text(posts[index].purpose.toString()),
-                                subtitle: Text(posts[index].email.toString()),
+      body: FutureBuilder(
+          future: firestore.collection('Patient').doc(currentUserId).get(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator(color: Colors.black,));
+            }
+            if (!snapshot.hasData || !snapshot.data!.exists) {
+              return const Center(child: Text('No data found for this doctor.'));
+            }
+            else {
+              if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}'));
+              }
+              else {
+                Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                List<String> appointmentIds = List<String>.from(data['appointments'] ?? []);
+                return Padding(
+                  padding: EdgeInsets.all(15),
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: appointmentIds.map((appointmentId) {
+                        return FutureBuilder<DocumentSnapshot>(
+                          future: firestore.collection('Appointment').doc(appointmentId).get(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState == ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            }
+                            if (!snapshot.hasData || !snapshot.data!.exists) {
+                              return const SizedBox(); // Or some error widget
+                            }
+                            if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            }
+      
+                            Map<String, dynamic> appointmentData = snapshot.data!.data() as Map<String, dynamic>;
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 8.0),
+                              child: WhiteContainer(
+                                  child: Column(
+                                    children: [
+                                      ListTile(
+                                        leading: CircleImage(image: AssetImage('assets/images/doctor.png')),
+                                        title: Text(appointmentData['purpose']),
+                                        subtitle: Text(appointmentData['mode']),
+                                      ),
+                                      Divider(),
+                                      appointmentData['status'] == "waiting" ? Text('Status: Waiting') : Text('Status: Denied', style: TextStyle(color: Colors.red),),
+                                    ],
+                                  )
                               ),
-                              Divider(),
-                              posts[index].status == "wait" ? Text('Status: Waiting') : Text('Status: Denied', style: TextStyle(color: Colors.red),),
-                            ],
-                          )
-                      ),
-                      SizedBox(height: 7,)
-                    ],
-                  );
-                else
-                  return Container();
-              },
-              itemCount: posts.length
-          ),
-        ),
+                            );
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+                );
+              }
+            }
+          }
       ),
     );
   }
+  // Widget ShowPostList(BuildContext context,List<prodModal2> posts)
+  // {
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       title: Text('Notifications'),
+  //     ),
+  //     body: SingleChildScrollView(
+  //       child: Padding(
+  //         padding: EdgeInsets.all(8),
+  //         child: ListView.builder(
+  //             shrinkWrap: true,
+  //             itemBuilder: (context, index){
+  //               if(posts[index].status.toString() == "wait" || posts[index].status.toString() == "denied")
+  //                 return Column(
+  //                   children: [
+  //                     WhiteContainer(
+  //                         child: Column(
+  //                           children: [
+  //                             ListTile(
+  //                               leading: CircleImage(image: AssetImage('assets/images/doctor.png')),
+  //                               title: Text(posts[index].purpose.toString()),
+  //                               subtitle: Text(posts[index].email.toString()),
+  //                             ),
+  //                             Divider(),
+  //                             posts[index].status == "wait" ? Text('Status: Waiting') : Text('Status: Denied', style: TextStyle(color: Colors.red),),
+  //                           ],
+  //                         )
+  //                     ),
+  //                     SizedBox(height: 7,)
+  //                   ],
+  //                 );
+  //               else
+  //                 return Container();
+  //             },
+  //             itemCount: posts.length
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 }
