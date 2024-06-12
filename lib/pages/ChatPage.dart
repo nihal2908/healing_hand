@@ -64,7 +64,7 @@ class ChatPage2 extends StatelessWidget {
     return usertype == 'doctor' ? buildUserList2(): buildUserList3();
   }
 
-// geting all the patients on doctor side
+  // geting all the patients on doctor side
   Widget buildUserList2(){
     return StreamBuilder(
         stream: chatService.getPatientStream(),
@@ -131,31 +131,31 @@ class ChatPage2 extends StatelessWidget {
 
 
 
-  // list of all the chat rooms
-  Widget buildUserList4(){
-    return StreamBuilder(
-        stream: chatService.getRoomStream(),
-        builder: (context, snapshot){
-          if(snapshot.hasError){
-            return Text('Error');
-          }
-          else if(snapshot.connectionState == ConnectionState.waiting){
-            return Text('Loading...');
-          }
-          else{
-            return ListView(
-              children: snapshot.data!.map<Widget>((userData) => buildUserListItem4(userData, context)).toList(),
-            );
-          }
-        }
-    );
-  }
+  // // list of all the chat rooms
+  // Widget buildUserList4(){
+  //   return StreamBuilder(
+  //       stream: chatService.getRoomStream(),
+  //       builder: (context, snapshot){
+  //         if(snapshot.hasError){
+  //           return Text('Error');
+  //         }
+  //         else if(snapshot.connectionState == ConnectionState.waiting){
+  //           return Text('Loading...');
+  //         }
+  //         else{
+  //           return ListView(
+  //             children: snapshot.data!.map<Widget>((userData) => buildUserListItem4(userData, context)).toList(),
+  //           );
+  //         }
+  //       }
+  //   );
+  // }
 
 
 
-// build the list of patients
+  // build the list of patients
   Widget buildUserListItem2(Map<String, dynamic> userData, BuildContext context) {
-    tempUserData = userData;
+    // tempUserData = userData;
     //List<String> doctors = userData['doctors'].cast<String>().toList();
     //if(doctors.contains(currentUserId)){
     String name = userData['name'];
@@ -178,30 +178,22 @@ class ChatPage2 extends StatelessWidget {
     // }
   }
 
-// build all the doctors list on patient side
+  // build all the doctors list on patient side
   Widget buildUserListItem3(Map<String, dynamic> userData, BuildContext context) {
-    // tempUserData = userData;
-    // List<String> doctors = userData['patients'].cast<String>().toList();
-      String name = userData['name'];
-    //if(doctors.contains(currentUserId)){
-      return UserTile(
-          text: name,
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(
-                builder: (context)=>
-                    ChatRoom3(senderemail: currentUserEmail, recieveremail: userData['email'], name: name,)
-            ));
-          }
-      );
-    //}
-    //else{
-      //return Container();
-    //}
+    String name = userData['name'];
+    return UserTile(
+        text: name,
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(
+              builder: (context)=>
+                  ChatRoom3(senderemail: currentUserEmail, recieveremail: userData['email'], name: name,)
+          ));
+        }
+    );
   }
 
-// all chat rooms in which that doctor is
+  // all chat rooms in which that doctor is
   Widget buildUserListItem4(Map<String, dynamic> userData, BuildContext context) {
-    tempUserData = userData;
     String name = userData['name'];
     String id = userData['rid'].toString();
     List<String> parts = id.split('_').toList();
@@ -255,7 +247,3 @@ class UserTile2 extends StatelessWidget{
   }
 
 }
-
-
-// delete kar dena bad me
-Map<String, dynamic> tempUserData={};

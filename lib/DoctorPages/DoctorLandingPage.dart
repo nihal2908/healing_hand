@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:healing_hand/DoctorPages/DoctorHomePage.dart';
 import 'package:healing_hand/DoctorPages/DoctorNotePage.dart';
 import 'package:healing_hand/DoctorPages/DoctorSettingPage.dart';
+import 'package:healing_hand/pages/ChatPage.dart';
 
 
 class DoctorLandingPage extends StatefulWidget {
@@ -14,6 +15,7 @@ class DoctorLandingPage extends StatefulWidget {
 List<Widget> HomePageScreen = [
   DoctorHomePage(),
   DoctorNotePage(),
+  ChatPage2(usertype: 'doctor',),
   DoctorSettingPage(),
 ];
 
@@ -42,6 +44,11 @@ class _DoctorLandingPageState extends State<DoctorLandingPage> {
             selectedIcon: Icon(Icons.note_alt_sharp),
             icon: Icon(Icons.note_alt_outlined),
             label: 'Notes',
+          ),
+          NavigationDestination(
+            //selectedIcon: Icon(),
+            icon: Icon(Icons.message),
+            label: 'Chats',
           ),
           NavigationDestination(
             //selectedIcon: Icon(),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/DoctorTile.dart';
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -103,7 +104,7 @@ class _SearchPageState extends State<SearchPage> {
           itemBuilder: (context, index) {
             final doctor = filteredDoctors[index];
             return DoctorTile(
-              profile: doctor['profile']==null ? Image.network(doctor['profile']) : Image.asset('assets/images/doctor.png'),
+              profile: doctor['profile']!=null ? CircleImage(image: NetworkImage(doctor['profile'])) : CircleImage(image: AssetImage('assets/images/doctor.png')),
               uid: doctor['uid'],
               name: doctor['name'],
               category: doctor['category'],

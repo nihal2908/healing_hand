@@ -99,6 +99,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
     else{
       currentDp = NetworkImage(data['profile']);
     }
+    print(data['profile']);
     return Scaffold(
       appBar: AppBar(),
       body: SingleChildScrollView(

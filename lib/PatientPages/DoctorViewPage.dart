@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:healing_hand/PatientPages/PatientAccountPage.dart';
+import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/firebase/AppointmentFunctions.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/pages/ChatRoom.dart';
 
 class DoctorViewPage extends StatefulWidget {
   final String uid;
@@ -179,7 +181,37 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                             )
                         ),
                       ),
-                      CircleImage(image: AssetImage('assets/images/doctor.png')),
+                      CircleImage(
+                          image: NetworkImage(doctor['profile']),
+                        onTap: (){
+                            showDialog(context: context, builder: (context){
+                              return AlertDialog(
+                                title: Text(doctor['name']),
+                                content: Image.network(doctor['profile']),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: (){
+                                      Navigator.pop(context);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatRoom3(senderemail: currentUserEmail, recieveremail: doctor['email'], name: doctor['name'],),
+                                        ),
+                                      );
+                                    },
+                                    child: Text('Chat'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: (){
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('Cancel'),
+                                  ),
+                                ],
+                              );
+                            });
+                        },
+                      ),
                     ],
                   ),
                 ],

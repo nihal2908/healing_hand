@@ -10,7 +10,7 @@ class ChatService{
   final FirebaseAuth auth = FirebaseAuth.instance;
 
 
-  //get user strem
+  //get user stream (not used)
   Stream<List<Map<String, dynamic>>> getUserStream(){
     return firestore.collection('Users').snapshots().map((snapshot) {
       return snapshot.docs.map((doc){
@@ -91,15 +91,13 @@ class ChatService{
   Future<void> sendMessage2(String senderemail, recieveremail, message) async {
     //get current user info
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    final Timestamp timestamp = Timestamp.now();
-
 
     //create a new message
     Message2 newMessage = Message2(
       senderemail: senderemail,
       recieveremail: recieveremail,
       message: message,
-      timestamp: timestamp,
+      timestamp: FieldValue.serverTimestamp(),
     );
 
     //construct a chat room id
@@ -175,7 +173,7 @@ class Message2{
   final String message;
   final String senderemail;
   final String recieveremail;
-  final Timestamp timestamp;
+  final dynamic timestamp;
 
   Message2({
     required this.message,

@@ -40,7 +40,7 @@ dependencies:
   provider:
   flutter_rating_bar: ^4.0.1
   url_launcher: ^6.2.5
-  http: ^0.13.0
+  http: ^0.13.6
   image_picker: ^1.0.7
   google_maps_flutter: ^2.6.0
   google_api_headers: ^1.0.0
@@ -54,6 +54,9 @@ dependencies:
   social_media_flutter: ^0.0.2
   flutter_social_button: ^1.1.4+1
   file_picker: ^8.0.1
+  awesome_notifications: ^0.8.2
+  flutter_local_notifications: ^17.1.2
+  firebase_messaging: ^14.9.4
 
 
 dev_dependencies:
