@@ -14,7 +14,7 @@ class PatientLandingPage extends StatefulWidget {
 List<Widget> HomePageScreen = [
   PatientHomePage(),
   PatientSchedulePage(),
-  ChatPage2(usertype: 'patient',),
+  ChatPage(usertype: 'patient',),
   PatientSettingPage(),
 ];
 

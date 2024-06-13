@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:healing_hand/chat_services/chatServices.dart';
+import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/customWidgets/styles.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
@@ -10,12 +11,13 @@ final AuthServices auth = AuthServices();
 
 
 class UserTile extends StatelessWidget{
-
+  final String profile;
   final String text;
   final void Function()? onTap;
 
   const UserTile({
     super.key,
+    required this.profile,
     required this.text,
     required this.onTap,
   });
@@ -25,25 +27,27 @@ class UserTile extends StatelessWidget{
     return Padding(
       padding: const EdgeInsets.only(bottom: 7),
       child: GestureDetector(
+        onTap: onTap,
         child: WhiteContainer(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: [
-                Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey.shade300
-                    ),
-                    child: Icon(Icons.person)
-                ),
-                SizedBox(width: 10,),
-                Text(text),
-              ],
-            ),
+          child: Row(
+            children: [
+              profile == 'none' ? Container(
+                  decoration: BoxDecoration(
+                      //shape: BoxShape.circle,
+                      color: Colors.grey.shade300,
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+                  child: const Icon(Icons.person, size: 50, color: Colors.grey,)
+              ) :
+              CircleAvatar(
+                radius: 25,
+                backgroundImage: NetworkImage(profile),
+              ),
+              const SizedBox(width: 10,),
+              Text(text, style: const TextStyle(fontSize: 16),),
+            ],
           ),
         ),
-        onTap: onTap,
       ),
     );
   }
@@ -51,8 +55,8 @@ class UserTile extends StatelessWidget{
 }
 
 
-class ChatPage2 extends StatelessWidget {
-  ChatPage2({super.key, required this.usertype});
+class ChatPage extends StatelessWidget {
+  ChatPage({super.key, required this.usertype});
   final String usertype;
   //geting instance of services
   final ChatService chatService = ChatService();
@@ -61,11 +65,11 @@ class ChatPage2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return usertype == 'doctor' ? buildUserList2(): buildUserList3();
+    return usertype == 'doctor' ? buildPatientList(): buildDoctorList();
   }
 
-  // geting all the patients on doctor side
-  Widget buildUserList2(){
+  // getting all the patients on doctor side
+  Widget buildPatientList(){
     return StreamBuilder(
         stream: chatService.getPatientStream(),
         builder: (context, snapshot){
@@ -88,7 +92,7 @@ class ChatPage2 extends StatelessWidget {
                   ),
                   ListView(
                     shrinkWrap: true,
-                    children: snapshot.data!.map<Widget>((userData) => buildUserListItem2(userData, context)).toList(),
+                    children: snapshot.data!.map<Widget>((userData) => buildPatientChatTile(userData, context)).toList(),
                   ),
                 ],
               ),
@@ -98,8 +102,8 @@ class ChatPage2 extends StatelessWidget {
     );
   }
 
-  // geting all the doctors on patient side
-  Widget buildUserList3(){
+  // getting all the doctors on patient side
+  Widget buildDoctorList(){
     return StreamBuilder(
         stream: chatService.getDoctorStream(),
         builder: (context, snapshot){
@@ -119,7 +123,7 @@ class ChatPage2 extends StatelessWidget {
                   ),
                   ListView(
                     shrinkWrap: true,
-                    children: snapshot.data!.map<Widget>((userData) => buildUserListItem3(userData, context)).toList(),
+                    children: snapshot.data!.map<Widget>((userData) => buildDoctorChatTile(userData, context)).toList(),
                   ),
                 ],
               ),
@@ -131,57 +135,29 @@ class ChatPage2 extends StatelessWidget {
 
 
 
-  // // list of all the chat rooms
-  // Widget buildUserList4(){
-  //   return StreamBuilder(
-  //       stream: chatService.getRoomStream(),
-  //       builder: (context, snapshot){
-  //         if(snapshot.hasError){
-  //           return Text('Error');
-  //         }
-  //         else if(snapshot.connectionState == ConnectionState.waiting){
-  //           return Text('Loading...');
-  //         }
-  //         else{
-  //           return ListView(
-  //             children: snapshot.data!.map<Widget>((userData) => buildUserListItem4(userData, context)).toList(),
-  //           );
-  //         }
-  //       }
-  //   );
-  // }
-
-
-
   // build the list of patients
-  Widget buildUserListItem2(Map<String, dynamic> userData, BuildContext context) {
-    // tempUserData = userData;
-    //List<String> doctors = userData['doctors'].cast<String>().toList();
-    //if(doctors.contains(currentUserId)){
+  Widget buildPatientChatTile(Map<String, dynamic> userData, BuildContext context) {
+    String profile = userData['profile']?? 'none';
     String name = userData['name'];
     return UserTile(
-          text: name,
-          onTap: (){
-            Navigator.push(context, MaterialPageRoute(
-                builder: (context)=>
-                    ChatRoom3(senderemail: currentUserEmail, recieveremail: userData['email'],name: name,)
-            ));
-          }
-      );
-    }
-    // else{
-    //   return Container(
-    //     height: 30,
-    //     width: 30,
-    //     color: Colors.red,
-    //   );
-    // }
+      profile: profile,
+      text: name,
+      onTap: (){
+        Navigator.push(context, MaterialPageRoute(
+            builder: (context)=>
+                ChatRoom3(senderemail: currentUserEmail, recieveremail: userData['email'],name: name,)
+        ));
+      }
+    );
   }
 
+
   // build all the doctors list on patient side
-  Widget buildUserListItem3(Map<String, dynamic> userData, BuildContext context) {
+  Widget buildDoctorChatTile(Map<String, dynamic> userData, BuildContext context) {
+    String profile = userData['profile'] ?? 'none';
     String name = userData['name'];
     return UserTile(
+        profile: profile,
         text: name,
         onTap: (){
           Navigator.push(context, MaterialPageRoute(
@@ -192,14 +168,16 @@ class ChatPage2 extends StatelessWidget {
     );
   }
 
+
   // all chat rooms in which that doctor is
   Widget buildUserListItem4(Map<String, dynamic> userData, BuildContext context) {
     String name = userData['name'];
+    String profile = userData['profile'] ?? 'none';
     String id = userData['rid'].toString();
     List<String> parts = id.split('_').toList();
     if(parts[1] == currentUserEmail){
-//    if(doctors.contains(currentUserId)){
       return UserTile(
+          profile: profile,
           text: userData['name'],
           onTap: (){
             Navigator.push(context, MaterialPageRoute(
@@ -212,38 +190,6 @@ class ChatPage2 extends StatelessWidget {
     else{
       return Container();
     }
-  }
-
-
-class UserTile2 extends StatelessWidget{
-
-  final String text;
-  final void Function()? onTap;
-
-  const UserTile2({
-    super.key,
-    required this.text,
-    required this.onTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      child: Container(
-        margin: EdgeInsets.all(5),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            Icon(Icons.person),
-            Text(text),
-          ],
-        ),
-      ),
-      onTap: onTap,
-    );
   }
 
 }
