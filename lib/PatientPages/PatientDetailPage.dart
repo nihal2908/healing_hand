@@ -4,7 +4,6 @@ import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final detailKey = GlobalKey<FormState>();
 
@@ -185,10 +184,7 @@ class _PatientDetailPageState extends State<PatientDetailPage> {
           height: double.parse(heightController.text),
           weight: double.parse(weightController.text)
       );
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('FIRST_PAGE', 'patient');
-      Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>const PatientLandingPage()));
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const PatientLandingPage()), (route)=>false);
     }
     catch (e) {
       print(e.toString());

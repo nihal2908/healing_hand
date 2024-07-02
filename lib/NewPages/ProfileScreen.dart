@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -24,7 +25,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     try {
       // Retrieve profile image URL from Firestore
       DocumentSnapshot userSnapshot =
-      await FirebaseFirestore.instance.collection('Patient').doc(currentUserId).get();
+      await FirebaseFirestore.instance.collection('Patient').doc(UserManager.userId).get();
       setState(() {
         _profileImageUrl = userSnapshot['profile'];
       });
@@ -122,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       String downloadURL = await ref.getDownloadURL();
 
       // Update profile image URL in Firestore
-      await FirebaseFirestore.instance.collection('Patient').doc(currentUserId).update({
+      await FirebaseFirestore.instance.collection('Patient').doc(UserManager.userId).update({
         'profile': downloadURL,
       });
 

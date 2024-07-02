@@ -6,7 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
 class NearByPlacesScreen extends StatefulWidget {
-  const NearByPlacesScreen({Key? key}) : super(key: key);
+  final String latitude;
+  final String longitude;
+  const NearByPlacesScreen({Key? key, required this.latitude, required this.longitude});
 
   @override
   State<NearByPlacesScreen> createState() => _NearByPlacesScreenState();
@@ -16,9 +18,6 @@ class _NearByPlacesScreenState extends State<NearByPlacesScreen> {
 
   String apiKey = "AIzaSyDz1yuC4lv3zAQXbffeFUo85KMw77T6_4Y";
   String radius = "500";
-
-  double latitude = double.parse(lang1.toString());
-  double longitude = double.parse(long1.toString());
 
   NearbyPlacesResponse nearbyPlacesResponse = NearbyPlacesResponse();
 
@@ -50,8 +49,8 @@ class _NearByPlacesScreenState extends State<NearByPlacesScreen> {
 
   void getNearbyPlaces() async {
 
-    var url = Uri.parse('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitude.toString() + ','
-    + longitude.toString() + '&radius=' + radius + '&key='+apiKey+'&type=hospital|pharmacy|doctor'
+    var url = Uri.parse('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + widget.latitude + ','
+    + widget.longitude + '&radius=' + radius + '&key='+apiKey+'&type=hospital|pharmacy|doctor'
     );
 
     var response = await http.post(url);

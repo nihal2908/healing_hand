@@ -7,6 +7,7 @@ import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/firebase/AppointmentFunctions.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 import 'package:healing_hand/pages/ChatRoom.dart';
 
 class DoctorViewPage extends StatefulWidget {
@@ -195,7 +196,7 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => ChatRoom3(senderemail: currentUserEmail, recieveremail: doctor['email'], name: doctor['name'],),
+                                          builder: (context) => ChatRoom3(senderemail: UserManager.emailId!, recieveremail: doctor['email'], name: doctor['name'],),
                                         ),
                                       );
                                     },
@@ -277,7 +278,7 @@ class _DoctorViewPageState extends State<DoctorViewPage> {
             TextButton(
                 onPressed: (){
                   createAppointment(
-                      patient: currentUserId,
+                      patient: UserManager.userId!,
                       doctor: uid,
                       status: 'waiting',
                       mode: modeController.text,

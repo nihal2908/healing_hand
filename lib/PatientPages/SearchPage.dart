@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/DoctorTile.dart';
 
-final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
 class SearchPage extends StatefulWidget {
   const SearchPage({Key? key}) : super(key: key);
 
@@ -13,6 +11,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   List<Map<String, dynamic>> doctors = [];
   List<Map<String, dynamic>> filteredDoctors = [];
   bool searchByName = true;

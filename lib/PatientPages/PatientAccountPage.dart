@@ -9,11 +9,9 @@ import 'package:healing_hand/PatientPages/PatientProfileEditPage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-Image content = Image.asset('assets/images/default_dp.jpg');
-ImageProvider<Object>? currentDp;
 
 TextStyle nameSytle = const TextStyle(
     fontSize: 17,
@@ -33,38 +31,9 @@ TextStyle titleStyle = const TextStyle(
     color: Colors.white
 );
 
-final FirebaseFirestore firestore = FirebaseFirestore.instance;
-
-class PatientAccountRequest extends StatelessWidget {
-  const PatientAccountRequest({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: firestore.collection('Patient').doc(auth.getCurentUser()!.uid).get(),
-        builder: (context, snapshot){
-          print('UID is ${auth.getCurentUser()!.uid}');
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          else {
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            else {
-              Map<String, dynamic> userData = snapshot.data!.data() as Map<String, dynamic>;
-              return PatientAccountPage(data: userData);
-            }
-          }
-        }
-    );
-  }
-}
-
 
 class PatientAccountPage extends StatefulWidget {
-  final Map<String, dynamic> data;
-  PatientAccountPage({required this.data, super.key});
+  PatientAccountPage({super.key});
 
   @override
   State<PatientAccountPage> createState() => _PatientAccountPageState();
@@ -73,18 +42,21 @@ class PatientAccountPage extends StatefulWidget {
 class _PatientAccountPageState extends State<PatientAccountPage> {
   String? _profileImageUrl;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  Image content = Image.asset('assets/images/default_dp.jpg');
+  ImageProvider<Object>? currentDp;
 
   @override
   void initState() {
     super.initState();
-    loadProfileImage();
+    // loadProfileImage();
   }
 
   Future<void> loadProfileImage() async {
     try {
       // Retrieve profile image URL from Firestore
       DocumentSnapshot userSnapshot =
-      await FirebaseFirestore.instance.collection('Patient').doc(currentUserId).get();
+      await FirebaseFirestore.instance.collection('Patient').doc(UserManager.userId).get();
       setState(() {
         _profileImageUrl = userSnapshot['profile'];
       });
@@ -95,128 +67,152 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String , dynamic> data = widget.data;
-    if(data['profile']==null){
-      currentDp = const AssetImage('assets/images/default_dp.jpg');
-    }
-    else{
-      currentDp = NetworkImage(data['profile']);
-    }
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Your Profile'),
+        centerTitle: true,
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Stack(
-            alignment: Alignment.topCenter,
+          child: Column(
             children: [
-              Column(
-                children: [
-                  const SizedBox(height: 100,),
-                  WhiteContainer(
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>PatientProfileEditPage(
-                                name: data['name'],
-                                phone: data['phone'],
-                                gender: data['gender'],
-                                age: data['age'],
-                                height: data['height'],
-                                weight: data['weight'],
-                              )));
-                            },
-                            icon: const Icon(Icons.edit),
+              const SizedBox(height: 50,),
+              FutureBuilder(
+                future: firestore.collection('Patient').doc(UserManager.userId).get(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                  else {
+                    if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    }
+                    else {
+                      Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                      if(data['profile']==null){
+                        currentDp = const AssetImage('assets/images/default_dp.jpg');
+                        _profileImageUrl = null;
+                      }
+                      else{
+                        currentDp = NetworkImage(data['profile']);
+                        _profileImageUrl = data['profile'];
+                      }
+
+                      return Stack(
+                        children: [
+                          Column(
+                            children: [
+                              const SizedBox(height: 35,),
+                              WhiteContainer(
+                                child: Column(
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: IconButton(
+                                        onPressed: () {
+                                          Navigator.push(context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PatientProfileEditPage(
+                                                        name: data['name'],
+                                                        phone: data['phone'],
+                                                        gender: data['gender'],
+                                                        age: data['age'],
+                                                        height: data['height'],
+                                                        weight: data['weight'],
+                                                      ),
+                                              ),
+                                          );
+                                        },
+                                        icon: const Icon(Icons.edit),
+                                      ),
+                                    ),
+                                    Text(data['name'], style: nameSytle,),
+                                    Text('${data['age']} years',
+                                      style: profileStyle,),
+                                    Text(data['gender'], style: profileStyle),
+                                    Text(data['phone'], style: profileStyle),
+                                    Text(data['email'], style: profileStyle),
+                                    Text(
+                                        '${data['height']}cm / ${data['weight']}Kg',
+                                        style: profileStyle)
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        Text(data['name'], style: nameSytle,),
-                        Text('${data['age']} years', style: profileStyle,),
-                        Text(data['gender'], style: profileStyle),
-                        Text(data['phone'], style: profileStyle),
-                        Text(data['email'], style: profileStyle),
-                        Text('${data['height']}cm / ${data['weight']}Kg', style: profileStyle)
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(25)
-                    ),
-                    child: InkWell(
-                        onTap: (){
-                          print('Change password');
-                          forgotPassword(context);
-                        },
-                        child: Center(child: Text('Change Password', style: nameSytle,))
-                    ),
-                  ),
-                  const SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(25)
-                    ),
-                    child: InkWell(
-                        onTap: () async {
-                          print('Logout pressed');
-                          logOut();
-                        },
-                        child: Center(child: Text('Log-out', style: nameSytle,))
-                    ),
-                  )
-                ],
+                          Center(
+                            child: Container(
+                              width: 75.0,
+                              height: 75.0,
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) =>
+                                        _buildChangeImageDialog(),
+                                  );
+                                },
+                                child: _profileImageUrl != null ?
+                                CircleAvatar(
+                                  radius: 35,
+                                  backgroundImage: NetworkImage(
+                                      _profileImageUrl!,
+                                  ),
+                                ) :
+                                const CircleAvatar(
+                                  radius: 35,
+                                  child: Icon(Icons.person),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }
+                  }
+                }
               ),
-              Column(
-                children: [
-                  Container(
-                    height: 65,
-                    child: Center(
-                        child: Text(
-                            'Your Profile',
-                            style: titleStyle
-                        )
-                    ),
-                  ),
-                  Container(
-                    width: 75.0,
-                    height: 75.0,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => _buildChangeImageDialog(),
-                          );
-                        },
-                        child: _profileImageUrl != null ?
-                        CircleAvatar(
-                          radius: 35,
-                          backgroundImage: NetworkImage(_profileImageUrl!),
-                        ) :
-                        const CircleAvatar(
-                          radius: 35,
-                          child: Icon(Icons.person),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 20,),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                child: InkWell(
+                    onTap: (){
+                      print('Change password');
+                      forgotPassword(context);
+                    },
+                    child: Center(child: Text('Change Password', style: nameSytle,))
+                ),
               ),
+              const SizedBox(height: 20,),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                child: InkWell(
+                    onTap: () async {
+                      print('Logout pressed');
+                      logOut();
+                    },
+                    child: Center(child: Text('Log-out', style: nameSytle,))
+                ),
+              )
             ],
           ),
         ),
@@ -263,6 +259,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
         ),
         IconButton(
           onPressed: (){
+            Navigator.pop(context);
             confirmDelete();
           },
           icon: const Icon(Icons.delete),
@@ -273,7 +270,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
 
   Future<File?> pickImage() async {
     final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery, imageQuality: 50,);
     if (pickedImage != null) {
       return File(pickedImage.path);
     } else {
@@ -285,7 +282,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
     showCircularProgressIndicator(context);
     try {
       // Upload image to Firebase Storage
-      String imageName = '${currentUserId}_profile_picture.jpg'; // You can use a unique name for the image
+      String imageName = '${UserManager.userId}_profile_picture.jpg'; // You can use a unique name for the image
       firebase_storage.Reference ref =
       firebase_storage.FirebaseStorage.instance.ref().child('images').child(imageName);
       await ref.putFile(imageFile);
@@ -294,7 +291,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
       String downloadURL = await ref.getDownloadURL();
 
       // Update profile image URL in Firestore
-      await FirebaseFirestore.instance.collection('Patient').doc(currentUserId).update({
+      await FirebaseFirestore.instance.collection('Patient').doc(UserManager.userId).update({
         'profile': downloadURL,
       });
       Navigator.pop(context);
@@ -316,14 +313,24 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(onPressed: () async {
-                      Navigator.pop(context);
-                      showCircularProgressIndicator(context);
+                      // Navigator.pop(context);
+                      // showCircularProgressIndicator(context);
+                      // showDialog(context: context, builder: (context){
+                      //   return Center(
+                      //     child: CircularProgressIndicator(),
+                      //   );
+                      // });
                       await deleteProfileImage().then((_) {
+                        Navigator.pop(context);
                         setState(() {
                           _profileImageUrl = null;
                         });
-                        Navigator.pop(context);
                       });
+                      // await deleteProfileImage();
+                      // // Navigator.pop(context);
+                      // setState(() {
+                      //   _profileImageUrl = null;
+                      // });
                     }, child: const Text('Delete')),
                     ElevatedButton(onPressed: (){
                       Navigator.pop(context);
@@ -338,10 +345,11 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
   Future<void> deleteProfileImage() async {
     try {
       // Remove 'profile' field from the user's document
-      await FirebaseFirestore.instance.collection('Patient').doc(currentUserId).update({
+      await FirebaseFirestore.instance.collection('Patient').doc(UserManager.userId!).update({
         'profile': FieldValue.delete(),
       });
       print('Profile image deleted');
+      return ;
     } catch (error) {
       print('Error deleting profile image: $error');
     }
@@ -360,9 +368,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
           ),
           ElevatedButton(
               onPressed: () async {
-                SharedPreferences prefs = await SharedPreferences.getInstance();
-                await prefs.setString('FIRST_PAGE', 'userselection');
-
+                firebaseAuth.signOut();
                 if (Platform.isAndroid) {
                   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
                 } else if (Platform.isIOS) {

@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
 
-final editorKey = GlobalKey<FormState>();
-final AuthServices auth = AuthServices();
 
 class PatientProfileEditPage extends StatelessWidget {
 
@@ -14,7 +12,7 @@ class PatientProfileEditPage extends StatelessWidget {
   final double height;
   final double weight;
 
-  const PatientProfileEditPage({
+  PatientProfileEditPage({
     super.key,
     required this.name,
     required this.phone,
@@ -23,6 +21,10 @@ class PatientProfileEditPage extends StatelessWidget {
     required this.gender,
     required this.age
   });
+
+
+  final editorKey = GlobalKey<FormState>();
+  final AuthServices auth = AuthServices();
 
   @override
   Widget build(BuildContext context) {

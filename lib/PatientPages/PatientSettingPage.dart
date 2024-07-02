@@ -38,7 +38,7 @@ class _PatientSettingPageState extends State<PatientSettingPage> {
                         leading: const Icon(Icons.person),
                         title: const Text('Your Profile'),
                         onTap: (){
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => PatientAccountRequest()));
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => PatientAccountPage()));
                         },
                       ),
                       ListTile(

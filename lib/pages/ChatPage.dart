@@ -5,6 +5,7 @@ import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/customWidgets/styles.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 import 'package:healing_hand/pages/ChatRoom.dart';
 
 final AuthServices auth = AuthServices();
@@ -145,7 +146,7 @@ class ChatPage extends StatelessWidget {
       onTap: (){
         Navigator.push(context, MaterialPageRoute(
             builder: (context)=>
-                ChatRoom3(senderemail: currentUserEmail, recieveremail: userData['email'],name: name,)
+                ChatRoom3(senderemail: UserManager.emailId!, recieveremail: userData['email'],name: name,)
         ));
       }
     );
@@ -162,7 +163,7 @@ class ChatPage extends StatelessWidget {
         onTap: (){
           Navigator.push(context, MaterialPageRoute(
               builder: (context)=>
-                  ChatRoom3(senderemail: currentUserEmail, recieveremail: userData['email'], name: name,)
+                  ChatRoom3(senderemail: UserManager.emailId!, recieveremail: userData['email'], name: name,)
           ));
         }
     );
@@ -175,14 +176,14 @@ class ChatPage extends StatelessWidget {
     String profile = userData['profile'] ?? 'none';
     String id = userData['rid'].toString();
     List<String> parts = id.split('_').toList();
-    if(parts[1] == currentUserEmail){
+    if(parts[1] == UserManager.emailId!){
       return UserTile(
           profile: profile,
           text: userData['name'],
           onTap: (){
             Navigator.push(context, MaterialPageRoute(
                 builder: (context)=>
-                    ChatRoom3(senderemail: currentUserEmail, recieveremail: userData['email'],name: name,)
+                    ChatRoom3(senderemail: UserManager.emailId!, recieveremail: userData['email'],name: name,)
             ));
           }
       );

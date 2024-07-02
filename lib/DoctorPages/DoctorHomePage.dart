@@ -5,6 +5,7 @@ import 'package:healing_hand/DoctorPages/NotificationPage.dart';
 import 'package:healing_hand/customWidgets/AppointmentContainerForDoctor.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 
 class DoctorHomePage extends StatefulWidget {
   const DoctorHomePage({super.key});
@@ -20,7 +21,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
   @override
   Widget build(BuildContext context) {
       return FutureBuilder(
-          future: firestore.collection('Doctor').doc(currentUserId).get(),
+          future: firestore.collection('Doctor').doc(UserManager.userId).get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
@@ -46,7 +47,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                         toolbarHeight: 150,
                         leading: GestureDetector(
                           onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> const DoctorAccountRequest()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=> DoctorAccountRequest()));
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

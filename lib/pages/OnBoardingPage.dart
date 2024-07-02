@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:introduction_screen/introduction_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class OnBoardingPage extends StatefulWidget {
   const OnBoardingPage({super.key});
@@ -62,8 +61,6 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
         showNextButton: true,
         showBottomPart: true,
         onDone: () async {
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('FIRST_PAGE', 'userselection');
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const UserTypePage()));
         },
       ),
@@ -76,8 +73,8 @@ PageViewModel CustomPageViewModal(String title, body, Image image){
     title: title,
     body: body,
     image: image,
-    decoration: PageDecoration(
-      titleTextStyle: const TextStyle(
+    decoration: const PageDecoration(
+      titleTextStyle: TextStyle(
           fontSize: 25,
           fontWeight: FontWeight.bold,
           fontStyle: FontStyle.italic,
@@ -90,13 +87,13 @@ PageViewModel CustomPageViewModal(String title, body, Image image){
       imageFlex: 1,
       footerFlex: 0,
       bodyAlignment: Alignment.bottomCenter,
-      imagePadding: const EdgeInsets.only(top: 20, bottom: 20),
+      imagePadding: EdgeInsets.only(top: 20, bottom: 20),
       // boxDecoration: BoxDecoration(
       //   //color: Colors.deepPurple.shade50,
       //   borderRadius: BorderRadius.circular(20),
       // ),
-      bodyPadding: const EdgeInsets.all(10),
-      pageMargin: const EdgeInsets.all(15),
+      bodyPadding: EdgeInsets.all(10),
+      pageMargin: EdgeInsets.all(15),
     )
   );
 }

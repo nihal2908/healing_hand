@@ -8,6 +8,7 @@ import 'package:healing_hand/DoctorPages/DoctorProfileEditPage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 import 'package:image_picker/image_picker.dart';
 
 Image content = Image.asset('assets/images/default_dp.jpg');
@@ -31,16 +32,17 @@ TextStyle titleStyle = const TextStyle(
     color: Colors.white
 );
 
-final FirebaseFirestore firestore = FirebaseFirestore.instance;
-final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
 
 class DoctorAccountRequest extends StatelessWidget {
-  const DoctorAccountRequest({super.key});
+  DoctorAccountRequest({super.key});
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
-        future: firestore.collection('Doctor').doc(currentUserId).get(),
+        future: firestore.collection('Doctor').doc(UserManager.userId).get(),
         builder: (context, snapshot){
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -62,7 +64,8 @@ class DoctorAccountRequest extends StatelessWidget {
 
 class DoctorAccountPage extends StatefulWidget {
   final Map<String, dynamic> data;
-  const DoctorAccountPage({required this.data, super.key});
+  DoctorAccountPage({required this.data, super.key});
+
 
   @override
   State<DoctorAccountPage> createState() => _DoctorAccountPageState();
@@ -70,6 +73,8 @@ class DoctorAccountPage extends StatefulWidget {
 
 class _DoctorAccountPageState extends State<DoctorAccountPage> {
   String? _profileImageUrl;
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
 
   @override
   void initState() {
@@ -81,7 +86,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
     try {
       // Retrieve profile image URL from Firestore
       DocumentSnapshot userSnapshot =
-      await FirebaseFirestore.instance.collection('Doctor').doc(currentUserId).get();
+      await FirebaseFirestore.instance.collection('Doctor').doc(UserManager.userId).get();
       setState(() {
         _profileImageUrl = userSnapshot['profile'];
       });
@@ -286,7 +291,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
     showCircularProgressIndicator(context);
     try {
       // Upload image to Firebase Storage
-      String imageName = '${currentUserId}_profile_picture.jpg'; // You can use a unique name for the image
+      String imageName = '${UserManager.userId}_profile_picture.jpg'; // You can use a unique name for the image
       firebase_storage.Reference ref =
       firebase_storage.FirebaseStorage.instance.ref().child('images').child(imageName);
       await ref.putFile(imageFile);
@@ -295,7 +300,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
       String downloadURL = await ref.getDownloadURL();
 
       // Update profile image URL in Firestore
-      await FirebaseFirestore.instance.collection('Doctor').doc(currentUserId).update({
+      await FirebaseFirestore.instance.collection('Doctor').doc(UserManager.userId).update({
         'profile': downloadURL,
       });
       Navigator.pop(context);
@@ -339,7 +344,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
   Future<void> deleteProfileImage() async {
     try {
       // Remove 'profile' field from the user's document
-      await FirebaseFirestore.instance.collection('Doctor').doc(currentUserId).update({
+      await FirebaseFirestore.instance.collection('Doctor').doc(UserManager.userId).update({
         'profile': FieldValue.delete(),
       });
       print('Profile image deleted');

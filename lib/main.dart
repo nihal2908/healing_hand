@@ -1,18 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:healing_hand/DoctorPages/DoctorDetailPage.dart';
-import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
-import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
-import 'package:healing_hand/PatientPages/PatientSignupPage.dart';
-import 'package:healing_hand/Providers/DoctorProvider.dart';
-import 'package:healing_hand/Providers/PatientProvider.dart';
 import 'package:healing_hand/Providers/ThemeProvider.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 import 'package:healing_hand/firebase_options.dart';
-import 'package:healing_hand/pages/HomePage.dart';
-import 'package:healing_hand/pages/OnBoardingPage.dart';
+import 'package:healing_hand/pages/SplashScreen.dart';
 import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 String firstPage = 'onbording'; // when skips onboarding make it
 // userselection, when sighed in make it patient or doctor
@@ -23,22 +16,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  // await SharedPreferences.getInstance();
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  // if(prefs.getString('FIRST_PAGE')!=null){
-  //   firstPage = prefs.getString('FIRST_PAGE')!;
-  // }
-  // switch(firstPage){
-  //   case'onboarding': page = OnBoardingPage();
-  //   break;
-  //   case'userselection' : page = UserTypePage();
-  //   break;
-  //   case'patient' : page = PatientLandingPage();
-  //   break;
-  //   case'doctor' : page = DoctorLandingPage();
-  //   break;
-  //   default: page = OnBoardingPage();
-  // }
   runApp(const MyApp());
 }
 
@@ -81,10 +58,11 @@ class MyApp extends StatelessWidget {
             //home: const OnBoardingPage(),
             //home: const PatientSignupPage(),
             //home: PatientLandingPage(),
-            home: UserTypePage(),
+            // home: UserTypePage(),
             //home: DoctorLandingPage(),
             //home: page,
             //home: DoctorDetailPage(),
+            home: SplashScreen(),
           );
         }
       )

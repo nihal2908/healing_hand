@@ -158,6 +158,7 @@ import 'package:healing_hand/customWidgets/AppointmentContainerForDoctor.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 
 final FirebaseFirestore firestore = FirebaseFirestore.instance;
 
@@ -243,7 +244,7 @@ class _PatientSchedulePageState extends State<PatientSchedulePage> {
   }
   
   Future<void> getList() async {
-    List<String> apps = await firestore.collection('Patient').doc(currentUserId).collection('appointments').get() as List<String>;
+    List<String> apps = await firestore.collection('Patient').doc(UserManager.userId).collection('appointments').get() as List<String>;
     for(String a in apps){
       Map<String, dynamic> data = await firestore.collection('Appointment').doc(a).get() as Map<String, dynamic>;
       if(data['status']=='accepted'){

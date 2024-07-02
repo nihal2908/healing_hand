@@ -3,7 +3,6 @@ import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 final formKey = GlobalKey<FormState>();
 
@@ -14,19 +13,33 @@ class PatientSignupPage extends StatefulWidget {
   State<PatientSignupPage> createState() => _PatientSignupPageState();
 }
 
-TextEditingController nameController = TextEditingController();
-TextEditingController emailController = TextEditingController();
-TextEditingController passwordController = TextEditingController();
+late TextEditingController nameController;
+late TextEditingController emailController;
+late TextEditingController passwordController;
 
 class _PatientSignupPageState extends State<PatientSignupPage> {
   bool isObscured = true;
   bool isLogin = false;
 
   @override
+  void initState() {
+    nameController = TextEditingController();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
-      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.grey.shade200,
         foregroundColor: Colors.black,
@@ -36,30 +49,15 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
             borderRadius: BorderRadius.vertical(bottom: Radius.circular(15), top: Radius.circular(15))
         ),
       ),
-      body: Padding(
-          padding: const EdgeInsets.all(15),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              const Text('Hey Champ!', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
-              const SizedBox(height: 30,),
-              Container(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
-                height: 480,
-                decoration: BoxDecoration(
-                    color: Colors.deepPurple.shade100,
-                    borderRadius: BorderRadius.circular(20),
-                    border: Border.all(
-                      color: Colors.black,
-                    ),
-                    boxShadow: const [
-                      BoxShadow(
-                          color: Colors.deepPurple,
-                          blurRadius: 5
-                      )
-                    ]
-                ),
-                child: Column(
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: const EdgeInsets.all(15),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                const Text('Hey Champ!', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
+                const SizedBox(height: 30,),
+                Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
@@ -88,6 +86,9 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                               floatingLabelAlignment: FloatingLabelAlignment.center,
                             ),
                             validator: (value){
+                              if(value==null || value.isEmpty || value.trim().isEmpty){
+                                return 'Required field';
+                              }
                               return null;
                             },
                           ),
@@ -169,32 +170,29 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                             },
                             child: !isLogin? const Text('Already have account? Login') : const Text('New to Helping Hand? SignUp')
                         ),
-                        TextButton(onPressed: (){
-                          final authServices = AuthServices();
-                          authServices.signOut();
-                        }, child: const Text('signout'))
+                        // TextButton(onPressed: (){
+                        //   final authServices = AuthServices();
+                        //   authServices.signOut();
+                        // }, child: const Text('signout'))
                       ],
                     )
                   ],
                 ),
-              ),
-            ],
-          )
+              ],
+            )
+        ),
       ),
     );
   }
 
   void login()async{
     //get instance
-    final authService = AuthServices();
-    showCircularProgressIndicator(context);
-    //try login
     try{
+      final authService = AuthServices();
+      showCircularProgressIndicator(context);
       await authService.patientLogin(emailController.text, passwordController.text);
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      prefs.setString('FIRST_PAGE', 'patient');
-      Navigator.pop(context);
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>const PatientLandingPage()));
+      //try login
+      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const PatientLandingPage()), (route)=>false);
     }
     //catch error
     catch (e) {

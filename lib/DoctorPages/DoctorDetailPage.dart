@@ -5,7 +5,6 @@ import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/CustomTextFormField.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 final detailKey = GlobalKey<FormState>();

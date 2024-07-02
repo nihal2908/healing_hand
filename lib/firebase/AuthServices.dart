@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:healing_hand/Providers/DoctorProvider.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 
 class AuthServices{
 
@@ -29,12 +29,7 @@ class AuthServices{
           email: email,
           password: password
       );
-      print('credentials sahi hain');
-      currentUserId = await  userCredential.user!.uid;
-      currentUserEmail = await userCredential.user!.email!;
-      print(currentUserId);
-      print(currentUserId.runtimeType);
-      print(currentUserEmail);
+      await UserManager.initializeUserId();
       return userCredential;
     }
     on FirebaseAuthException catch (e) {
@@ -59,8 +54,6 @@ class AuthServices{
     try{
       UserCredential userCredential =  await auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      print('bana diya doctor ka naya account');
-
       //add it to the list of users
       firestore.collection('Doctor').doc(userCredential.user!.uid).set(
           {
@@ -78,10 +71,7 @@ class AuthServices{
           }
       );
 
-      currentUserId = await  userCredential.user!.uid;
-      currentUserEmail = await userCredential.user!.email!;
-      print(currentUserId);
-      print(currentUserEmail);
+      await UserManager.initializeUserId();
       return userCredential;
     }
     on FirebaseAuthException catch (e){
@@ -99,7 +89,7 @@ class AuthServices{
     required int age,
     required String gender,
   }) async {
-    await firestore.collection('Doctor').doc(currentUserId).update(
+    await firestore.collection('Doctor').doc(UserManager.userId).update(
         {
           'name' : name,
           'phone': phone,
@@ -124,11 +114,7 @@ class AuthServices{
           email: email,
           password: password
       );
-      print('credentials sahi hain');
-      currentUserId = await  userCredential.user!.uid;
-      currentUserEmail = await userCredential.user!.email!;
-      print(currentUserId);
-      print(currentUserEmail);
+      await UserManager.initializeUserId();
       return userCredential;
     }
     on FirebaseAuthException catch (e) {
@@ -151,7 +137,6 @@ class AuthServices{
     try{
       UserCredential userCredential =  await auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      print('bana diya patient ka naya account');
 
       //add it to the list of users
       firestore.collection('Patient').doc(userCredential.user!.uid).set(
@@ -166,10 +151,7 @@ class AuthServices{
             'weight': weight,
           }
       );
-      currentUserId = await  userCredential.user!.uid;
-      currentUserEmail = await userCredential.user!.email!;
-      print(currentUserId);
-      print(currentUserEmail);
+      await UserManager.initializeUserId();
       return userCredential;
     }
     on FirebaseAuthException catch (e){
@@ -186,7 +168,7 @@ class AuthServices{
     required double height,
     required double weight,
   }) async {
-    await firestore.collection('Patient').doc(currentUserId).update(
+    await firestore.collection('Patient').doc(UserManager.userId).update(
         {
           'name' : name,
           'phone': phone,
@@ -209,6 +191,3 @@ class AuthServices{
     );
   }
 }
-
-String currentUserId = '';
-String currentUserEmail = '';

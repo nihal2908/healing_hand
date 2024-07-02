@@ -4,6 +4,7 @@ import 'package:healing_hand/customWidgets/AppointmentContainerForDoctor.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/firebase/user_manager.dart';
 
 class AppointmentRequestPage extends StatefulWidget {
   const AppointmentRequestPage({super.key});
@@ -24,7 +25,7 @@ class _AppointmentRequestPageState extends State<AppointmentRequestPage> {
         centerTitle: true,
       ),
       body: FutureBuilder(
-          future: firestore.collection('Patient').doc(currentUserId).get(),
+          future: firestore.collection('Patient').doc(UserManager.userId).get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator(color: Colors.black,));
