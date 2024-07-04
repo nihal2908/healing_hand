@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:healing_hand/Providers/ThemeProvider.dart';
 import 'package:healing_hand/firebase/user_manager.dart';
-import 'package:healing_hand/firebase_options.dart';
+import 'package:healing_hand/APIs_and_keys/firebase_options.dart';
 import 'package:healing_hand/pages/SplashScreen.dart';
 import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:provider/provider.dart';

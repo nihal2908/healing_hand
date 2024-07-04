@@ -10,6 +10,7 @@ import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:healing_hand/firebase/user_manager.dart';
+import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:image_picker/image_picker.dart';
 
 
@@ -358,7 +359,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
   void logOut(){
     showDialog(context: context, builder: (context){
       return AlertDialog(
-        content: const Text('Do you want to Log-out? This will close the app.'),
+        content: const Text('Do you want to Log-out?'),
         actions: [
           ElevatedButton(
               onPressed: (){
@@ -368,12 +369,13 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
           ),
           ElevatedButton(
               onPressed: () async {
-                firebaseAuth.signOut();
-                if (Platform.isAndroid) {
-                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-                } else if (Platform.isIOS) {
-                  exit(0);
-                }
+                await firebaseAuth.signOut();
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>UserTypePage()), (route)=>false);
+                // if (Platform.isAndroid) {
+                //   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
+                // } else if (Platform.isIOS) {
+                //   exit(0);
+                // }
               },
               child: const Text('Log-out', style: TextStyle(color: Colors.red),)
           ),

@@ -7,7 +7,23 @@ class UserManager {
   static String? _userType;
   static Map<String, dynamic>? _userData;
 
-  static Future<void> initializeUserId() async {
+  static Future<void> initializeUserId({required String usertype}) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      _userId = user.uid;
+      _emailId = user.email;
+      _userType = usertype;
+      await _retrieveUserData();
+    } else {
+      // Handle the case where there is no logged-in user
+      _userId = null;
+      _emailId = null;
+      _userType = null;
+      _userData = null;
+    }
+  }
+
+  static Future<void> initializeApp() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       _userId = user.uid;

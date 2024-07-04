@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorSignupPage.dart';
 import 'package:healing_hand/PatientPages/PatientDetailPage.dart';
 import 'package:healing_hand/PatientPages/PatientLandingPage.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
+import 'package:healing_hand/services/validator_functions.dart';
 
 final formKey = GlobalKey<FormState>();
 
@@ -13,13 +15,13 @@ class PatientSignupPage extends StatefulWidget {
   State<PatientSignupPage> createState() => _PatientSignupPageState();
 }
 
-late TextEditingController nameController;
-late TextEditingController emailController;
-late TextEditingController passwordController;
-
 class _PatientSignupPageState extends State<PatientSignupPage> {
   bool isObscured = true;
   bool isLogin = false;
+
+  late final TextEditingController nameController;
+  late final TextEditingController emailController;
+  late final TextEditingController passwordController;
 
   @override
   void initState() {
@@ -105,9 +107,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                               ),
                               floatingLabelAlignment: FloatingLabelAlignment.center,
                             ),
-                            validator: (value){
-                              return null;
-                            },
+                            validator: emailValidator,
                           ),
                           const SizedBox(height: 10,),
                           TextFormField(
@@ -131,9 +131,7 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                                 },
                               ),
                             ),
-                            validator: (value){
-                              return null;
-                            },
+                            validator: passwordValidator,
                             obscureText: isObscured,
                           ),
                         ],
@@ -142,24 +140,30 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                     //SizedBox(height: 15,),
                     Column(
                       children: [
-                        ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 20),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              elevation: 8,
-                            ),
-                            onPressed: () async {
-                              if(formKey.currentState!.validate()){
-                                if(isLogin) {
-                                  login();
-                                }
-                                else
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>const PatientDetailPage()));
+                        GestureDetector(
+                          onTap: () async {
+                            if(formKey.currentState!.validate()){
+                              if(isLogin) {
+                                tryLogin();
                               }
-                            },
-                            child: !isLogin? const Text('Sign-Up') : const Text('Login')
+                              else {
+                                Navigator.pushReplacement(context,
+                                  MaterialPageRoute(builder: (context) =>
+                                      PatientDetailPage(
+                                        name: nameController.text,
+                                        email: emailController.text,
+                                        password: passwordController.text,
+                                      ),
+                                  ),
+                                );
+                              }
+                            }
+                          },
+                          child: Card(
+                            child: Center(
+                              child: !isLogin? const Text('Sign-Up') : const Text('Login'),
+                            ),
+                          ),
                         ),
                         const SizedBox(height: 10,),
                         TextButton(
@@ -168,12 +172,16 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
                                 isLogin = !isLogin;
                               });
                             },
-                            child: !isLogin? const Text('Already have account? Login') : const Text('New to Helping Hand? SignUp')
+                            child: !isLogin?
+                            const Text(
+                              'Already have account? Login',
+                              style: TextStyle(color: Colors.white),
+                            ) :
+                            const Text(
+                              'New to Helping Hand? SignUp',
+                              style: TextStyle(color: Colors.white),
+                            )
                         ),
-                        // TextButton(onPressed: (){
-                        //   final authServices = AuthServices();
-                        //   authServices.signOut();
-                        // }, child: const Text('signout'))
                       ],
                     )
                   ],
@@ -185,12 +193,12 @@ class _PatientSignupPageState extends State<PatientSignupPage> {
     );
   }
 
-  void login()async{
+  void tryLogin() async {
     //get instance
     try{
-      final authService = AuthServices();
+      final AuthServices auth = AuthServices();
       showCircularProgressIndicator(context);
-      await authService.patientLogin(emailController.text, passwordController.text);
+      await auth.patientLogin(emailController.text, passwordController.text);
       //try login
       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>const PatientLandingPage()), (route)=>false);
     }

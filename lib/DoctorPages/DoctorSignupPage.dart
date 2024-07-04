@@ -5,8 +5,6 @@ import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
 
-final formKey = GlobalKey<FormState>();
-
 class DoctorSignupPage extends StatefulWidget {
   const DoctorSignupPage({super.key});
 
@@ -14,13 +12,29 @@ class DoctorSignupPage extends StatefulWidget {
   State<DoctorSignupPage> createState() => _DoctorSignupPageState();
 }
 
-TextEditingController nameController = TextEditingController();
-TextEditingController emailController = TextEditingController();
-TextEditingController passwordController = TextEditingController();
-
 class _DoctorSignupPageState extends State<DoctorSignupPage> {
   bool isObscured = true;
   bool isLogin = false;
+  final formKey = GlobalKey<FormState>();
+  late final TextEditingController nameController;
+  late final TextEditingController emailController;
+  late final TextEditingController passwordController;
+
+  @override
+  void initState() {
+    nameController = TextEditingController();
+    emailController = TextEditingController();
+    passwordController = TextEditingController();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -160,7 +174,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
                                 }
                                 else {
                                   Navigator.push(context, MaterialPageRoute(
-                                      builder: (context) => DoctorDetailPage()));
+                                      builder: (context) => DoctorDetailPage(name: nameController.text, email: emailController.text, password: passwordController.text,)));
                                   //for checking, currently using push,, afterwards it should be pushReplacement or pushandrmoveuntil
                                 }
                               }
@@ -193,7 +207,7 @@ class _DoctorSignupPageState extends State<DoctorSignupPage> {
     showCircularProgressIndicator(context);
     //try login
     try{
-      await authService.doctorLogin(emailController.text, passwordController.text);
+      await authService.doctorLogin(context: context, email: emailController.text, password: passwordController.text);
       Navigator.pop(context);
       Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorLandingPage()));
     }

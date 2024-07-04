@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:healing_hand/DoctorPages/DoctorLandingPage.dart';
 import 'package:healing_hand/firebase/user_manager.dart';
 
 class AuthServices{
@@ -16,25 +17,161 @@ class AuthServices{
 
   //signout
   Future<void> signOut () async {
-    return await auth.signOut();
+    await auth.signOut();
+    UserManager.signOut();
+    return;
   }
 
+  Future<UserCredential?> login({
+    required BuildContext context,
+    required String email,
+    required String password
+  }) async {
+    try {
+      _showLoadingDialog(context);
+      UserCredential userCredential = await auth.signInWithEmailAndPassword(
+          email: email, password: password);
+      Navigator.of(context).pop();
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      Navigator.of(context).pop();
+      _showErrorDialog(context, e.message!);
+      throw Exception(e.code);
+    }
+  }
+
+  Future<UserCredential> register({
+    required BuildContext context,
+    required String email,
+    required String password,
+    required String name,
+    required String gender,
+  }) async {
+    try {
+      _showLoadingDialog(context);
+      UserCredential userCredential = await auth.createUserWithEmailAndPassword(
+          email: email, password: password);
+
+      await firestore.collection('users').doc(userCredential.user!.uid).set({
+        'uid': userCredential.user!.uid,
+        'email': email,
+        'name': name,
+        'gender': gender,
+        'accountDate': FieldValue.serverTimestamp()
+      });
+      Navigator.of(context).pop();
+      return userCredential;
+    } on FirebaseAuthException catch (e) {
+      Navigator.of(context).pop();
+      _showErrorDialog(context, e.message!);
+      throw Exception(e.code);
+    }
+  }
+
+  void _showLoadingDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return const AlertDialog(
+          content: Center(child: CircularProgressIndicator(color: Colors.white,)),
+        );
+      },
+    );
+  }
+
+/*
+  void _showEmailVerify(BuildContext context) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Email not verified'),
+          content: const Text('A verification link is sent to your email. Please verify it\'s you.'),
+          actions: [
+            ElevatedButton(onPressed: (){
+              Navigator.pop(context);
+            }, child: const Text('Retry')),
+          ],
+        );
+      },
+    );
+  }
+*/
+
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Error'),
+          content: Text(message),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   //////////////////////////////////////////////// for doctor ////////////////////////////////////////////////////
 
   //doctor login
-  Future<UserCredential> doctorLogin(String email, String password) async {
-    try{
+  Future<UserCredential> doctorLogin({
+    required BuildContext context,
+    required String email,
+    required String password
+  }) async {
+    try {
+      _showLoadingDialog(context);
       UserCredential userCredential = await auth.signInWithEmailAndPassword(
-          email: email,
-          password: password
-      );
-      await UserManager.initializeUserId();
+          email: email, password: password);
+      final user = userCredential.user;
+      if (user != null) {
+        final uid = user.uid;
+        final doc = await firestore.collection('Doctor').doc(uid).get();
+        if (doc.exists) {
+          await UserManager.initializeUserId(usertype: 'Doctor');
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => DoctorLandingPage()),
+          );
+        } else {
+          _showMessage(context: context, message: 'No Doctor found for this credential.');
+        }
+      }
+      Navigator.of(context).pop();
       return userCredential;
-    }
-    on FirebaseAuthException catch (e) {
+    } on FirebaseAuthException catch (e) {
+      Navigator.of(context).pop();
+      _showErrorDialog(context, e.message!);
       throw Exception(e.code);
     }
+  }
+
+  void _showMessage({required BuildContext context, required String message}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          content: Text(message),
+          actions: [
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   //doctor signup
@@ -71,7 +208,7 @@ class AuthServices{
           }
       );
 
-      await UserManager.initializeUserId();
+      await UserManager.initializeUserId(usertype: 'Doctor');
       return userCredential;
     }
     on FirebaseAuthException catch (e){
@@ -114,7 +251,7 @@ class AuthServices{
           email: email,
           password: password
       );
-      await UserManager.initializeUserId();
+      await UserManager.initializeUserId(usertype: 'Patient');
       return userCredential;
     }
     on FirebaseAuthException catch (e) {
@@ -151,7 +288,7 @@ class AuthServices{
             'weight': weight,
           }
       );
-      await UserManager.initializeUserId();
+      await UserManager.initializeUserId(usertype: 'Patient');
       return userCredential;
     }
     on FirebaseAuthException catch (e){

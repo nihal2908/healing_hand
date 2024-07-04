@@ -47,16 +47,16 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                         toolbarHeight: 150,
                         leading: GestureDetector(
                           onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=> DoctorAccountRequest()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorAccountRequest()));
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              data['profile'] == null ?
+                              UserManager.userData!['profile'] == null ?
                               CircleImage(image: const AssetImage('assets/images/default_dp.jpg')) :
-                              CircleImage(image: NetworkImage(data['profile'])),
+                              CircleImage(image: NetworkImage(UserManager.userData!['profile'])),
                               const Text('Welcome back,'),
-                              Text(data['name'], style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
+                              Text(UserManager.userData!['name'], style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 25),)
                             ],
                           ),
                         ),

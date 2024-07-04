@@ -7,25 +7,55 @@ import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
 
 
-final detailKey = GlobalKey<FormState>();
-
 class DoctorDetailPage extends StatefulWidget {
-  const DoctorDetailPage({super.key});
+  final String name;
+  final String email;
+  final String password;
+  const DoctorDetailPage({super.key, required this.name, required this.email, required this.password});
 
   @override
   State<DoctorDetailPage> createState() => _DoctorDetailPageState();
 }
 
-final TextEditingController ageController = TextEditingController();
-final TextEditingController phoneController = TextEditingController();
-final TextEditingController addressController = TextEditingController();
-final TextEditingController bioController = TextEditingController();
-
-
-String selectedGender = 'Select';
-String selectedCategory = 'Select';
-
 class _DoctorDetailPageState extends State<DoctorDetailPage> {
+
+  late final TextEditingController ageController;
+  late final TextEditingController phoneController;
+  late final TextEditingController bioController;
+  late final TextEditingController addressController;
+  late final TextEditingController nameController;
+  late final TextEditingController emailController;
+  late final TextEditingController passwordController;
+
+  String selectedGender = 'Select';
+  String selectedCategory = 'Select';
+  final detailKey = GlobalKey<FormState>();
+
+
+  @override
+  void initState() {
+    ageController = TextEditingController();
+    phoneController = TextEditingController();
+    bioController = TextEditingController();
+    addressController = TextEditingController();
+    nameController = TextEditingController(text: widget.name);
+    emailController = TextEditingController(text: widget.email);
+    passwordController = TextEditingController(text: widget.password);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    nameController.dispose();
+    ageController.dispose();
+    addressController.dispose();
+    emailController.dispose();
+    passwordController.dispose();
+    bioController.dispose();
+    phoneController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -48,20 +78,6 @@ class _DoctorDetailPageState extends State<DoctorDetailPage> {
               const Text('Lets create your profile', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 30, color: Colors.white),),
               const SizedBox(height: 15,),
               Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                      color: Colors.deepPurple.shade50,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: Colors.deepPurple,
-                      ),
-                      boxShadow: const [
-                        BoxShadow(
-                            color: Colors.deepPurple,
-                            blurRadius: 5
-                        )
-                      ]
-                  ),
                   child: Form(
                     key: detailKey,
                     child: Column(

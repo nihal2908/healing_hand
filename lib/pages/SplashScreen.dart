@@ -36,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
       _errorMessage = null;
     });
     try {
-      await UserManager.initializeUserId();
+      await UserManager.initializeApp();
       if (UserManager.userId == null) {
         // Navigate to login screen if there is no logged-in user
         Navigator.pushReplacement(
