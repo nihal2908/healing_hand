@@ -318,13 +318,33 @@ class AuthServices{
   }
 
   ///////////////////////// notes ////////////////////////////
-  Future<void> createNote({required String docId, required String patId, required String note}) async {
-    await firestore.collection('Notes').add(
+  Future<void> addNote({required String docId, required String patId, required String note, required String name}) async {
+    final newNote = await firestore.collection('Notes').add(
       {
         'docId': docId,
         'patId': patId,
-        'note': note
+        'note': note,
+        'name': name,
+        'created': FieldValue.serverTimestamp(),
+        'modified': FieldValue.serverTimestamp(),
       }
     );
+    await firestore.collection('Doctor').doc(docId).update({
+      'notes': FieldValue.arrayUnion([newNote.id])
+    });
+  }
+
+  Future<void> editNode({required String noteId,  required String name, required String note}) async {
+    await firestore.collection('Notes').doc(noteId).update({
+      'name': name,
+      'note': note
+    });
+  }
+
+  Future<QuerySnapshot> getNotes({required String doctorId}) async {
+    final docSnap = await firestore.collection('Doctor').doc(doctorId).get();
+    final Map<String, dynamic> data = docSnap.data() as Map<String, dynamic>;
+    final notes = await firestore.collection('Notes').where(FieldPath.documentId, whereIn: data['notes']).get();
+    return notes;
   }
 }

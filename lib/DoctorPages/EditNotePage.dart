@@ -4,21 +4,21 @@ import 'package:healing_hand/Providers/DoctorProvider.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 
 class EditNotePage extends StatelessWidget {
-  final String note;
+  final Map<String, dynamic> note;
   EditNotePage({super.key, required this.note});
 
   @override
   Widget build(BuildContext context) {
-    List<String> parts = note.split(': ');
-    TextEditingController editorController = TextEditingController(text: parts[1]);
+    // List<String> parts = note.split(': ');
+    TextEditingController editorController = TextEditingController(text: note['note']);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(parts[0]),
+        title: Text(note['name']),
         actions: [
           IconButton(
               onPressed: (){
-                print('Sahre button pressed');
+                print('Share button pressed');
               },
               icon: Icon(Icons.share)
           )
@@ -47,7 +47,6 @@ class EditNotePage extends StatelessWidget {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                DoctorUser.notes[DoctorUser.notes.indexWhere((element) => element.contains(parts[0]))] = parts[0] +': '+ editorController.text;
                 Navigator.pop(context);
               },
               child: Text('Save'),
