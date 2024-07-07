@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:healing_hand/chat_services/chatServices.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
+import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/customWidgets/styles.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:healing_hand/firebase/user_manager.dart';
 import 'package:healing_hand/pages/ChatRoom.dart';
-
-final AuthServices auth = AuthServices();
 
 
 class UserTile extends StatelessWidget{
@@ -57,6 +56,7 @@ class UserTile extends StatelessWidget{
 
 
 class ChatPage extends StatelessWidget {
+
   ChatPage({super.key, required this.usertype});
   final String usertype;
   //geting instance of services
@@ -71,66 +71,83 @@ class ChatPage extends StatelessWidget {
 
   // getting all the patients on doctor side
   Widget buildPatientList(){
-    return StreamBuilder(
-        stream: chatService.getPatientStream(),
-        builder: (context, snapshot){
-          if(snapshot.hasError){
-            return Text('Error');
-          }
-          else if(snapshot.connectionState == ConnectionState.waiting){
-            return Text('Loading...');
-          }
-          else{
-            return Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 100,
-                    child: Center(
-                      child: Text('Chat with your Patients', style: titleStyle,)
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chat with your Patients'),
+        actions: [
+          IconButton(
+              onPressed: (){},
+              icon: const Icon(Icons.search)
+          )
+        ],
+      ),
+      body: StreamBuilder(
+          stream: chatService.getPatientStream(),
+          builder: (context, snapshot){
+            if(snapshot.hasError){
+              return const Text('Error');
+            }
+            else if(snapshot.connectionState == ConnectionState.waiting){
+              return const CenterIndicator();
+            }
+            else{
+              return Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ),
-                  ListView(
-                    shrinkWrap: true,
-                    children: snapshot.data!.map<Widget>((userData) => buildPatientChatTile(userData, context)).toList(),
-                  ),
-                ],
-              ),
-            );
+                    ListView(
+                      shrinkWrap: true,
+                      children: snapshot.data!.map<Widget>((userData) => buildPatientChatTile(userData, context)).toList(),
+                    ),
+                  ],
+                ),
+              );
+            }
           }
-        }
+      ),
     );
   }
 
   // getting all the doctors on patient side
   Widget buildDoctorList(){
-    return StreamBuilder(
-        stream: chatService.getDoctorStream(),
-        builder: (context, snapshot){
-          if(snapshot.hasError){
-            return Text('Error');
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Chat with Doctors'),
+        actions: [
+          IconButton(
+              onPressed: (){},
+              icon: const Icon(Icons.search)
+          )
+        ],
+      ),
+      body: StreamBuilder(
+          stream: chatService.getDoctorStream(),
+          builder: (context, snapshot){
+            if(snapshot.hasError){
+              return const Text('Error');
+            }
+            else if(snapshot.connectionState == ConnectionState.waiting){
+              return const CenterIndicator();
+            }
+            else{
+              return Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20,),
+                    ListView(
+                      shrinkWrap: true,
+                      children: snapshot.data!.map<Widget>((userData) => buildDoctorChatTile(userData, context)).toList(),
+                    ),
+                  ],
+                ),
+              );
+            }
           }
-          else if(snapshot.connectionState == ConnectionState.waiting){
-            return Text('Loading...');
-          }
-          else{
-            return Padding(
-              padding: const EdgeInsets.all(10),
-              child: Column(
-                children: [
-                  SizedBox(height: 100,
-                    child: Center(child: Text('Chat with Doctors', style: titleStyle,)),
-                  ),
-                  ListView(
-                    shrinkWrap: true,
-                    children: snapshot.data!.map<Widget>((userData) => buildDoctorChatTile(userData, context)).toList(),
-                  ),
-                ],
-              ),
-            );
-          }
-        }
+      ),
     );
   }
 

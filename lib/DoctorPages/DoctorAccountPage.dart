@@ -9,10 +9,10 @@ import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:healing_hand/firebase/user_manager.dart';
+import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:image_picker/image_picker.dart';
 
-Image content = Image.asset('assets/images/default_dp.jpg');
-ImageProvider<Object>? currentDp;
+
 
 TextStyle nameSytle = const TextStyle(
     fontSize: 17,
@@ -32,40 +32,8 @@ TextStyle titleStyle = const TextStyle(
     color: Colors.white
 );
 
-
-
-class DoctorAccountRequest extends StatelessWidget {
-  DoctorAccountRequest({super.key});
-  final FirebaseFirestore firestore = FirebaseFirestore.instance;
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: firestore.collection('Doctor').doc(UserManager.userId).get(),
-        builder: (context, snapshot){
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          else {
-            if (snapshot.hasError) {
-              return Text('Error: ${snapshot.error}');
-            }
-            else {
-              Map<String, dynamic> userData = snapshot.data!.data() as Map<String, dynamic>;
-              return DoctorAccountPage(data: userData);
-            }
-          }
-        }
-    );
-  }
-}
-
-
 class DoctorAccountPage extends StatefulWidget {
-  final Map<String, dynamic> data;
-  DoctorAccountPage({required this.data, super.key});
-
+  DoctorAccountPage({super.key});
 
   @override
   State<DoctorAccountPage> createState() => _DoctorAccountPageState();
@@ -73,13 +41,15 @@ class DoctorAccountPage extends StatefulWidget {
 
 class _DoctorAccountPageState extends State<DoctorAccountPage> {
   String? _profileImageUrl;
+  Image content = Image.asset('assets/images/default_dp.jpg');
+  ImageProvider<Object>? currentDp;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-
 
   @override
   void initState() {
     super.initState();
-    loadProfileImage();
+    // loadProfileImage();
   }
 
   Future<void> loadProfileImage() async {
@@ -97,132 +67,145 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
 
   @override
   Widget build(BuildContext context) {
-    Map<String , dynamic> data = widget.data;
-    if(data['profile']==null){
-      currentDp = const AssetImage('assets/images/default_dp.jpg');
-    }
-    else{
-      currentDp = NetworkImage(data['profile']);
-    }
-    print(data['profile']);
+
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text('Your Profile'),
+      ),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(10),
-          child: Stack(
-            alignment: Alignment.topCenter,
+          child: Column(
             children: [
-              Column(
-                children: [
-                  const SizedBox(height: 100,),
-                  WhiteContainer(
-                    child: Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: IconButton(
-                            onPressed: (){
-                              Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorProfileEditPage(
-                                name: data['name'],
-                                age: data['age'],
-                                gender: data['gender'],
-                                phone: data['phone'],
-                                address: data['address'],
-                                bio: data['bio'],
-                                category: data['category'],
-                              )));
-                            },
-                            icon: const Icon(Icons.edit),
-                          ),
-                        ),
-                        Text(data['name'], style: nameSytle,),
-                        Text(data['category'], style: profileStyle),
-                        Text('${data['age']} years', style: profileStyle,),
-                        Text(data['gender'], style: profileStyle),
-                        Text(data['phone'], style: profileStyle),
-                        Text(data['email'], style: profileStyle),
-                        Text(data['bio'], style: profileStyle),
-                        Text(data['address'], style: profileStyle),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(25)
-                    ),
-                    child: InkWell(
-                        onTap: (){
-                          print('Change password');
-                          forgotPassword(context);
-                        },
-                        child: Center(child: Text('Change Password', style: nameSytle,))
-                    ),
-                  ),
-                  const SizedBox(height: 20,),
-                  Container(
-                    padding: const EdgeInsets.all(10),
-                    width: MediaQuery.of(context).size.width,
-                    height: 50,
-                    decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(25)
-                    ),
-                    child: InkWell(
-                        onTap: () async {
-                          print('Logout pressed');
-                          logOut();
-                        },
-                        child: Center(child: Text('Log-out', style: nameSytle,))
-                    ),
-                  )
-                ],
+              const SizedBox(height: 50,),
+              FutureBuilder(
+                  future: firestore.collection('Doctor').doc(UserManager.userId).get(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const CenterIndicator();
+                    }
+                    else {
+                      if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      }
+                      else {
+                        Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+                        if(data['profile']==null){
+                          currentDp = const AssetImage('assets/images/default_dp.jpg');
+                          _profileImageUrl = null;
+                        }
+                        else{
+                          currentDp = NetworkImage(data['profile']);
+                          _profileImageUrl = data['profile'];
+                        }
+
+                        return Stack(
+                          children: [
+                            Column(
+                              children: [
+                                const SizedBox(height: 35,),
+                                WhiteContainer(
+                                  child: Column(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.centerRight,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorProfileEditPage(
+                                              name: data['name'],
+                                              age: data['age'],
+                                              gender: data['gender'],
+                                              phone: data['phone'],
+                                              address: data['address'],
+                                              bio: data['bio'],
+                                              category: data['category'],
+                                            )));
+                                          },
+                                          icon: const Icon(Icons.edit),
+                                        ),
+                                      ),
+                                      Text(data['name'], style: nameSytle,),
+                                      Text(data['category'], style: profileStyle),
+                                      Text('${data['age']} years', style: profileStyle,),
+                                      Text(data['bio'], style: profileStyle),
+                                      Text(data['gender'], style: profileStyle),
+                                      Text(data['phone'], style: profileStyle),
+                                      Text(data['address'], style: profileStyle),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Center(
+                              child: Container(
+                                width: 75.0,
+                                height: 75.0,
+                                decoration: const BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) =>
+                                          _buildChangeImageDialog(),
+                                    );
+                                  },
+                                  child: _profileImageUrl != null ?
+                                  CircleAvatar(
+                                    radius: 35,
+                                    backgroundImage: NetworkImage(
+                                      _profileImageUrl!,
+                                    ),
+                                  ) :
+                                  const CircleAvatar(
+                                    radius: 35,
+                                    child: Icon(Icons.person),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      }
+                    }
+                  }
               ),
-              Column(
-                children: [
-                  SizedBox(
-                    height: 65,
-                    child: Center(
-                        child: Text(
-                            'Your Profile',
-                            style: titleStyle
-                        )
-                    ),
-                  ),
-                  Container(
-                    width: 75.0,
-                    height: 75.0,
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white,
-                    ),
-                    child: Center(
-                      child: GestureDetector(
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => _buildChangeImageDialog(),
-                          );
-                        },
-                        child: _profileImageUrl != null ?
-                        CircleAvatar(
-                          radius: 35,
-                          backgroundImage: NetworkImage(_profileImageUrl!),
-                        ) :
-                        const CircleAvatar(
-                          radius: 35,
-                          child: Icon(Icons.person),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+              const SizedBox(height: 20,),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                child: InkWell(
+                    onTap: (){
+                      print('Change password');
+                      forgotPassword(context);
+                    },
+                    child: Center(child: Text('Change Password', style: nameSytle,))
+                ),
               ),
+              const SizedBox(height: 20,),
+              Container(
+                padding: const EdgeInsets.all(10),
+                width: MediaQuery.of(context).size.width,
+                height: 50,
+                decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(25)
+                ),
+                child: InkWell(
+                    onTap: () async {
+                      print('Logout pressed');
+                      logOut();
+                    },
+                    child: Center(child: Text('Log-out', style: nameSytle,))
+                ),
+              )
             ],
           ),
         ),
@@ -300,7 +283,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
       String downloadURL = await ref.getDownloadURL();
 
       // Update profile image URL in Firestore
-      await FirebaseFirestore.instance.collection('Doctor').doc(UserManager.userId).update({
+      await firestore.collection('Doctor').doc(UserManager.userId).update({
         'profile': downloadURL,
       });
       Navigator.pop(context);
@@ -316,19 +299,17 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
         context: context,
         builder: (context)=>
             AlertDialog(
-              content: const Text('Do you wnat to remove your Profile Picture?'),
+              content: const Text('Do you want to remove your Profile Picture?'),
               actions: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(onPressed: () async {
-                      Navigator.pop(context);
-                      showCircularProgressIndicator(context);
                       await deleteProfileImage().then((_) {
+                        Navigator.pop(context);
                         setState(() {
                           _profileImageUrl = null;
                         });
-                        Navigator.pop(context);
                       });
                     }, child: const Text('Delete')),
                     ElevatedButton(onPressed: (){
@@ -344,7 +325,7 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
   Future<void> deleteProfileImage() async {
     try {
       // Remove 'profile' field from the user's document
-      await FirebaseFirestore.instance.collection('Doctor').doc(UserManager.userId).update({
+      await firestore.collection('Doctor').doc(UserManager.userId).update({
         'profile': FieldValue.delete(),
       });
       print('Profile image deleted');
@@ -366,14 +347,8 @@ class _DoctorAccountPageState extends State<DoctorAccountPage> {
           ),
           ElevatedButton(
               onPressed: () async {
-                // SharedPreferences prefs = await SharedPreferences.getInstance();
-                // prefs.setString('FIRST_PAGE', 'userselection');
-
-                if (Platform.isAndroid) {
-                  SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-                } else if (Platform.isIOS) {
-                  exit(0);
-                }
+                await firebaseAuth.signOut();
+                Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>UserTypePage()), (route)=>false);
               },
               child: const Text('Log-out', style: TextStyle(color: Colors.red),)
           ),

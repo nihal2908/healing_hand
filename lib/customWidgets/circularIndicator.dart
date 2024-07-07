@@ -7,3 +7,17 @@ void showCircularProgressIndicator(BuildContext context){
     );
   });
 }
+
+class CenterIndicator extends StatelessWidget {
+  final Color? color;
+  const CenterIndicator({super.key, this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CircularProgressIndicator(
+        color: color ?? Colors.white,
+      ),
+    );
+  }
+}

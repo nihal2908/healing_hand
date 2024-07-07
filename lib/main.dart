@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:healing_hand/Providers/ThemeProvider.dart';
+import 'package:healing_hand/customWidgets/Themes.dart';
 import 'package:healing_hand/firebase/user_manager.dart';
 import 'package:healing_hand/APIs_and_keys/firebase_options.dart';
 import 'package:healing_hand/pages/SplashScreen.dart';
@@ -32,16 +33,17 @@ class MyApp extends StatelessWidget {
         builder: (context, ThemeModel, child) {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
-            theme: ThemeData.light().copyWith(
-                primaryColor: Colors.deepPurple, // Background color for Scaffold
-                scaffoldBackgroundColor: Colors.deepPurple,
-                appBarTheme: AppBarTheme(
-                  iconTheme: IconThemeData(color: Colors.white), // White foreground color for AppBar icons
-                  foregroundColor: Colors.white,
-                  backgroundColor: Colors.transparent,
-                ),
-                cardColor: Colors.grey.shade200
-            ),
+            // theme: ThemeData.light().copyWith(
+            //     primaryColor: Colors.deepPurple, // Background color for Scaffold
+            //     scaffoldBackgroundColor: Colors.deepPurple,
+            //     appBarTheme: AppBarTheme(
+            //       iconTheme: IconThemeData(color: Colors.white), // White foreground color for AppBar icons
+            //       foregroundColor: Colors.white,
+            //       backgroundColor: Colors.transparent,
+            //     ),
+            //     cardColor: Colors.grey.shade200
+            // ),
+            theme: ThemeManager.LightTheme,
             darkTheme: ThemeData.dark().copyWith(
                 primaryColor: Colors.black, // Background color for Scaffold in dark mode
                 scaffoldBackgroundColor: Colors.black,

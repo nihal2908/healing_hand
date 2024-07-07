@@ -4,6 +4,7 @@ import 'package:healing_hand/DoctorPages/DoctorAccountPage.dart';
 import 'package:healing_hand/DoctorPages/NotificationPage.dart';
 import 'package:healing_hand/customWidgets/AppointmentContainerForDoctor.dart';
 import 'package:healing_hand/customWidgets/CircleImage.dart';
+import 'package:healing_hand/customWidgets/circularIndicator.dart';
 import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:healing_hand/firebase/user_manager.dart';
 
@@ -24,7 +25,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
           future: firestore.collection('Doctor').doc(UserManager.userId).get(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return const CenterIndicator();
             }
             if (!snapshot.hasData || !snapshot.data!.exists) {
               return const Center(child: Text('No data found for this doctor.'));
@@ -47,7 +48,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                         toolbarHeight: 150,
                         leading: GestureDetector(
                           onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorAccountRequest()));
+                            Navigator.push(context, MaterialPageRoute(builder: (context)=>DoctorAccountPage()));
                           },
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,

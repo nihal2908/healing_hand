@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -8,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:healing_hand/PatientPages/PatientProfileEditPage.dart';
 import 'package:healing_hand/customWidgets/WhiteContainer.dart';
 import 'package:healing_hand/customWidgets/circularIndicator.dart';
-import 'package:healing_hand/firebase/AuthServices.dart';
 import 'package:healing_hand/firebase/user_manager.dart';
 import 'package:healing_hand/pages/UserTypePage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -31,7 +29,6 @@ TextStyle titleStyle = const TextStyle(
     fontWeight: FontWeight.bold,
     color: Colors.white
 );
-
 
 class PatientAccountPage extends StatefulWidget {
   PatientAccountPage({super.key});
@@ -72,7 +69,6 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Your Profile'),
-        centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -292,7 +288,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
       String downloadURL = await ref.getDownloadURL();
 
       // Update profile image URL in Firestore
-      await FirebaseFirestore.instance.collection('Patient').doc(UserManager.userId).update({
+      await firestore.collection('Patient').doc(UserManager.userId).update({
         'profile': downloadURL,
       });
       Navigator.pop(context);
@@ -314,24 +310,12 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     ElevatedButton(onPressed: () async {
-                      // Navigator.pop(context);
-                      // showCircularProgressIndicator(context);
-                      // showDialog(context: context, builder: (context){
-                      //   return Center(
-                      //     child: CircularProgressIndicator(),
-                      //   );
-                      // });
                       await deleteProfileImage().then((_) {
                         Navigator.pop(context);
                         setState(() {
                           _profileImageUrl = null;
                         });
                       });
-                      // await deleteProfileImage();
-                      // // Navigator.pop(context);
-                      // setState(() {
-                      //   _profileImageUrl = null;
-                      // });
                     }, child: const Text('Delete')),
                     ElevatedButton(onPressed: (){
                       Navigator.pop(context);
@@ -346,7 +330,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
   Future<void> deleteProfileImage() async {
     try {
       // Remove 'profile' field from the user's document
-      await FirebaseFirestore.instance.collection('Patient').doc(UserManager.userId!).update({
+      await firestore.collection('Patient').doc(UserManager.userId!).update({
         'profile': FieldValue.delete(),
       });
       print('Profile image deleted');
@@ -371,11 +355,6 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
               onPressed: () async {
                 await firebaseAuth.signOut();
                 Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>UserTypePage()), (route)=>false);
-                // if (Platform.isAndroid) {
-                //   SystemChannels.platform.invokeMethod('SystemNavigator.pop');
-                // } else if (Platform.isIOS) {
-                //   exit(0);
-                // }
               },
               child: const Text('Log-out', style: TextStyle(color: Colors.red),)
           ),
