@@ -16,6 +16,8 @@ class _AddNotePageState extends State<AddNotePage> {
   final TextEditingController name = TextEditingController();
   final AuthServices auth = AuthServices();
 
+  bool editingNote = false;
+
   @override
   Widget build(BuildContext context) {
 
@@ -28,7 +30,7 @@ class _AddNotePageState extends State<AddNotePage> {
                 await auth.addNote(docId: UserManager.userId!, patId: '', note: note.text, name: name.text);
                 Navigator.pop(context);
               },
-              child: Text('Save', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600, fontSize: 20),)
+              child: Text('Save', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 20),)
           )
         ],
       ),
@@ -57,6 +59,21 @@ class _AddNotePageState extends State<AddNotePage> {
               child: TextField(
                 controller: note,
                 maxLines: null,
+                onTap: (){
+                  setState(() {
+                    editingNote = true;
+                  });
+                },
+                // onSubmitted: (_){
+                //   setState(() {
+                //     editingNote = false;
+                //   });
+                // },
+                // onTapOutside: (_){
+                //   setState(() {
+                //     editingNote = false;
+                //   });
+                // },
                 decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10)
@@ -71,10 +88,13 @@ class _AddNotePageState extends State<AddNotePage> {
                 buildAddNoteMenuButton(
                     title: 'Add Today\'s Date',
                     action: (){
-                      final date = DateTime.now();
-                      setState(() {
-                        note.text = note.text + ' ${date.day}-${date.month}-${date.year} ';
-                      });
+                      if(editingNote){
+                        final date = DateTime.now();
+                        setState(() {
+                          note.text = note.text + ' ${date.day}-${date.month}-${date.year} ';
+                        });
+                      }
+
                     },
                 ),
                 buildAddNoteMenuButton(

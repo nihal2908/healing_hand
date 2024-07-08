@@ -26,8 +26,8 @@ class ThemeManager {
     ),
     textButtonTheme: TextButtonThemeData(
       style: TextButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.deepPurple,
+        // backgroundColor: Colors.white,
+        foregroundColor: Colors.white,
       ),
     ),
     buttonTheme: ButtonThemeData(
