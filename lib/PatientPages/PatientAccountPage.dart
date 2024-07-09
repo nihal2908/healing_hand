@@ -244,7 +244,8 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
             pickImage().then((imageFile) {
               if (imageFile != null) {
                 Navigator.pop(context);
-                uploadImage(imageFile).then((imageUrl) {
+                uploadImage(imageFile).then((imageUrl) async {
+                  await UserManager.retrieveUserData();
                   setState(() {
                     _profileImageUrl = imageUrl;
                   });
@@ -294,6 +295,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
       Navigator.pop(context);
       return downloadURL;
     } catch (error) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to upload image')));
       print('Error uploading image: $error');
       return null;
     }
@@ -304,7 +306,7 @@ class _PatientAccountPageState extends State<PatientAccountPage> {
         context: context,
         builder: (context)=>
             AlertDialog(
-              content: const Text('Do you wnat to remove your Profile Picture?'),
+              content: const Text('Do you want to remove your Profile Picture?'),
               actions: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

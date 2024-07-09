@@ -13,7 +13,7 @@ class UserManager {
       _userId = user.uid;
       _emailId = user.email;
       _userType = usertype;
-      await _retrieveUserData();
+      await retrieveUserData();
     } else {
       // Handle the case where there is no logged-in user
       _userId = null;
@@ -29,7 +29,7 @@ class UserManager {
       _userId = user.uid;
       _emailId = user.email;
       await _retrieveUserType();
-      await _retrieveUserData();
+      await retrieveUserData();
     } else {
       // Handle the case where there is no logged-in user
       _userId = null;
@@ -46,11 +46,15 @@ class UserManager {
     }
   }
 
-  static Future<void> _retrieveUserData() async {
+  static Future<void> retrieveUserData() async {
     if (_userId != null && _userType != null) {
       DocumentSnapshot doc = await FirebaseFirestore.instance.collection(_userType!).doc(_userId).get();
       _userData = doc.data() as Map<String, dynamic>?;
     }
+  }
+
+  static Future<void> reloadUserData() async {
+
   }
 
   static String? get userId => _userId;
